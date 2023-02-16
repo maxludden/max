@@ -1,0 +1,79 @@
+{
+    "workbench.colorCustomizations": {
+        "editor.background": "#020202",
+        "panel.background": "#212121",
+        "sideBar.background": "#121212",
+        "sideBarSectionHeader.background": "#1a0056",
+        "sideBarSectionHeader.foreground": "#d699ff",
+        "sideBarSectionHeader.border": "#d699ff30",
+        "terminal.background": "#000000",
+        "activityBar.activeBorder": "#240078",
+        "activityBar.background": "#121212",
+        "activityBar.border": "#2e2e2e",
+        "activityBar.activeBackground": "#1e005171",
+        "activityBar.foreground": "#c0abff",
+        "activityBarBadge.background": "#d497ff",
+        "activityBarBadge.foreground": "#1e0051",
+        "list.errorForeground": "#ff9cde",
+        "list.warningForeground": "#ff0066b1",
+        "list.hoverBackground": "#1e0051",
+        "list.hoverForeground": "#dbbeff",
+        "list.activeSelectionBackground": "#1e0051",
+        "list.activeSelectionForeground": "#dbbeff",
+        "list.focusForeground": "#1e0051",
+        "list.focusBackground": "#dbbeff",
+        "list.inactiveFocusBackground": "#310046",
+        "list.deemphasizedForeground": "#dbbeff",
+        "list.inactiveSelectionBackground": "#1e0051",
+        "list.inactiveSelectionForeground": "#dbbeff",
+        "banner.background": "#121212",
+        "editor.findMatchBackground": "#0fefff89",
+        "editorInlayHint.parameterBackground": "#bb00ff",
+        "scrollbarSlider.background": "#403444",
+        "scrollbarSlider.hoverBackground": "#9500ffaa",
+        "terminal.tab.activeBorder": "#bb00ff",
+        "terminal.border": "#bb00ff"
+    },
+    "cSpell.words": [
+        "emph",
+        "mofn",
+        "namedcolor"
+    ],
+    "colorize.colorized_colors": [
+        "BROWSERS_COLORS",
+        "HEXA",
+        "RGB",
+        "HSL",
+        "ARGB"
+    ],
+    "colorize.colorized_variables": [
+        "CSS",
+        "LESS",
+        "SASS",
+        "STYLUS"
+    ],
+    "colorize.languages": [
+        "python",
+        "json",
+        "jsonc",
+        "yaml",
+        "toml",
+        "css",
+        "sass",
+        "scss",
+        "less",
+        "postcss",
+        "sss",
+        "stylus",
+        "xml",
+        "svg"
+    ],
+    "[markdown]": {
+        "editor.unicodeHighlight.ambiguousCharacters": false,
+        "editor.unicodeHighlight.invisibleCharacters": false,
+        "cSpell.fixSpellingWithRenameProvider": true,
+        "cSpell.advanced.feature.useReferenceProviderWithRename": true,
+        "cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
+        "editor.suggest.preview": true
+    }
+}
