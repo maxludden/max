@@ -1,3 +1,5 @@
+"""This module generates a custom theme for the other modules of Max."""
+
 from typing import Dict, Optional, Mapping
 from rich.style import Style, StyleType
 from rich.theme import Theme
@@ -187,7 +189,8 @@ MAX_STYLES: Dict[str, Style] = {
 class MaxTheme(Theme):
     """A container for style information, used by :class:'max.console.MaxConsole'.
     Args:
-        styles (Dict[str, Style], optional): A mapping of style names on to styles. Defaults to None for a theme with no styles.
+        styles (Dict[str, Style], optional): A mapping of style names on to \
+            styles. Defaults to None for a theme with no styles.
         inherit (bool, optional): Inherit default styles. Defaults to True.
     """
 
@@ -229,3 +232,4 @@ if __name__ == "__main__":  # pragma: no cover
     console.print(table)
     if html:
         print(console.export_html(inline_styles=True))
+        

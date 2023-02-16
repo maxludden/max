@@ -2,12 +2,13 @@
 
 import time
 from random import randint
-from typing import Sequence, Tuple
+from typing import Sequence, Tuple, Optional, Dict
 
 
 from rich.panel import Panel
 # from rich import inspect
 from rich.progress import (
+    TaskID,
     BarColumn,
     MofNCompleteColumn,
     Progress,
@@ -23,17 +24,28 @@ from rich.syntax import Syntax
 from rich.table import Column, Table
 from rich.text import Text
 
-from max.console import MaxConsole, Console
+from max.console import MaxConsole, Console, RenderableType, Singleton
 
 progress_console = MaxConsole()
 
+class MaxProgressColumn(ProgressColumn):
+    """A basic wrapper around `rich.table.Column`"""
+    def __init__(self, table_column: Optional[Column] = None) -> None:
+        super().__init__(table_column=table_column)
+        self._table_column = table_column
+        self._renderable_cache: Dict[TaskID, Tuple[float, RenderableType]] = {}
+        self._update_time: Optional[float] = None
 
-class MaxProgress(Progress):
+    def get_table_column(self) -> Column:
+        """Get a table column, used to build tasks table."""
+        return self._table_column or Column()
+
+class MaxProgress(Progress, metaclass=Singleton):
     """Generates a progress bar for MaxConsole with additional fields\
         and color_pallets."""
 
-    columns: Sequence[ProgressColumn]
-    console: MaxConsole
+    columns: Sequence[MaxProgressColumn]
+    console: MaxConsole = MaxConsole() # what line was that typo on?
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -45,7 +57,7 @@ class MaxProgress(Progress):
             self.expand = True
 
     @classmethod
-    def get_default_columns(cls) -> Tuple[ProgressColumn, ...]:
+    def get_default_columns(cls) -> Tuple[MaxProgressColumn, ...]:
         """Get the default columns used for a new MaxProgress instance:
         - a text column for the description (TextColumn)
         - the bar itself (BarColumn)
