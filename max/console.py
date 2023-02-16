@@ -1,5 +1,7 @@
+"""MaxConsole is a custom themed class inheriting from rich.console.Console."""
+
 import threading
-from typing import IO, Dict, List, Mapping, Optional, Sequence
+from dataclasses import dataclass
 
 from rich.console import Console, ConsoleOptions, NewLine, RenderResult
 from rich.style import Style, StyleType
@@ -24,11 +26,12 @@ class Singleton(type):
         else:
             return cls.__instance
 
-
+@dataclass
 class MaxConsole(Console, metaclass=Singleton):
     """A custom themed console class that inherits from rich.console.Console"""
 
     theme: Theme
+    
 
     def __init__(self, theme: Theme = MaxTheme(), *args, **kwargs):
         super().__init__(*args, **kwargs, theme=theme)

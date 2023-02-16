@@ -1,71 +1,78 @@
+"""Description: A class to represent a named color."""
+import re
+from functools import lru_cache
 from pathlib import Path
-from random import randint
-from re import MULTILINE, compile
-from sys import exit
+
 from time import sleep
 from typing import Any, Set, Tuple
-from functools import lru_cache
 
 from console import MaxConsole
 from rich.box import ROUNDED
 from rich.columns import Columns
-from rich.console import Console, ConsoleOptions, NewLine
+from rich.console import NewLine
 from rich.prompt import Confirm
 from rich.table import Table
 from rich.text import Text
-from snoop import snoop, spy
-from birdseye import eye
-from cheap_repr import cheap_repr, register_repr
 
 
 class ColorParsingError(ValueError):
-    pass
+    """Raised when a color cannot be parsed."""
 
 
 class InvalidHexColor(ValueError):
-    pass
+    """Raised when a hex color is not valid."""
 
 
 class InvalidRGBColor(ValueError):
-    pass
+    """Raised when an RGB color is not valid."""
 
 
 CWD = Path.cwd()
 LOG = CWD / "logs" / "log.log"
 VERBOSE = CWD / "logs" / "verbose.log"
 HEX_RE_STR = r"^\#([0-9a-fA-F]{6})$|^ ([0-9a-fA-F]{6})$"
-HEX_PATTERN = compile(HEX_RE_STR, MULTILINE)
+HEX_PATTERN = re.compile(HEX_RE_STR, re.MULTILINE)
 
 console = MaxConsole()
 
 
 def colorful_class(on_white: bool = False) -> Text:
+    """Print the word "NamedColor" in a rainbow of colors.
+
+    Args:
+        on_white (`optional[bool]`): Whether to print the text \
+            on a white background. Defaults to False.
+
+    Returns:
+        `Text`: The formatted string.
+    """
     if on_white:
         background = " on #ffffff"
     else:
         background = ""
-    N_ = f"[bold #ff00ff{background}]N[/]"
-    A_ = f"[bold #af00ff{background}]a[/]"
-    M_ = f"[bold #5f00ff{background}]m[/]"
-    E_ = f"[bold #0000ff{background}]e[/]"
-    D_ = f"[bold #249df1{background}]d[/]"
-    C_ = f"[bold #00ffff{background}]C[/]"
-    O1 = f"[bold #00ff00{background}]o[/]"
-    L_ = f"[bold #ffff00{background}]l[/]"
-    O2 = f"[bold #ff8800{background}]o[/]"
-    R_ = f"[bold #ff0000{background}]r[/]"
-    NAMEDCOLOR = f"{N_}{A_}{M_}{E_}{D_}{C_}{O1}{L_}{O2}{R_}"
-    return NAMEDCOLOR
+    colored_n= f"[bold #ff00ff{background}]N[/]"
+    colored_a = f"[bold #af00ff{background}]a[/]"
+    colored_m = f"[bold #5f00ff{background}]m[/]"
+    colored_e = f"[bold #0000ff{background}]e[/]"
+    colored_d = f"[bold #249df1{background}]d[/]"
+    colored_c= f"[bold #00ffff{background}]C[/]"
+    colored_o1 = f"[bold #00ff00{background}]o[/]"
+    colored_l= f"[bold #ffff00{background}]l[/]"
+    colored_o2 = f"[bold #ff8800{background}]o[/]"
+    colored_r = f"[bold #ff0000{background}]r[/]"
+    named_color = f"{colored_n}{colored_a}{colored_m}{colored_e}\
+        {colored_d}{colored_c}{colored_o1}{colored_l}{colored_o2}{colored_r}"
+    return named_color
 
 
 def format_rgb(rgb: Tuple[int, int, int]) -> Text:
     """Return a formatted colorized string to represent the tuple."""
-    r, g, b = rgb
+    r_value, g_value, b_value = rgb
     left_par = Text.from_markup("[#ffffff]([/]")
-    r_string = Text.from_markup(f"[#000000 on #ff0000]{r: >3},[/]")
-    g_string = Text.from_markup(f"[#000000 on #00ff00]{g: >3},[/]")
-    b_string = Text.from_markup(f"[#ffffff on #0000ff]{b: >3}[/]")
-    right_par = Text.from_markup(f"[#ffffff])[/]")
+    r_string = Text.from_markup(f"[#000000 on #ff0000]{r_value:>3},[/]")
+    g_string = Text.from_markup(f"[#000000 on #00ff00]{g_value:>3},[/]")
+    b_string = Text.from_markup(f"[#ffffff on #0000ff]{b_value:>3}[/]")
+    right_par = Text.from_markup("[#ffffff])[/]")
     return Text.assemble(
         left_par, r_string, g_string, b_string, right_par, justify="center"
     )
@@ -123,15 +130,14 @@ class NamedColor:
         (255, 0, 0),  # red
     )
 
-    @spy
-    @staticmethod
-    def get_all_colors(self) -> set[dict[str, int | str | tuple]]:
+    @classmethod
+    def get_all_colors(cls) -> set[dict[str, int | str | tuple]]:
         """Return a set of:
         - all colors('str')
         - their indexes(`int`)
         - hex values('str')
         - rgb values('tuple[int, int, int]')"""
-        return list(zip((self.colors, self.indexes, self.hex_colors, self.rgb_tuples)))
+        return list(zip((cls.colors, cls.indexes, cls.hex_colors, cls.rgb_tuples)))
 
     # all_colors = (
     #     {"color": "magenta", "index": 0, "hex": "#ff00ff", "rgb": (255, 0, 255)},
@@ -160,15 +166,15 @@ class NamedColor:
             border_style="bold #ffffff",
         )
         for color in self.get_all_colors():
-            name = color["color"]
-            index = str(color["index"])
-            hex = color["hex"]
-            rgb = color["rgb"]
+            name_value = color["color"]
+            index_value = str(color["index"])
+            hex_value = color["hex"]
+            rgb_value = color["rgb"]
 
-            if index in [1, 2, 3, 4, 9]:
+            if index_value in [1, 2, 3, 4, 9]:
                 table.add_row(
-                    (name, str(index), hex, str(rgb)),
-                    style=f"bold #ffffff on {color['hex']}",
+                    (name_value, str(index_value), hex, str(rgb_value)),
+                    style=f"bold #ffffff on {color[{hex_value}]}",
                 )
             else:
                 table.add_row(
@@ -203,12 +209,7 @@ class NamedColor:
             case "red":
                 return 9
             case _:
-                raise ValueError(
-                    "Unable to convert NamedColor ({self}) to an integer")
-
-    def as_index(self) -> int:
-        """Returns the index of the NamedColor"""
-        return int(self)
+                raise ValueError("Unable to convert NamedColor ({self}) to an integer")
 
     @lru_cache(maxsize=10)
     def as_hex(self) -> str:
@@ -262,14 +263,14 @@ class NamedColor:
 
     def as_formatted_rgb(self) -> Text:
         """Return a formatted colorized string to represent the tuple."""
-        r, g, b = self.as_rgb()
+        r_value, g_value, b_value = tuple(self.as_rgb())
         left_par = Text.from_markup("[#ffffff]([/]")
-        r_string = Text.from_markup(f"[#000000 on #ff0000]{r: >3},[/]")
-        g_string = Text.from_markup(f"[#000000 on #00ff00]{g: >3},[/]")
-        b_string = Text.from_markup(f"[#ffffff on #0000ff]{b: >3}[/]")
-        right_par = Text.from_markup(f"[#ffffff])[/]")
+        r_string = Text.from_markup(f"[#000000 on #ff0000]{r_value:>3},[/]")
+        g_string = Text.from_markup(f"[#000000 on #00ff00]{g_value:>3},[/]")
+        b_string = Text.from_markup(f"[#ffffff on #0000ff]{b_value:>3}[/]")
+        end = Text.from_markup("[#ffffff])[/]")
         return Text.assemble(
-            left_par, r_string, g_string, b_string, right_par, justify="center"
+            left_par, r_string, g_string, b_string, end, justify="center"
         )
 
     def __init__(self, value: Any) -> None:
@@ -286,7 +287,7 @@ class NamedColor:
                     self.value = self.colors[index]
                     self._original = value
                 except InvalidHexColor as ihc:
-                    raise InvalidHexColor("Unable to parse hex color", ihc)
+                    raise InvalidHexColor('Unable to parse hex color', ihc) from ihc
         # RGB Tuple
         elif isinstance(value, tuple):
             try:
@@ -294,7 +295,7 @@ class NamedColor:
                 self.value = self.colors[index]
                 self._original = value
             except InvalidRGBColor as irc:
-                raise InvalidRGBColor("Unable to parse RGB color", irc)
+                raise InvalidRGBColor("Unable to parse RGB color", irc) from irc
 
         # Index
         elif isinstance(value, int):
@@ -328,8 +329,7 @@ class NamedColor:
             collapse_padding=True,
         )
 
-        table.add_column(
-            f"[{self.as_Style()}]Original Color[/]", justify="center")
+        table.add_column(f"[{self.as_style()}]Original Color[/]", justify="center")
         table.add_column("Index", justify="center")
         table.add_column("HEX", justify="center")
         table.add_column("RGB", justify="center")
@@ -338,7 +338,7 @@ class NamedColor:
             f"[bold #ffffff]{index}[/]",
             f"[bold #ffffff on {self.as_hex()}]{self.as_hex()}[/]",
             self.as_formatted_rgb(),
-        ),
+        )
         return table
 
     def __repr__(self) -> str:
@@ -355,34 +355,15 @@ class NamedColor:
         """Returns the index of the NamedColor"""
         return int(self)
 
-    def as_hex(self) -> str:
-        """Returns the hex value of the NamedColor"""
-        return self.hex_colors[int(self)]
-
-    def as_rgb(self) -> Tuple[int, int, int]:
-        """Returns the RGB tuple of the NamedColor"""
-        return self.rgb_tuples[int(self)]
-
-    def as_formatted_rgb(self) -> Text:
-        """Return a formatted colorized string to represent the tuple."""
-        r, g, b = self.as_rgb()
-        left_par = Text.from_markup("[#ffffff]([/]")
-        r_string = Text.from_markup(f"[#000000 on #ff0000]{r: >3},[/]")
-        g_string = Text.from_markup(f"[#000000 on #00ff00]{g: >3},[/]")
-        b_string = Text.from_markup(f"[#ffffff on #0000ff]{b: >3}[/]")
-        right_par = Text.from_markup(f"[#ffffff])[/]")
-        return Text.assemble(
-            left_par, r_string, g_string, b_string, right_par, justify="center"
-        )
-
-    def as_Style(self) -> str:
+    def as_style(self) -> str:
         """Returns the Style string of the NamedColor"""
         if self.as_index() in [1, 2, 3, 4, 9]:
             return f"bold #ffffff on {self.as_hex()}"
         else:
             return f"bold #ffffff on {self.as_hex()}"
 
-    def hex_to_rgb(hex: str) -> Tuple:
+    @classmethod
+    def hex_to_rgb(cls, hex_value: str) -> Tuple:
         """
         Convert a hex color to rgb.
         Args:
@@ -390,48 +371,50 @@ class NamedColor:
         Returns:
             rgb (tuple): The rgb color.
         """
-        if "#" in hex:
-            stripped_hex = hex.replace("#", "")
+        if "#" in hex_value:
+            stripped_hex = hex_value.replace("#", "")
         else:
-            stripped_hex = hex
-
-        if HEX_PATTERN.match(stripped_hex):
-            rgb = []
-            for i in (0, 2, 4):
-                decimal = int(hex[i: i + 2], 16)
-                rgb.append(decimal)
-            return tuple(rgb)
-        else:
-            raise InvalidHexColor(f"Invalid hex color: {hex}")
-
-    def rgb_to_hex(rgb: Tuple[int, int, int]) -> str:
-        """Convert an rgb color to hex."""
-        r, g, b = rgb
-
-        return f"{r:X}{g:X}{b:X}"
+            stripped_hex = hex_value
+        rgb = []
+        for i in (0, 2, 4):
+            decimal = int(stripped_hex[i : i + 2], 16)
+            rgb.append(decimal)
+        return tuple(rgb)
 
     @classmethod
-    def color_name(cls) -> Text:
-        """Returns the classes name with each color progressing the named colors."""
-        range = []
-        start = randint(0, 9)
-        for i in range(10):
-            index = (start + i) % 10
-            range.append(cls.colors[index])
-        repeat = len(range)
-        for x in range(repeat):
-            range.append(range[x])
+    def rgb_to_hex(cls, rgb: Tuple[int, int, int]) -> str:
+        """Convert an rgb color to hex."""
+        r_value, g_value, b_value = rgb
+
+        return f"{r_value:X}{g_value:X}{b_value:X}"
+
+    # @classmethod
+    # def color_name(cls) -> Text:
+    #     """Returns the classes name with each color progressing the named colors."""
+    #     color_range = []
+    #     start = randint(0, 9)
+    #     for i in range(10):
+    #         index = (start + i) % 10
+    #         color_range.append(cls.colors[index])
+    #     repeat = len(range)
+    #     for _ in range(repeat):
+    #         color_range.append(range[x])
 
 
 def print_color_tables(
-    as_columns: bool = False, console: Console = MaxConsole()
-) -> None:
-    """A demo of the NamedColor class."""
+    as_columns: bool = False, example_console: MaxConsole = console) -> None:
+    """A demo of the NamedColor class.
+    
+    Args:
+        as_columns (bool, optional): Whether to print the colors as columns. Defaults to False.
+        example_console (MaxConsole, optional): The console to print to. Defaults to console.
+    """
     explanation = Text(
-        "NamedColor is a class that allows you to use named colors in your code. The following colors are the NamedColors that maxcolor makes gradients from. It also has a few extra methods to help you work with the color."
+        "NamedColor is a class that allows you to use named colors in your code. \
+            The following colors are the NamedColors that maxcolor makes gradients \
+                from. It also has a few extra methods to help you work with the color."
     )
-    explanation = explanation.wrap(console=console, width=60, justify="left")
-    console = MaxConsole()
+    explanation = explanation.wrap(console=example_console, width=60, justify="left")
     console.clear()
     console.print(NewLine(2))
     console.rule(title=colorful_class(on_white=False), style="bold #ff00ff")
@@ -452,11 +435,6 @@ def print_color_tables(
         for color in NamedColor.colors:
             console.print(NamedColor(color), justify="center")
             console.print(NewLine(2))
-
-
-@register_repr(NamedColor)
-def repr_my_class(x, helper):
-    return helper.repr_iterable(x.items, "NamedColor([", "])")
 
 
 if __name__ == "__main__":

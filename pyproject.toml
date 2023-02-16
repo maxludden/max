@@ -1,13 +1,20 @@
 [tool.pdm]
 [tool.pdm.dev-dependencies]
-dev = ["snoop>=0.4.3", "birdseye>=0.9.4"]
+dev = [
+    "snoop>=0.4.3",
+    "birdseye>=0.9.4",
+    "pylint>=2.16.2",
+]
 
 [project]
 name = "max"
 version = "0.1.0"
 description = "A library that automates some of the tricky parts of rich."
 authors = [{ name = "maxludden", email = "dev@maxludden.com" }]
-dependencies = ["rich>=13.3.1", "colorama>=0.4.6"]
+dependencies = [
+    "rich>=13.3.1",
+    "colorama>=0.4.6",
+]
 requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "MIT" }

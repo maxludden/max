@@ -1,103 +1,68 @@
-from threading import Event, RLock, Thread
-from typing import (
-    Any,
-    BinaryIO,
-    Callable,
-    ContextManager,
-    Deque,
-    Dict,
-    Generic,
-    Iterable,
-    List,
-    NamedTuple,
-    NewType,
-    Optional,
-    Sequence,
-    TextIO,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
-from max.console import MaxConsole
-from rich.console import Console
+"""This module defines a custom progress bar for the max console."""
+
+import time
+from random import randint
+from typing import Sequence, Tuple
+
+
+from rich.panel import Panel
+# from rich import inspect
 from rich.progress import (
-    Progress,
     BarColumn,
     MofNCompleteColumn,
+    Progress,
+    ProgressColumn,
     SpinnerColumn,
     TextColumn,
     TimeElapsedColumn,
     TimeRemainingColumn,
-    Task,
-    ProgressSample,
-    ProgressColumn,
-    TaskProgressColumn,
 )
+from rich.rule import Rule
+from rich.style import Style
+from rich.syntax import Syntax
 from rich.table import Column, Table
-from rich.style import Style, StyleType, StyleStack
-from rich.text import Text, Span, TextType
-from rich import filesize, get_console
-from rich.console import Console, Group, JustifyMethod, RenderableType
-from rich.highlighter import Highlighter
-from rich.jupyter import JupyterMixin
-from rich.live import Live
-from rich.progress_bar import ProgressBar
-from rich.spinner import Spinner
-from rich.text import Text, TextType
-import time
+from rich.text import Text
 
-TaskID = NewType("TaskID", int)
+from max.console import MaxConsole, Console
 
-ProgressType = TypeVar("ProgressType")
-
-GetTimeCallable = Callable[[], float]
+progress_console = MaxConsole()
 
 
 class MaxProgress(Progress):
-    """Renders an auto-updating progress bar(s).
-    Args:
-        console (Console, optional): Optional Console instance. Default will an internal Console instance writing to stdout.
-        auto_refresh (bool, optional): Enable auto refresh. If disabled, you will need to call `refresh()`.
-        refresh_per_second (Optional[float], optional): Number of times per second to refresh the progress information or None to use default (10). Defaults to None.
-        speed_estimate_period: (float, optional): Period (in seconds) used to calculate the speed estimate. Defaults to 30.
-        transient: (bool, optional): Clear the progress on exit. Defaults to False.
-        redirect_stdout: (bool, optional): Enable redirection of stdout, so ``print`` may be used. Defaults to True.
-        redirect_stderr: (bool, optional): Enable redirection of stderr. Defaults to True.
-        get_time: (Callable, optional): A callable that gets the current time, or None to use Console.get_time. Defaults to None.
-        disable (bool, optional): Disable progress display. Defaults to False
-        expand (bool, optional): Expand tasks table to fit width. Defaults to False.
-    """
+    """Generates a progress bar for MaxConsole with additional fields\
+        and color_pallets."""
 
-    columns: Optional[Sequence[ProgressColumn]]
-    expand: bool
+    columns: Sequence[ProgressColumn]
+    console: MaxConsole
 
-    def __init__(self, columns:Optional[Console]=MaxConsole(), console=None, expand: bool = True, *args, **kwargs
-    ) -> None:
-        if console == None:
-            console = MaxConsole()
-        if columns == None:
-            columns = self.get_max_columns()
-        super().__init__(columns, console, expand=expand, *args, **kwargs)
-        self.columns = columns or self.get_max_columns()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        if not self.console:
+            self.console =  MaxConsole()
+        if not self.columns:
+            self.columns = self.get_default_columns()
+        if self.expand is None:
+            self.expand = True
 
     @classmethod
-    def get_max_columns(cls) -> Tuple[ProgressColumn, ...]:
+    def get_default_columns(cls) -> Tuple[ProgressColumn, ...]:
         """Get the default columns used for a new MaxProgress instance:
         - a text column for the description (TextColumn)
         - the bar itself (BarColumn)
         - a column showing the number of completed tasks (MofNCompleteColumn)
         - a column showing the elapsed time (TimeElapsedColumn)
         - an estimated-time-remaining column (TimeRemainingColumn)
+
         If the Progress instance is created without passing a columns argument,
         the default columns defined here will be used.
+
         You can also create a Progress instance using custom columns before
         and/or after the defaults, as in this example:
             progress = Progress(
-                SpinnerColumn(),
-                *Progress.default_columns(),
+                SpinnerColumn(), # Redundant spinner left of default columns
+                *MaxProgress.get_max_columns(),
                 "Elapsed:",
-                TimeElapsedColumn(),
+                TimeElapsedColumn(), # Redundant elapsed time right of default columns
             )
         This code shows the creation of a Progress display, containing
         a spinner to the left, the default columns, and a labeled elapsed
@@ -131,14 +96,6 @@ class MaxProgress(Progress):
 
 
 if __name__ == "__main__":  # pragma: no coverage
-    import random
-    import time
-
-    from rich.panel import Panel
-    from rich.rule import Rule
-    from rich.syntax import Syntax
-    from rich.table import Table
-
     syntax = Syntax(
         '''def loop_last(values: Iterable[T]) -> Iterable[Tuple[bool, T]]:
     """Iterate and generate a tuple with a flag for last value."""
@@ -182,8 +139,19 @@ if __name__ == "__main__":  # pragma: no coverage
         task3 = progress.add_task("[yellow]Thinking", total=None)
 
         while not progress.finished:
-            progress.update(task1, advance=0.5)
-            progress.update(task2, advance=0.3)
+            progress.update(task1, advance=1)
+            progress.update(task2, advance=0.7)
+            if progress.tasks[0].completed >= 400:
+                if progress.tasks[0].completed < 500:
+                    progress.start_task(task3)
+                    progress.update(task3, total=1000)
+                    progress.update(task3, completed=200)
+                    progress.update(task3, description="[bold #00ff00]Planning![/]")
+                progress.update(task3, advance=2)
+                if progress.tasks[0].completed is 1000:
+                    progress.update(task2, advance=2)
+
             time.sleep(0.01)
-            if random.randint(0, 100) < 1:
+            if randint(0, 100) < 1:
                 progress.log(next(examples))
+                    

@@ -75,5 +75,11 @@
         "cSpell.advanced.feature.useReferenceProviderWithRename": true,
         "cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
         "editor.suggest.preview": true
-    }
+    },
+    "python.testing.pytestArgs": [
+        "max"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.formatting.provider": "black"
 }
