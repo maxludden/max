@@ -69,33 +69,16 @@ class MaxProgress(Progress):
         expand (bool, optional): Expand tasks table to fit width. Defaults to False.
     """
 
-    def __init__(
-        self,
-        *columns: Union[str, Progress, Column],
-        console: Optional[MaxConsole] = None,
-        auto_refresh: bool = True,
-        refresh_per_second: float = 10,
-        speed_estimate_period: float = 30.0,
-        transient: bool = False,
-        redirect_stdout: bool = True,
-        redirect_stderr: bool = True,
-        get_time: Optional[GetTimeCallable] = None,
-        disable: bool = False,
-        expand: bool = False,
+    columns: Optional[Sequence[ProgressColumn]]
+    expand: bool
+
+    def __init__(self, columns:Optional[Console]=MaxConsole(), console=None, expand: bool = True, *args, **kwargs
     ) -> None:
-        super().__init__(
-            columns=columns or self.get_max_columns(),
-            console=console or MaxConsole.get_console(),
-            auto_refresh=auto_refresh,
-            refresh_per_second=refresh_per_second,
-            speed_estimate_period=speed_estimate_period,
-            transient=transient,
-            redirect_stdout=redirect_stdout,
-            redirect_stderr=redirect_stderr,
-            get_time=get_time,
-            disable=disable,
-            expand=expand,
-        )
+        if console == None:
+            console = MaxConsole()
+        if columns == None:
+            columns = self.get_max_columns()
+        super().__init__(columns, console, expand=expand, *args, **kwargs)
         self.columns = columns or self.get_max_columns()
 
     @classmethod
@@ -193,13 +176,7 @@ if __name__ == "__main__":  # pragma: no coverage
 
     console = Console(record=True)
 
-    with Progress(
-        SpinnerColumn(),
-        *Progress.get_default_columns(),
-        TimeElapsedColumn(),
-        console=console,
-        transient=False,
-    ) as progress:
+    with MaxProgress() as progress:
         task1 = progress.add_task("[red]Downloading", total=1000)
         task2 = progress.add_task("[green]Processing", total=1000)
         task3 = progress.add_task("[yellow]Thinking", total=None)
