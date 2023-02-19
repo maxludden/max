@@ -253,4 +253,56 @@ if __name__ == "__main__":  # pragma: no cover
     console.print(table)
     if html:
         print(console.export_html(inline_styles=True))
-        
+
+    new_styles = {
+         "red": Style(color="#ff0000"),
+        "bold.red": Style(color="#ff0000", bold=True),
+        "cs.red": Style(color="#ff0000", bgcolor="#ff0000"),
+        "style.red": Style(color="#ffffff", bgcolor="#ff0000"),
+        "orange": Style(color="#ff8800"),
+        "bold.orange": Style(color="#ff8800", bold=True),
+        "cs.orange": Style(color="#ff8800", bgcolor="#ff8800"),
+        "style.orange": Style(color="#000000", bgcolor="#ff8800"),
+        "yellow": Style(color="#ffff00"),
+        "bold.yellow": Style(color="#ffff00", bold=True),
+        "cs.yellow": Style(color="#ffff00", bgcolor="#ffff00"),
+        "style.yellow": Style(color="#000000", bgcolor="#ffff00"),
+        "green": Style(color="#00ff00"),
+        "bold.green": Style(color="#00ff00", bold=True),
+        "cs.green": Style(color="#00ff00", bgcolor="#00ff00"),
+        "style.green": Style(color="#000000", bgcolor="#00ff00"),
+        "cyan": Style(color="#00ffff"),
+        "bold.cyan": Style(color="#00ffff", bold=True),
+        "cs.cyan": Style(color="#00ffff", bgcolor="#00ffff"),
+        "style.cyan": Style(color="#000000", bgcolor="#00ffff"),
+        "light_blue": Style(color="#0088ff"),
+        "bold.light_blue": Style(color="#0088ff", bold=True),
+        "cs.light_blue": Style(color="#0088ff", bgcolor="#0088ff"),
+        "style.light_blue": Style(color="#ffffff", bgcolor="#0088ff"),
+        "blue": Style(color="#0000ff"),
+        "bold.blue": Style(color="#0000ff", bold=True),
+        "cs.blue": Style(color="#0000ff", bgcolor="#0000ff"),
+        "style.blue": Style(color="#ffffff", bgcolor="#0000ff"),
+        "purple": Style(color="#5f00ff"),
+        "bold.purple": Style(color="#5f00ff", bold=True),
+        "cs.purple": Style(color="#5f00ff", bgcolor="#5f00ff"),
+        "style.purple": Style(color="#ffffff", bgcolor="#5f00ff"),
+        "light_purple": Style(color="#af00ff"),
+        "bold.light_purple": Style(color="#af00ff", bold=True),
+        "cs.light_purple": Style(color="#af00ff", bgcolor="#af00ff"),
+        "style.light_purple": Style(color="#ffffff", bgcolor="#af00ff"),
+        "magenta": Style(color="#ff00ff"),
+        "bold.magenta": Style(color="#ff00ff", bold=True),
+        "cs.magenta": Style(color="#ff00ff", bgcolor="#ff00ff"),
+        "style.magenta": Style(color="#000000", bgcolor="#ff00ff"),
+    }
+
+    table2 = Table("Name", "Styling", title="\n\n :star: New Styles :star:", \
+        title_style="bold italic #ff00ff", width=115)
+
+    for style_name, style in new_styles.items():
+        table2.add_row(Text(style_name, style=style), str(style))
+
+    console.print(table2)
+    if html:
+        print(console.export_html(inline_styles=True))

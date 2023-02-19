@@ -406,17 +406,44 @@ class NamedColor:
 
         return f"{r_value:X}{g_value:X}{b_value:X}"
 
-    # @classmethod
-    # def color_name(cls) -> Text:
-    #     """Returns the classes name with each color progressing the named colors."""
-    #     color_range = []
-    #     start = randint(0, 9)
-    #     for i in range(10):
-    #         index = (start + i) % 10
-    #         color_range.append(cls.colors[index])
-    #     repeat = len(range)
-    #     for _ in range(repeat):
-    #         color_range.append(range[x])
+    @staticmethod
+    def colorful_class(on_white: bool = False) -> Text:
+        """Print the word "NamedColor" in a rainbow of colors.
+
+        Args:
+            on_white (`optional[bool]`): Whether to print the text \
+                on a white background. Defaults to False.
+
+        Returns:
+            `Text`: The formatted string.
+        """
+        if on_white:
+            background = " on #ffffff"
+        else:
+            background = ""
+        colored_n= f"[bold #ff00ff{background}]N[/]"
+        colored_a = f"[bold #af00ff{background}]a[/]"
+        colored_m = f"[bold #5f00ff{background}]m[/]"
+        colored_e = f"[bold #0000ff{background}]e[/]"
+        colored_d = f"[bold #0088ff{background}]d[/]"
+        colored_c= f"[bold #00ffff{background}]C[/]"
+        colored_o1 = f"[bold #00ff00{background}]o[/]"
+        colored_l= f"[bold #ffff00{background}]l[/]"
+        colored_o2 = f"[bold #ff8800{background}]o[/]"
+        colored_r = f"[bold #ff0000{background}]r[/]"
+        named_color = Text.assemble(
+            colored_n,
+            colored_a,
+            colored_m,
+            colored_e,
+            colored_d,
+            colored_c,
+            colored_o1,
+            colored_l,
+            colored_o2,
+            colored_r
+        )
+        return named_color
 
 
 def print_color_tables(
@@ -427,16 +454,20 @@ def print_color_tables(
         as_columns (bool, optional): Whether to print the colors as columns. Defaults to False.
         example_console (MaxConsole, optional): The console to print to. Defaults to console.
     """
-    explanation = Text(
-        "NamedColor is a class that allows you to use named colors in your code. \
-            The following colors are the NamedColors that maxcolor makes gradients \
-                from. It also has a few extra methods to help you work with the color."
-    )
-    explanation = explanation.wrap(console=example_console, width=60, justify="left")
+    explanation = Text("NamedColor is a class that allows you to use named ")
+    explanation_parts=[
+    
+        "colors in your code. The following colors are the NamedColors that ",
+        "maxcolor makes gradients from. It also has a few extra methods to ",
+        "help you work with the color."
+    ]
+    for part in explanation_parts:
+        explanation = Text.assemble(explanation, part)
+    explanation = explanation.wrap(console=example_console, width=100, justify="left")
     console.clear()
-    console.print(NewLine(2))
-    console.rule(title=colorful_class(on_white=False), style="bold #ff00ff")
-    console.print(NewLine(2))
+    console.line(2)
+    console.rule(title=f"{colorful_class(on_white=False)}", style="bold #ff00ff")
+    console.line()
     console.print(
         explanation,
         justify="center",

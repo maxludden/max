@@ -3,6 +3,7 @@
 import threading
 from dataclasses import dataclass
 
+from rich import inspect
 from rich.console import (
     Console,
     ConsoleRenderable,
@@ -11,6 +12,7 @@ from rich.console import (
     RenderResult
 )
 from rich.theme import Theme
+from rich.text import Text
 from rich.traceback import install as install_traceback
 
 from max.theme import MaxTheme
@@ -103,6 +105,7 @@ class MaxConsole(Console):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, theme=self.theme, )
         install_traceback(console=self)
+        
 
     @staticmethod
     def colorful_hello():
@@ -116,6 +119,16 @@ if __name__ == "__main__":
     console = MaxConsole()
     console.clear()
     console.line(2)
-    console.print(console.colorful_hello())
-    console.line(2)
-    console.print(console.options)
+    console.print(console.colorful_hello(), justify='center', width=115)
+
+    EXPLANATION=[
+        "\n\nMaxConsole is a custom themed class inheriting from ",
+        "rich.console.Console. It is a global singleton class that can ",
+        "be imported and used anywhere in the project and used as a ",
+        "drop in replacement for rich.console.Console.\n\n"
+    ]
+    EXP = Text.assemble(*EXPLANATION)
+    console.print(EXP, width=115, justify='left')
+
+    inspect(console)
+    
