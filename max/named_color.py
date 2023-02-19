@@ -54,14 +54,24 @@ def colorful_class(on_white: bool = False) -> Text:
     colored_a = f"[bold #af00ff{background}]a[/]"
     colored_m = f"[bold #5f00ff{background}]m[/]"
     colored_e = f"[bold #0000ff{background}]e[/]"
-    colored_d = f"[bold #249df1{background}]d[/]"
+    colored_d = f"[bold #0088ff{background}]d[/]"
     colored_c= f"[bold #00ffff{background}]C[/]"
     colored_o1 = f"[bold #00ff00{background}]o[/]"
     colored_l= f"[bold #ffff00{background}]l[/]"
     colored_o2 = f"[bold #ff8800{background}]o[/]"
     colored_r = f"[bold #ff0000{background}]r[/]"
-    named_color = f"{colored_n}{colored_a}{colored_m}{colored_e}\
-        {colored_d}{colored_c}{colored_o1}{colored_l}{colored_o2}{colored_r}"
+    named_color = Text.assemble(
+        colored_n,
+        colored_a,
+        colored_m,
+        colored_e,
+        colored_d,
+        colored_c,
+        colored_o1,
+        colored_l,
+        colored_o2,
+        colored_r
+    )
     return named_color
 
 
@@ -126,7 +136,7 @@ class NamedColor:
         (0, 255, 255),  # cyan
         (0, 255, 0),  # green
         (255, 255, 0),  # yellow
-        (255, 128, 0),  # orange
+        (255, 136, 0),  # orange
         (255, 0, 0),  # red
     )
 
@@ -264,11 +274,11 @@ class NamedColor:
     def as_formatted_rgb(self) -> Text:
         """Return a formatted colorized string to represent the tuple."""
         r_value, g_value, b_value = tuple(self.as_rgb())
-        left_par = Text.from_markup("[#ffffff]([/]")
-        r_string = Text.from_markup(f"[#000000 on #ff0000]{r_value:>3},[/]")
-        g_string = Text.from_markup(f"[#000000 on #00ff00]{g_value:>3},[/]")
-        b_string = Text.from_markup(f"[#ffffff on #0000ff]{b_value:>3}[/]")
-        end = Text.from_markup("[#ffffff])[/]")
+        left_par = Text.from_markup("[bold #ffffff]([/]")
+        r_string = Text.from_markup(f"[bold #000000 on #ff0000]{r_value:>3},[/]")
+        g_string = Text.from_markup(f"[bold #000000 on #00ff00]{g_value:>3},[/]")
+        b_string = Text.from_markup(f"[bold #ffffff on #0000ff]{b_value:>3}[/]")
+        end = Text.from_markup("[bold #ffffff])[/]")
         return Text.assemble(
             left_par, r_string, g_string, b_string, end, justify="center"
         )
@@ -330,15 +340,23 @@ class NamedColor:
         )
 
         table.add_column(f"[{self.as_style()}]Original Color[/]", justify="center")
-        table.add_column("Index", justify="center")
-        table.add_column("HEX", justify="center")
-        table.add_column("RGB", justify="center")
-        table.add_row(
-            f"[bold {self.as_hex()}]{str(original_input).capitalize()}[/]",
-            f"[bold #ffffff]{index}[/]",
-            f"[bold #ffffff on {self.as_hex()}]{self.as_hex()}[/]",
-            self.as_formatted_rgb(),
-        )
+        table.add_column(f"[{self.as_style()}] Index[/]", justify="center")
+        table.add_column(f"[{self.as_style()}]HEX[/]", justify="center")
+        table.add_column(f"[{self.as_style()}]RGB[/]", justify="center")
+        if index in [1, 2, 3, 4, 9]:
+            table.add_row(
+                f"[bold {self.as_hex()}]{str(original_input).capitalize()}[/]",
+                f"[bold #ffffff]{index:^7}[/]",
+                f"[bold #ffffff on {self.as_hex()}]{self.as_hex()}[/]",
+                self.as_formatted_rgb(),
+            )
+        else:
+            table.add_row(
+                f"[bold {self.as_hex()}]{str(original_input).capitalize()}[/]",
+                f"[bold #ffffff]{index:^7}[/]",
+                f"[bold #000000 on {self.as_hex()}]{self.as_hex():^7}[/]",
+                self.as_formatted_rgb(),
+            )
         return table
 
     def __repr__(self) -> str:
@@ -360,7 +378,7 @@ class NamedColor:
         if self.as_index() in [1, 2, 3, 4, 9]:
             return f"bold #ffffff on {self.as_hex()}"
         else:
-            return f"bold #ffffff on {self.as_hex()}"
+            return f"bold #000000 on {self.as_hex()}"
 
     @classmethod
     def hex_to_rgb(cls, hex_value: str) -> Tuple:

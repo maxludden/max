@@ -1,5 +1,5 @@
 """This module defines a custom progress bar for the max console."""
-
+import threading
 import time
 from random import randint
 from typing import Sequence, Tuple, Optional, Dict
@@ -24,9 +24,9 @@ from rich.syntax import Syntax
 from rich.table import Column, Table
 from rich.text import Text
 
-from max.console import MaxConsole, Console, RenderableType, Singleton
+from max.console import MaxConsole,RenderableType
 
-progress_console = MaxConsole()
+console = MaxConsole()
 
 class MaxProgressColumn(ProgressColumn):
     """A basic wrapper around `rich.table.Column`"""
@@ -40,17 +40,52 @@ class MaxProgressColumn(ProgressColumn):
         """Get a table column, used to build tasks table."""
         return self._table_column or Column()
 
-class MaxProgress(Progress, metaclass=Singleton):
+
+def singleton(cls):
+    """Singleton decorator for MaxProgress."""
+    instance = None
+    lock = threading.Lock()
+
+    def get_instance(*args, **kwargs):
+        nonlocal instance
+        if instance is None:
+            with lock:
+                if instance is None:
+                    instance = cls(*args, **kwargs)
+        return instance
+
+    return get_instance
+
+class MaxProgress(Progress):
     """Generates a progress bar for MaxConsole with additional fields\
-        and color_pallets."""
+        and color_pallets.
+    Args:
+    console (Console, optional): Optional Console instance. Default will \
+        an internal Console instance writing to stdout.
+    auto_refresh (bool, optional): Enable auto refresh. If disabled, \
+        you will need to call refresh().
+    refresh_per_second (Optional[float], optional): Number of times per \
+        second to refresh the progress information or None to use \
+        default (10). Defaults to None. 
+    speed_estimate_period (float, optional): Period (in seconds) used to calculate \
+        the speed estimate. Defaults to 30. 
+    transient: (bool, optional): Clear the progress on exit. Defaults to False. 
+    redirect_stdout: (bool, optional): Enable redirection of stdout, so print \
+        may be used. Defaults to True. 
+    redirect_stderr: (bool, optional): Enable redirection of stderr. Defaults to True. 
+    get_time: (Callable, optional): A callable that gets the current time, or \
+        None to use Console.get_time. Defaults to None.
+    disable (bool, optional): Disable progress display. Defaults to False
+    expand (bool, optional): Expand tasks table to fit width. Defaults to False.    
+    """
 
     columns: Sequence[MaxProgressColumn]
-    console: MaxConsole = MaxConsole() # what line was that typo on?
+    progress_console: MaxConsole = MaxConsole()
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        if not self.console:
-            self.console =  MaxConsole()
+        if not self.progress_console:
+            self.progress_console =  MaxConsole()
         if not self.columns:
             self.columns = self.get_default_columns()
         if self.expand is None:
@@ -108,6 +143,7 @@ class MaxProgress(Progress, metaclass=Singleton):
 
 
 if __name__ == "__main__":  # pragma: no coverage
+    console.clear()
     syntax = Syntax(
         '''def loop_last(values: Iterable[T]) -> Iterable[Tuple[bool, T]]:
     """Iterate and generate a tuple with a flag for last value."""
@@ -143,7 +179,7 @@ if __name__ == "__main__":  # pragma: no coverage
 
     examples = cycle(progress_renderables)
 
-    console = Console(record=True)
+    console = MaxConsole(record=True)
 
     with MaxProgress() as progress:
         task1 = progress.add_task("[red]Downloading", total=1000)
@@ -160,8 +196,13 @@ if __name__ == "__main__":  # pragma: no coverage
                     progress.update(task3, completed=200)
                     progress.update(task3, description="[bold #00ff00]Planning![/]")
                 progress.update(task3, advance=2)
-                if progress.tasks[0].completed is 1000:
+                if progress.tasks[0].completed > 999:
+                    progress.update(task1, description="[dim #00ff00]Downloaded[/]")
                     progress.update(task2, advance=2)
+                if progress.tasks[2].completed > 999:
+                    progress.update(task3, description="[dim #00ff00]Planned![/]")
+                if progress.tasks[1].completed > 999:
+                    progress.update(task2, description="[dim #00ff00]Processed![/]")
 
             time.sleep(0.01)
             if randint(0, 100) < 1:

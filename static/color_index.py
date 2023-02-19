@@ -1,57 +1,58 @@
-"""This module creates a sequence of increasing or decreasing integers \
-    from which to generate a gradient."""
-# max/color_index.copy()
-
+# max/color_index.py
+"""This module defines a the index from which to generate gradient text."""
+import re
 from itertools import cycle
-from os import environ
 from pathlib import Path
-from random import randint, choice
+from random import choice, randint
 from typing import Optional
 
 from loguru import logger as log
+from rich.console import NewLine
 from rich.panel import Panel
 from rich.text import Text
+
+# from snoop import snoop
 
 from max.console import MaxConsole
 from max.progress import MaxProgress
 
 console = MaxConsole()
-console.print("[#00ff00]Max's favorite color is green[/]!")
 progress = MaxProgress(console=console)
+
+
+class InvalidHexColor(ValueError):
+    """Raised when a hex color is invalid."""
+
+
+class InvalidRGBColor(ValueError):
+    """Raised when a RGB color is invalid."""
+
 CWD = Path.cwd()
-LOGS = CWD / "logs"
-LOG = LOGS / "log.log"
-FORMAT = environ.get("LOGURU_FORMAT")
-RICH_SUCCESS_LOG_FORMAT = environ.get("RICH_SUCCESS_LOG_FORMAT")
-RICH_ERROR_LOG_FORMAT = environ.get("RICH_ERROR_LOG_FORMAT")
-ASCENDING = cycle(list(range(10)))
-DESCENDING = cycle(list(range(9, -1, -1)))
-TEST = True
+LOG = CWD / "logs" / "log.log"
+VERBOSE = CWD / "logs" / "verbose.log"
+HEX_RE_STR = r"^\#([0-9a-fA-F]{6})$|^ ([0-9a-fA-F]{6})$"
+HEX_PATTERN = re.compile(HEX_RE_STR, re.MULTILINE)
+TEST = False
 
 log.remove()
-log.add(sink=LOG, level="DEBUG", format=FORMAT, diagnose=True, backtrace=True)
-log.add(
-    sink=lambda msg: console.log(
-        msg, justify="left", style="logging.level.info", highlight=True
-    ),
-    level="INFO",
-    format=RICH_SUCCESS_LOG_FORMAT,
-    diagnose=True,
-    backtrace=True,
+log.configure(
+    handlers=[
+        dict(
+            sink=lambda msg: console.log(
+                msg,
+                sep='|',
+                style='logging.level.success'
+                highlight=True
+            )
+            level="INFO"
+        ),
+        dict(
+            sink=LOG,
+            level="DEBUG"
+        )
+    ]
 )
-log.add(
-    sink=lambda msg: console.log(
-        msg, justify="left", style="logging.level.error", highlight=True
-    ),
-    level="ERROR",
-    format=RICH_ERROR_LOG_FORMAT,
-    diagnose=True,
-    backtrace=True,
-    catch=True,
-)
-console.clear()
-console.line(2)
-log.success("Initialized logging")
+
 
 
 
@@ -66,13 +67,6 @@ class ColorIndex:
         `num_of_index` (int, optional): The number of indexes. Defaults to 3.
         `title` (str, optional): The title of the `ColorIndex` object. Defaults to "ColorIndex".
     """
-
-    start: Optional[int]
-    end: Optional[int]
-    invert: Optional[bool]
-    num_of_index: Optional[int]
-    indexes: list[int]
-    title: Optional[str]
 
     def __init__(
         self,
@@ -165,18 +159,8 @@ class ColorIndex:
         colored_d = f"[bold #ffff00{background}]d[/]"
         colored_e = f"[bold #ff8800{background}]e[/]"
         colored_x = f"[bold #ff0000{background}]x[/]"
-        colored_index = Text.assemble(
-            colored_c,
-            colored_o1,
-            colored_l,
-            colored_o2,
-            colored_r,
-            colored_i,
-            colored_n,
-            colored_d,
-            colored_e,
-            colored_x
-        )
+        colored_index = f"{colored_c}{colored_o1}{colored_l}{colored_o2}{colored_r}\
+            {colored_i}{colored_n}{colored_d}{colored_e}{colored_x}"
         return colored_index
 
     def __len__(self) -> int:
@@ -185,14 +169,14 @@ class ColorIndex:
     def __rich__(self) -> Panel:
         colors = [
             "#ff00ff",
-            "#af00ff",
-            "#5f00ff",
-            "#0000ff",
-            "#0088ff",
+            "#a900ff",
+            "#5e00ff",
+            "#1300ff",
+            "#00aaff",
             "#00ffff",
             "#00ff00",
             "#ffff00",
-            "#ff8800",
+            "#ffa900",
             "#ff0000",
         ]
         if self.title == "Color Index":
@@ -201,51 +185,42 @@ class ColorIndex:
             title = self.title
         index_list = []
         for i in self.indexes:
-            hex_color = colors[i]
-            index = f"[bold {hex_color}]{i}[/]"
+            hex_colors = colors[i]
+            index = f"[bold {hex_colors}]{i}[/]"
             index_list.append(index)
         indexes = "[bold #ffffff],[/] ".join(index_list)
         index_text = f"[bold #ffffff]< [/]{indexes} [bold #ffffff]>[/]"
 
         return Panel(index_text, title=title, border_style="bold #ffffff")
 
-    def demo(self):
-        """Generate a demonstration of the ColorIndex Class."""
+    @classmethod
+    def demo(cls):
+        """Prints a demo of `ColorIndex' to the console."""
+        console = MaxConsole()
         console.clear()
-        console.line(2)
+        console.print(NewLine(2))
         color_index = ColorIndex().colorful_class()
+        text_block1 = f"""[bold #ffffff]{color_index} is a mapping of colors from which to build a gradient to integers [/][bold italic #00ffff]0[/] - [/][bold italic #00ffff]9[/][bold #ffffff]. To create one, you can specify: \n\
+    - A [italic]starting index[/italic]([/bold #ffffff][italic #5e00ff]start[/][bold #ffffff]) 
+    - A [italic]finishing index[/italic]([/bold #ffffff][italic #5e00ff]end[/][bold #ffffff]) 
+    - The [italic]direction[/italic]([/bold #ffffff][italic #5e00ff]invert[/][bold #ffffff]) the index flows 
+    - The length of the index ([/bold #ffffff][italic #5e00ff]num_of_int[/][bold #ffffff]). 
 
-        text_block1 = f"[bold #ffffff]{color_index} is a mapping of colors \
-from which to build a gradient to integers [/][bold italic #00ffff]0[/]\
-[bold #ffffff] - [/][bold italic #00ffff]9[/][bold #ffffff]. To create one \
-you can specify a [italic]starting index[/italic]([/bold #ffffff]\
-[italic #5f00ff]start[/][bold #ffffff]), a [italic]finishing index[/italic]\
-([/bold #ffffff][italic #5f00ff]end[/][bold #ffffff]), which [italic]\
-direction[/italic] the index flows ([/bold #ffffff][italic #5f00ff]\
-invert[/][bold #ffffff]), or the length of the index ([/bold #ffffff]\
-[italic #5f00ff]num_of_int[/][bold #ffffff]). However you don't need all \
-of these arguments to make a {color_index}. To generate \
-a random {color_index}, no arguments are required.[/bold #ffffff]\n\n{color_index}\
-[bold #ff00ff] 1[/][bold #ffffff] is an example of one such random {color_index}:\n"
+However, you don't need all of these arguments to make a {color_index}. To generate a random {color_index}, no arguments are required.\n\n{color_index}[bold #ff00ff] 1[/][bold #ffffff] is an example of one such random {color_index}:\n"""
+
         console.print(text_block1, justify="center")
 
         color_index1 = ColorIndex(title=f"{color_index} [bold #ff00ff]1[/]")
         color_index = color_index1.colorful_class()
-        # console.print(color_index)
+        console.print(color_index)
         console.print(color_index1, justify="center")
-        console.line(2)
+        console.print(NewLine(2))
 
-        text_block2 = f"{color_index} [bold #ff00ff]2[/bold #ff00ff]\
-[bold #ffffff] was created with a [italic]starting value[/italic] of [/bold #ffffff]\
-[bold italic #00ffff]0[/bold italic #00ffff]\
-[bold #ffffff], and a [italic]finishing value[/italic] of [/bold #ffffff]\
-[bold italic #00ffff]9[/bold italic #00ffff]\
-[bold #ffffff], which spans the entire range of possible indexes \
-using {color_index}.\n[/bold #ffffff]"
+        text_block2 = f"""{color_index} [bold #ff00ff]2[/bold #ff00ff][bold #ffffff] was created with a [italic]starting value[/italic] of [/bold #ffffff][bold italic #00ffff]0[/bold italic #00ffff][bold #ffffff], and a [italic]finishing value[/italic] of [/bold #ffffff][bold italic #00ffff]9[/bold italic #00ffff][bold #ffffff], which spans the entire range of possible indexes using {color_index}.\n[/bold #ffffff]"""
         console.print(text_block2, justify="center")
         color_index2 = ColorIndex(0, 9, title=f"{color_index} [bold #ff00ff]2[/]")
         console.print(color_index2, justify="center")
-        console.line(2)
+        console.print(NewLine(2))
 
         text_block3 = f"{color_index} [bold #ff00ff]3[/bold #ff00ff]\
 [bold #ffffff] demonstrates both an [italic]inverted[/italic] gradient \
@@ -256,32 +231,14 @@ return from the opposite end of the spectrum.[/bold #fffff]\n"
         color_index3 = ColorIndex(2, 8, True, title=f"{color_index} [bold #ff00ff]3[/]")
         console.print(color_index3, justify="center")
 
-        text_block4 = f"\n[bold #ffffff]There is one final argument that has yet to be mentioned \
-though it has been demonstrated extensively. That is the [/][bold italic #5f00ff]title[/]\
-[bold #ffffff] which is the name of the {color_index} displayed in the repr and rich dunder \
-    methods.[/]"
+        text_block4 = f"\n[bold #ffffff]There is one final argument that \
+            has yet to be mentioned though it has been demonstrated extensively. \
+            That is the [/][bold italic #5e00ff]title[/] [bold #ffffff] which \
+            is the name of the {color_index} displayed in the repr and \
+    rich dunder methods.[/]"
 
         console.print(text_block4, justify="center")
 
 
 if __name__ == "__main__":
-    ColorIndex().demo()
-
-
-
-# if __name__ == "__main__":
-#     seq1 = ColorIndex(1, 3, name="ColorIndex 1")
-#     console.log(seq1, justify='center')
-#     console.print(f"{seq1.get_sequence()}\n", justify='center')
-#     seq2 = ColorIndex(1,9, name="ColorIndex 2")
-#     console.log(seq2)
-#     console.print(seq2.get_sequence(), justify='center')
-#     seq3 = ColorIndex(name="ColorIndex 3")
-#     console.log(seq3)
-#     console.log(seq3.get_sequence())
-#     seq4 = ColorIndex(6,3,True, name="ColorIndex 4")
-#     console.log(seq4)
-#     console.log(seq4.get_sequence())
-#     seq5 = ColorIndex(invert=True, name="ColorIndex 5")
-#     console.log(seq5)
-#     console.log(seq5.get_sequence())
+    ColorIndex.demo()
