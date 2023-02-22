@@ -207,4 +207,5 @@ if __name__ == "__main__":  # pragma: no coverage
             time.sleep(0.01)
             if randint(0, 100) < 1:
                 progress.log(next(examples))
+    console.line(3)
                     

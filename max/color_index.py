@@ -256,7 +256,7 @@ return from the opposite end of the spectrum.[/bold #fffff]\n"
         text_block4 = f"\n[bold #ffffff]There is one final argument that has yet to be mentioned \
 though it has been demonstrated \nextensively. That is the [/][bold italic #5f00ff]title[/]\
 [bold #ffffff] which is the name of the {color_index} displayed in the repr \
-and rich \ndunder methods.[/]"
+and rich \ndunder methods.[/]\n\n\n"
 
         console.print(text_block4, justify="center", width=115)
 
