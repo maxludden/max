@@ -105,7 +105,27 @@ class MaxConsole(Console):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, theme=self.theme, )
         install_traceback(console=self)
-        
+
+    @staticmethod
+    def get_options() -> dict:
+        """Retrieve the console options from MaxConsole and return it as a dict."""
+        options = MaxConsole().options
+        options.dict = {
+            "size": options.size,
+            "legacy_windows": options.legacy_windows,
+            "min_width": options.min_width,
+            "max_width": options.max_width,
+            "is_terminal": options.is_terminal,
+            "encoding": options.encoding,
+            "max_height": options.max_height,
+            "justify": options.justify,
+            "overflow": options.overflow,
+            "no_wrap": options.no_wrap,
+            "highlight": options.highlight,
+            "markup": options.markup,
+            "height": options.height
+        }
+        return ConsoleOptions(**options.dict)
 
     @staticmethod
     def colorful_hello():
@@ -129,6 +149,4 @@ if __name__ == "__main__":
     ]
     EXP = Text.assemble(*EXPLANATION)
     console.print(EXP, width=115, justify='left')
-
-    inspect(console)
     

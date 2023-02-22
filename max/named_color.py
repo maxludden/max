@@ -456,7 +456,7 @@ def print_color_tables(
     """
     explanation = Text("NamedColor is a class that allows you to use named ")
     explanation_parts=[
-    
+
         "colors in your code. The following colors are the NamedColors that ",
         "maxcolor makes gradients from. It also has a few extra methods to ",
         "help you work with the color."

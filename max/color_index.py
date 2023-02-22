@@ -5,8 +5,9 @@
 from itertools import cycle
 from os import environ
 from pathlib import Path
-from random import randint, choice
+from random import choice, randint
 from typing import Optional
+from collections.abc import Sequence
 
 from loguru import logger as log
 from rich.panel import Panel
@@ -28,34 +29,8 @@ ASCENDING = cycle(list(range(10)))
 DESCENDING = cycle(list(range(9, -1, -1)))
 TEST = True
 
-log.remove()
-log.add(sink=LOG, level="DEBUG", format=FORMAT, diagnose=True, backtrace=True)
-log.add(
-    sink=lambda msg: console.log(
-        msg, justify="left", style="logging.level.info", highlight=True
-    ),
-    level="INFO",
-    format=RICH_SUCCESS_LOG_FORMAT,
-    diagnose=True,
-    backtrace=True,
-)
-log.add(
-    sink=lambda msg: console.log(
-        msg, justify="left", style="logging.level.error", highlight=True
-    ),
-    level="ERROR",
-    format=RICH_ERROR_LOG_FORMAT,
-    diagnose=True,
-    backtrace=True,
-    catch=True,
-)
-console.clear()
-console.line(2)
-log.success("Initialized logging")
 
-
-
-class ColorIndex:
+class ColorIndex(Sequence):
     """
     A class to generate a list of indexes for a color wheel.
 
@@ -73,6 +48,7 @@ class ColorIndex:
     num_of_index: Optional[int]
     indexes: list[int]
     title: Optional[str]
+    _iter_index: int
 
     def __init__(
         self,
@@ -145,6 +121,26 @@ class ColorIndex:
         self.indexes = cycle_list[0 : end_index + 1]
         log.debug(f"Indexes: {self.indexes}")
 
+    def __getitem__(self, index):
+        if isinstance(index, slice):
+            return [self[i] for i in range(*index.indices(len(self)))]
+        elif index < 0:
+            index = len(self) + index
+        if not 0 <= index < len(self):
+            raise IndexError("ColorIndex index out of range")
+        return self.indexes[index]
+
+    def __iter__(self):
+        self._iter_index = 0
+        return self
+
+    def __next__(self):
+        if self._iter_index >= len(self.indexes):
+            raise StopIteration
+        value = self.indexes[self._iter_index]
+        self._iter_index += 1
+        return value
+
     def colorful_class(self, on_white=False) -> Text:
         """Prints `ColorIndex' in a colorful way, manually.
 
@@ -175,7 +171,7 @@ class ColorIndex:
             colored_n,
             colored_d,
             colored_e,
-            colored_x
+            colored_x,
         )
         return colored_index
 
@@ -209,7 +205,8 @@ class ColorIndex:
 
         return Panel(index_text, title=title, border_style="bold #ffffff")
 
-    def demo(self):
+    @staticmethod
+    def demo():
         """Generate a demonstration of the ColorIndex Class."""
         console.clear()
         console.line(2)
@@ -258,29 +255,11 @@ return from the opposite end of the spectrum.[/bold #fffff]\n"
 
         text_block4 = f"\n[bold #ffffff]There is one final argument that has yet to be mentioned \
 though it has been demonstrated \nextensively. That is the [/][bold italic #5f00ff]title[/]\
-[bold #ffffff] which is the name of the {color_index} displayed in the repr and rich \ndunder methods.[/]"
+[bold #ffffff] which is the name of the {color_index} displayed in the repr \
+and rich \ndunder methods.[/]"
 
         console.print(text_block4, justify="center", width=115)
 
 
 if __name__ == "__main__":
-    ColorIndex().demo()
-
-
-
-# if __name__ == "__main__":
-#     seq1 = ColorIndex(1, 3, name="ColorIndex 1")
-#     console.log(seq1, justify='center')
-#     console.print(f"{seq1.get_sequence()}\n", justify='center')
-#     seq2 = ColorIndex(1,9, name="ColorIndex 2")
-#     console.log(seq2)
-#     console.print(seq2.get_sequence(), justify='center')
-#     seq3 = ColorIndex(name="ColorIndex 3")
-#     console.log(seq3)
-#     console.log(seq3.get_sequence())
-#     seq4 = ColorIndex(6,3,True, name="ColorIndex 4")
-#     console.log(seq4)
-#     console.log(seq4.get_sequence())
-#     seq5 = ColorIndex(invert=True, name="ColorIndex 5")
-#     console.log(seq5)
-#     console.log(seq5.get_sequence())
+    ColorIndex.demo()
