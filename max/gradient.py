@@ -7,22 +7,17 @@ from os import environ
 from typing import Optional, Tuple
 
 from lorem_text import lorem
-from rich.console import (
-    Console,
-    ConsoleOptions,
-    JustifyMethod,
-    RenderResult
-)
+from rich.console import Console, ConsoleOptions, JustifyMethod, RenderResult
 from rich.control import _CONTROL_STRIP_TRANSLATE, strip_control_codes
 from rich.segment import Segment
 from rich.text import Text
 from rich.repr import Result
 from rich import inspect
 from snoop import snoop
-from cheap_repr import normal_repr
+from cheap_repr import register_repr, normal_repr
 
 from max.color_index import ColorIndex
-from max.console import  MaxConsole
+from max.console import MaxConsole
 from max.log import log
 from max.named_color import ColorParsingError, NamedColor
 
@@ -40,42 +35,48 @@ class Gradient:
     - Light-purple
     - Magenta
     """
+
     start_index: int
     end_index: int
     indexes: ColorIndex
     colors: list[NamedColor]
     console: MaxConsole
-    _start: Optional[NamedColor|str|int]
-    _end: Optional[NamedColor|str|int]
+    _start: Optional[NamedColor | str | int]
+    _end: Optional[NamedColor | str | int]
     _invert: Optional[bool]
     _title: Optional[str]
 
     def __init__(
         self,
-        text: Optional[str|Text] = None,
-        start: Optional[NamedColor|str|int] = None,
-        end: Optional[NamedColor|str|int] = None,
+        text: Optional[str | Text] = None,
+        start: Optional[NamedColor | str | int] = None,
+        end: Optional[NamedColor | str | int] = None,
         justify: Optional[JustifyMethod] = None,
         invert: Optional[bool] = False,
         num_of_colors: Optional[int] = 2,
         _console: MaxConsole = MaxConsole(),
-        title: Optional[str] = "Gradient") -> None:
+        title: Optional[str] = "Gradient",
+    ) -> None:
         """Initialize the Gradient object.
 
         Args:
+            text (Optional[str|Text], optional): The text to apply the \
+                gradient to. Defaults to None ("")
             start (Optional[NamedColor|str|int], optional): The starting \
                 color. Defaults to None.
             end (Optional[NamedColor|str|int], optional): The ending \
                 color. Defaults to None.
+            justify (Optional[JustifyMethod], optional): The justification \
+                of the gradient text. Defaults to None.
             invert (Optional[bool], optional): If True, the colors will \
                 be inverted. Defaults to False.
             num_of_colors (Optional[int], optional): The number of \
-                colors. Defaults to 2.
+                colors in the gradientH. Defaults to 2.
             title (Optional[str], optional): The title of the `Gradient` \
                 object. Defaults to "Gradient".
         """
 
-        #initialize attributes
+        # initialize attributes
         self.justify = justify
         self._invert = invert
         self.num_of_colors = num_of_colors
@@ -87,8 +88,9 @@ class Gradient:
         self.colors = []
 
         # Validate text
-        assert isinstance(text, (str, Text)), \
-            f"Text must be a string or a rich.text.Text object, not {type(text)}"
+        assert isinstance(
+            text, (str, Text)
+        ), f"Text must be a string or a rich.text.Text object, not {type(text)}"
         sanitized_text = strip_control_codes(text)
         self._text = [sanitized_text]
 
@@ -100,38 +102,59 @@ class Gradient:
 
         # Parse the colors and generate the indexes
         if _start is None and _end is None:
-            self.indexes = ColorIndex(None, None, self._invert, \
-                num_of_colors + 1, self._title)
+            self.indexes = ColorIndex(
+                start=None,
+                end=None,
+                invert=self._invert,
+                num_of_index=num_of_colors + 1,
+                title=self._title
+            )
         elif _end is None:
-            self.indexes = ColorIndex(_start.as_index(), None, \
-                self._invert, num_of_colors + 1, self._title)
+            self.indexes = ColorIndex(
+                start=_start.as_index(),
+                end=None,
+                invert=self._invert,
+                num_of_index=num_of_colors + 1,
+                title=self._title
+            )
         elif _start is None:
-            self.indexes = ColorIndex(None, _end.as_index(), \
-                self._invert, num_of_colors + 1, self._title)
+            self.indexes = ColorIndex(
+                start=None,
+                end=_end.as_index(),
+                invert=self._invert,
+                num_of_index=num_of_colors + 1,
+                title=self._title
+            )
         else:
-            self.indexes = ColorIndex(_start.as_index(), _end.as_index(), \
-                self._invert, num_of_colors + 1, self._title)
+            self.indexes = ColorIndex(
+                start=_start.as_index(),
+                end=_end.as_index(),
+                invert=self._invert,
+                num_of_index=num_of_colors + 1,
+                title=self._title,
+            )
         # log.success(f"Gradient indexes: {self.indexes}")
 
         for index in self.indexes:
             self.colors.append(NamedColor(index))
         # End of __init__
-    @normal_repr
+
     def __repr__(self) -> str:
         return str(self.gradient_colors)
 
     def gradient_colors(self) -> Text:
         """Print out a colored Text object with the gradient colors."""
-        ending = Text('>', style="bold.white")
-        comma = Text(', ', style="bold.white")
+        ending = Text(">", style="bold.white")
+        comma = Text(", ", style="bold.white")
         colors = Text("Gradient<", style="bold.white")
-        length = len (self.colors)
+        length = len(self.colors)
         for repr_index, color in enumerate(self.colors):
-            color_name = str(color.value).capitalize()
+            named_color = NamedColor(color).value()
+            color_name = str(color).capitalize()
             color_style = f"bold.{color.value}"
             color_text = Text(color_name, style=color_style)
             colors = colors.assemble(colors, color_text)
-            if repr_index < length -1:
+            if repr_index < length - 1:
                 colors = colors.assemble(colors, comma)
             else:
                 colors = colors.assemble(colors, ending)
@@ -142,9 +165,8 @@ class Gradient:
         return "".join(self._text)
 
     def validate_color(
-        self,
-        color: NamedColor|str|int,
-        verbose: Optional[bool] = False) -> NamedColor:
+        self, color: NamedColor | str | int, verbose: Optional[bool] = False
+    ) -> NamedColor:
         """Parse an user entered color.
         
         Args:
@@ -173,19 +195,21 @@ class Gradient:
         return valid
 
     @classmethod
-    def parse_color(cls, color: NamedColor|str|int) -> NamedColor:
+    def parse_color(cls, color: NamedColor | str | int) -> NamedColor:
         """Parse an user entered color.
-        
+
         Args:
             color (NamedColor|str|int): The color to parse.
-            
+
         Returns:
             NamedColor: The parsed color.
         """
         try:
             return NamedColor(color)
         except ColorParsingError as cpe:
-            raise ColorParsingError(f'Could not parse color {color}, error: {cpe}') from cpe
+            raise ColorParsingError(
+                f"Could not parse color {color}, error: {cpe}"
+            ) from cpe
 
     # @snoop
     def __rich__(self) -> RenderResult:
@@ -206,52 +230,27 @@ class Gradient:
         # console.log(f"Gradient Size: {gradient_size}\n\n")
         gradient_text = Text()
 
-        substrings = self.split_text(input_text, num_of_colors-1)
+        substrings = self.split_text(input_text, num_of_colors - 1)
         # console.log(f"Substrings: {substrings}")
 
         for x, substring in enumerate(substrings):
-            if x < num_of_colors -1:
+            if x < num_of_colors - 1:
                 color1 = self.colors[x].as_rgb()
-                color2 = self.colors[x+1].as_rgb()
-                substring = self.blend_text(substring, color1, color2)
-            gradient_text = Text.assemble(gradient_text, substring, justify=self.justify)
+                color2 = self.colors[x + 1].as_rgb()
+                substring = self.simple_gradient(substring, color1, color2)
+            gradient_text = Text.assemble(
+                gradient_text, substring, justify=self.justify
+            )
         return gradient_text
-
-        # for x, substring in enumerate(substrings):
-        #     if x < num_of_colors - 1:
-        #         # Generate the colors as rgb tuples
-        #         color1 = self.colors[x]
-        #         console.log(f"Color1: [{color1.as_style()}]{color1}[/]")
-        #         red1, green1, blue1 = color1.as_rgb()
-        #         color2 = self.colors[x + 1]
-        #         console.log(f"Color2: [{color2.as_style()}]{color2}[/]")
-        #         red2, green2, blue2 = color2.as_rgb()
-
-        #         # Calculate the deltas
-        #         delta_red = red2 - red1
-        #         delta_green = green2 - green1
-        #         delta_blue = blue2 - blue1
-        #     log.info(substring)
-
-        #     for character in range(gradient_size):
-        #         blend = x / gradient_size
-        #         color = f"#{int(red1 + delta_red * blend):02X}" # Hexadecimal red
-        #         color = f"{color}{int(green1 + delta_green * blend):02X}" # Hex green
-        #         color = f"{color}{int(blue1 + delta_blue * blend):02X}" # Hex blue
-        #         substring.stylize(color, character, character +  1)
-
-        #     gradient_text = gradient_text.assemble(gradient_text, substring, justify=self.justify)
-        #     # return gradient_text
-
 
     @staticmethod
     def split_text(text: str, num: int) -> list[Text]:
         """Split a text into equal parts.
-        
+
         Args:
             text (str): The text to split.
             num (int): The number of parts to split the text into.
-            
+
         Returns:
             list[str]: The split text.
         """
@@ -264,17 +263,26 @@ class Gradient:
             if index == 0:
                 substring = str(text[begin:end])
             else:
-                substring = str(text[begin+1:end+1])
+                substring = str(text[begin + 1 : end + 1])
             substring = Text(substring)
             substrings.append(substring)
         return substrings
 
     @staticmethod
-    def blend_text(
-        message: str,
-        color1: Tuple[int, int, int],
-        color2: Tuple[int, int, int]) -> Text:
-        """Blend text from one color to another."""
+    def simple_gradient(
+        message: str, color1: Tuple[int, int, int], color2: Tuple[int, int, int]
+    ) -> Text:
+        """Blend text from one color to another. This function was found in rich-cli \
+code and repurposed to make Gradient possible.
+
+        Args:
+            message (str): The text to apply the gradient to
+            color1 (Tuple[int, int, int]): The first color of the gradient
+            color2 (Tuple[int, int, int]): The second color of the gradient
+        
+        Returns:
+            Text: The gradient text
+"""
         console = MaxConsole()
         text = Text(str(message))
         r1, g1, b1 = color1
@@ -286,25 +294,25 @@ class Gradient:
         for index in range(size):
             blend = index / size
             color = f"#{int(r1 + dr * blend):02X}"
-            color=f"{color}{int(g1 + dg * blend):02X}"
-            color=f"{color}{int(b1 + db * blend):02X}"
+            color = f"{color}{int(g1 + dg * blend):02X}"
+            color = f"{color}{int(b1 + db * blend):02X}"
             text.stylize(color, index, index + 1)
-        # console.log(text)
+
         return text
-
-
+register_repr(Gradient)(normal_repr)
 
 if __name__ == "__main__":
     demo_console = MaxConsole(width=115)
     TEXT1 = lorem.paragraph()
-    gradient1 = Gradient(TEXT1, 'left')
-    demo_console.rule("Gradient1", style='bold.magenta')
-    demo_console.print(gradient1, justify='center')
+    gradient1 = Gradient(TEXT1, "left")
+    register_repr(Gradient)(normal_repr)
+    demo_console.rule("Gradient1", style="bold.magenta")
+    demo_console.print(gradient1, justify="center")
     demo_console.line(2)
 
-    demo_console.rule("Gradient2", style='bold.magenta')
+    demo_console.rule("Gradient2", style="bold.magenta")
     TEXT2 = lorem.paragraph()
-    demo_console.print(Gradient(TEXT2, 'center'), justify='center')
+    demo_console.print(Gradient(TEXT2, "center"), justify="center")
 
-    demo_console.rule("Gradient3", style='bold.magenta')
-    demo_console.print(Gradient(TEXT2, 'magenta', 'red', 'right'), justify='center')
+    demo_console.rule("Gradient3", style="bold.magenta")
+    demo_console.print(Gradient(TEXT2, "magenta", "red", "right"), justify="center")

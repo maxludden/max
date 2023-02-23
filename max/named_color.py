@@ -1,18 +1,21 @@
 """Description: A class to represent a named color."""
+import sys
 import re
 from functools import lru_cache
 from pathlib import Path
-
 from time import sleep
-from typing import Any, Set, Tuple
+from typing import Any, Tuple
 
+from cheap_repr import normal_repr, register_repr
 from console import MaxConsole
+from rich import inspect
 from rich.box import ROUNDED
 from rich.columns import Columns
 from rich.console import NewLine
 from rich.prompt import Confirm
 from rich.table import Table
 from rich.text import Text
+# from snoop import snoop
 
 
 class ColorParsingError(ValueError):
@@ -50,14 +53,14 @@ def colorful_class(on_white: bool = False) -> Text:
         background = " on #ffffff"
     else:
         background = ""
-    colored_n= f"[bold #ff00ff{background}]N[/]"
+    colored_n = f"[bold #ff00ff{background}]N[/]"
     colored_a = f"[bold #af00ff{background}]a[/]"
     colored_m = f"[bold #5f00ff{background}]m[/]"
     colored_e = f"[bold #0000ff{background}]e[/]"
     colored_d = f"[bold #0088ff{background}]d[/]"
-    colored_c= f"[bold #00ffff{background}]C[/]"
+    colored_c = f"[bold #00ffff{background}]C[/]"
     colored_o1 = f"[bold #00ff00{background}]o[/]"
-    colored_l= f"[bold #ffff00{background}]l[/]"
+    colored_l = f"[bold #ffff00{background}]l[/]"
     colored_o2 = f"[bold #ff8800{background}]o[/]"
     colored_r = f"[bold #ff0000{background}]r[/]"
     named_color = Text.assemble(
@@ -70,7 +73,7 @@ def colorful_class(on_white: bool = False) -> Text:
         colored_o1,
         colored_l,
         colored_o2,
-        colored_r
+        colored_r,
     )
     return named_color
 
@@ -93,17 +96,16 @@ def format_rgb(rgb: Tuple[int, int, int]) -> Text:
 # ============================================================================ #
 
 
-lru_cache(maxsize=10)
+# lru_cache(maxsize=10)
 
 
 class NamedColor:
     """Ten colors that span the spectrum to create gradients from."""
 
-    value: str
+    _value: str
     _original: Any
-
-    indexes: Set[int] = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-    colors: Set[str] = (
+    indexes: Tuple[int, ...] = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    colors: Tuple[str, ...] = (
         "magenta",
         "light_purple",
         "purple",
@@ -115,7 +117,7 @@ class NamedColor:
         "orange",
         "red",
     )
-    hex_colors: Set[str] = (
+    hex_colors: Tuple[str, ...] = (
         "#ff00ff",
         "#af00ff",
         "#5f00ff",
@@ -127,7 +129,7 @@ class NamedColor:
         "#ff8800",
         "#ff0000",
     )
-    rgb_tuples: Set[Tuple[int, int, int]] = (
+    rgb_tuples: Tuple[Tuple[int, int, int], ...] = (
         (255, 0, 255),  # magenta
         (175, 0, 255),  # light_purple
         (95, 0, 255),  # purple
@@ -140,6 +142,60 @@ class NamedColor:
         (255, 0, 0),  # red
     )
 
+    # @snoop(watch_explode=("self", "color_input"))
+    def __init__(self, color_input: Any) -> None:
+        # Parse NamedColor from inputs
+        if isinstance(color_input, str):
+            if color_input in self.colors:
+                self.value = color_input
+                self._original = color_input
+
+            # HEX Colors
+            elif HEX_PATTERN.match(color_input):
+                try:
+                    index = self.hex_colors.index(color_input)
+                    self.value = self.colors[index]
+                    self._original = color_input
+                except InvalidHexColor as ihc:
+                    raise InvalidHexColor("Unable to parse hex color", ihc) from ihc
+        # RGB Tuple
+        elif isinstance(color_input, tuple):
+            try:
+                index = self.rgb_tuples.index(color_input)
+                self.value = self.colors[index]
+                self._original = color_input
+            except InvalidRGBColor as irc:
+                raise InvalidRGBColor("Unable to parse RGB color", irc) from irc
+
+        # Index
+        elif isinstance(color_input, int):
+            if color_input in list(range(0, 10)):
+                self.value = self.colors[color_input]
+                self._original = color_input
+            else:
+                raise ValueError(
+                    f"Color Index must be between zero and nine. Input: {color_input}"
+                )
+
+        # NamedColor
+        elif isinstance(color_input, NamedColor):
+            self.value(color_input.value())
+            self._original = color_input._original
+        else:
+            raise ColorParsingError(
+                "invalid_named_color", f"{color_input} is not a named color."
+            )
+
+    def __str__(self) -> str:
+        return self._value
+
+    def __repr__(self) -> str:
+        return f"<NamedColor: {self.value}>"
+
+    def __rich_repr__(self) -> str:
+        nc_color = colorful_class()
+        return f"{nc_color}: [bold {self.as_hex()}]{str(self.value).capitalize()}[/]"
+
     @classmethod
     def get_all_colors(cls) -> set[dict[str, int | str | tuple]]:
         """Return a set of:
@@ -149,18 +205,28 @@ class NamedColor:
         - rgb values('tuple[int, int, int]')"""
         return list(zip((cls.colors, cls.indexes, cls.hex_colors, cls.rgb_tuples)))
 
-    # all_colors = (
-    #     {"color": "magenta", "index": 0, "hex": "#ff00ff", "rgb": (255, 0, 255)},
-    #     {"color": "light_purple", "index": 1, "hex": "#af00ff", "rgb": (175, 0, 255)},
-    #     {"color": "purple", "index": 2, "hex": "#5f00ff", "rgb": (5, 0, 255)},
-    #     {"color": "blue", "index": 3, "hex": "#0000ff", "rgb": (0, 0, 255)},
-    #     {"color": "light_blue", "index": 4, "hex": "#0088ff", "rgb": (0, 136, 255)},
-    #     {"color": "cyan", "index": 5, "hex": "#00ffff", "rgb": (0, 255, 255)},
-    #     {"color": "green", "index": 6, "hex": "#00ff00", "rgb": (0, 255, 0)},
-    #     {"color": "yellow", "index": 7, "hex": "#ffff00", "rgb": (255, 255, 0)},
-    #     {"color": "orange", "index": 8, "hex": "#ff8800", "rgb": (255, 128, 0)},
-    #     {"color": "red", "index": 9, "hex": "#ff0000", "rgb": (255, 0, 0)},
-    # )
+    @property
+    def value(self):
+        """The `name` value of a color. Valid values are:
+        - 'magenta',
+        - 'light_purple',
+        - 'purple,
+        - 'blue',
+        - 'light_blue',
+        - 'cyan',
+        - 'green',
+        - 'yellow',
+        - 'orange',
+        - 'red'"""
+        inspect(self)
+        return self.value()
+
+    @value.setter
+    def value(self, value: Any) -> None:
+        """The setter method for setting a NamedColor's value property."""
+        if not value in self.colors:
+            raise ColorParsingError(f"Invalid color value: {value}")
+        self._value = value
 
     def named_color_table(self) -> Table:
         """Generate a table to display the named colors."""
@@ -196,7 +262,8 @@ class NamedColor:
                 )
 
     @lru_cache(maxsize=10)
-    def __int__(self) -> int:
+    def as_index(self) -> int:
+        """Retrieve the index of a color given its name."""
         match self.value:
             case "magenta":
                 return 0
@@ -224,7 +291,7 @@ class NamedColor:
     @lru_cache(maxsize=10)
     def as_hex(self) -> str:
         """Returns the Hex string of the NamedColor."""
-        match self.value:
+        match self._value:
             case "magenta":
                 return "#ff00ff"
             case "light_purple":
@@ -249,7 +316,7 @@ class NamedColor:
     @lru_cache(maxsize=10)
     def as_rgb(self) -> Tuple[int, int, int]:
         """Returns the RGB Tuple of the Named Color."""
-        match self.value:
+        match self._value:
             case "magenta":
                 return (255, 0, 255)
             case "light_purple":
@@ -283,55 +350,14 @@ class NamedColor:
             left_par, r_string, g_string, b_string, end, justify="center"
         )
 
-    def __init__(self, value: Any) -> None:
-        # String of color in `.colors`
-        if isinstance(value, str):
-            if value in self.colors:
-                self.value = value
-                self._original = value
-
-            # HEX Colors
-            elif HEX_PATTERN.match(value):
-                try:
-                    index = self.hex_colors.index(value)
-                    self.value = self.colors[index]
-                    self._original = value
-                except InvalidHexColor as ihc:
-                    raise InvalidHexColor('Unable to parse hex color', ihc) from ihc
-        # RGB Tuple
-        elif isinstance(value, tuple):
-            try:
-                index = self.rgb_tuples.index(value)
-                self.value = self.colors[index]
-                self._original = value
-            except InvalidRGBColor as irc:
-                raise InvalidRGBColor("Unable to parse RGB color", irc) from irc
-
-        # Index
-        elif isinstance(value, int):
-            if value in list(range(0, 10)):
-                self.value = self.colors[value]
-                self._original = value
-            else:
-                raise ValueError(
-                    f"Color Index must be between zero and nine. Input: {value}"
-                )
-
-        # NamedColor
-        elif isinstance(value, NamedColor):
-            self.value = value.value
-            self._original = value._original
-        else:
-            raise ColorParsingError(
-                "invalid_named_color", f"{value} is not a named color."
-            )
-
     def __rich__(self):
-        index = int(self)
+        """Return whatever input was given to instantiate the\
+            NamedColor object via rich's console protocol."""
+        index = self.as_index()
         original_input = str(self._original)
 
         table = Table(
-            title=f"{colorful_class()}[bold {self.as_hex()}]: {str(self.value).capitalize()}[/]",
+            title=f"{colorful_class()}[bold {self.as_hex()}]: {str(self._value).capitalize()}[/]",
             box=ROUNDED,
             expand=True,
             header_style=f"bold #ffffff on {self.as_hex()}",
@@ -359,25 +385,12 @@ class NamedColor:
             )
         return table
 
-    def __repr__(self) -> str:
-        return f"<NamedColor: {self.value}>"
-
-    def __rich_repr__(self) -> str:
-        nc_color = colorful_class()
-        return f"{nc_color}: [bold {self.as_hex()}]{str(self.value).capitalize()}[/]"
-
-    def __str__(self) -> str:
-        return self.value
-
-    def as_index(self) -> int:
-        """Returns the index of the NamedColor"""
-        return int(self)
 
     def as_style(self) -> str:
         """Returns the Style string of the NamedColor"""
         if self.as_index() in [1, 2, 3, 4, 9]:
             return f"bold #ffffff on {self.as_hex()}"
-        else:
+        elif self.as_index() in [0,5,6,7,8]:
             return f"bold #000000 on {self.as_hex()}"
 
     @classmethod
@@ -421,14 +434,14 @@ class NamedColor:
             background = " on #ffffff"
         else:
             background = ""
-        colored_n= f"[bold #ff00ff{background}]N[/]"
+        colored_n = f"[bold #ff00ff{background}]N[/]"
         colored_a = f"[bold #af00ff{background}]a[/]"
         colored_m = f"[bold #5f00ff{background}]m[/]"
         colored_e = f"[bold #0000ff{background}]e[/]"
         colored_d = f"[bold #0088ff{background}]d[/]"
-        colored_c= f"[bold #00ffff{background}]C[/]"
+        colored_c = f"[bold #00ffff{background}]C[/]"
         colored_o1 = f"[bold #00ff00{background}]o[/]"
-        colored_l= f"[bold #ffff00{background}]l[/]"
+        colored_l = f"[bold #ffff00{background}]l[/]"
         colored_o2 = f"[bold #ff8800{background}]o[/]"
         colored_r = f"[bold #ff0000{background}]r[/]"
         named_color = Text.assemble(
@@ -441,25 +454,28 @@ class NamedColor:
             colored_o1,
             colored_l,
             colored_o2,
-            colored_r
+            colored_r,
         )
         return named_color
 
 
+register_repr(NamedColor)(normal_repr)
+
+
 def print_color_tables(
-    as_columns: bool = False, example_console: MaxConsole = console) -> None:
+    as_columns: bool = False, example_console: MaxConsole = console
+) -> None:
     """A demo of the NamedColor class.
-    
+
     Args:
         as_columns (bool, optional): Whether to print the colors as columns. Defaults to False.
         example_console (MaxConsole, optional): The console to print to. Defaults to console.
     """
     explanation = Text("NamedColor is a class that allows you to use named ")
-    explanation_parts=[
-
+    explanation_parts = [
         "colors in your code. The following colors are the NamedColors that ",
         "maxcolor makes gradients from. It also has a few extra methods to ",
-        "help you work with the color."
+        "help you work with the color.",
     ]
     for part in explanation_parts:
         explanation = Text.assemble(explanation, part)
@@ -496,4 +512,4 @@ if __name__ == "__main__":
         show_default=True,
         default=True,
     )
-    exit(0)
+    sys.exit(0)
