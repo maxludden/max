@@ -5,21 +5,22 @@
 import re
 from os import environ
 from typing import Optional, Tuple
-
 from lorem_text import lorem
-from rich.console import Console, ConsoleOptions, JustifyMethod, RenderResult
-from rich.control import _CONTROL_STRIP_TRANSLATE, strip_control_codes
-from rich.segment import Segment
+from rich.console import JustifyMethod, RenderResult
+from rich.control import strip_control_codes
 from rich.text import Text
-from rich.repr import Result
-from rich import inspect
-from snoop import snoop
 from cheap_repr import register_repr, normal_repr
+from snoop import snoop
 
 from max.color_index import ColorIndex
 from max.console import MaxConsole
-from max.log import log
-from max.named_color import ColorParsingError, NamedColor
+from max.log import log, debug
+from max.named_color import (
+    ColorParsingError,
+    NamedColor,
+    InvalidHexColor,
+    InvalidRGBColor
+)
 
 
 class Gradient:
@@ -35,7 +36,6 @@ class Gradient:
     - Light-purple
     - Magenta
     """
-
     start_index: int
     end_index: int
     indexes: ColorIndex
@@ -46,6 +46,7 @@ class Gradient:
     _invert: Optional[bool]
     _title: Optional[str]
 
+    # @snoop(watch_explode=("self", "color"))
     def __init__(
         self,
         text: Optional[str | Text] = None,
@@ -75,8 +76,6 @@ class Gradient:
             title (Optional[str], optional): The title of the `Gradient` \
                 object. Defaults to "Gradient".
         """
-
-        # initialize attributes
         self.justify = justify
         self._invert = invert
         self.num_of_colors = num_of_colors
@@ -87,27 +86,24 @@ class Gradient:
         self.indexes = []
         self.colors = []
 
-        # Validate text
         assert isinstance(
             text, (str, Text)
         ), f"Text must be a string or a rich.text.Text object, not {type(text)}"
         sanitized_text = strip_control_codes(text)
         self._text = [sanitized_text]
 
-        # Validate the input colors
         valid_start = self.validate_color(start)
         valid_end = self.validate_color(end)
         _start = self.parse_color(start) if valid_start else None
         _end = self.parse_color(end) if valid_end else None
 
-        # Parse the colors and generate the indexes
         if _start is None and _end is None:
             self.indexes = ColorIndex(
                 start=None,
                 end=None,
                 invert=self._invert,
                 num_of_index=num_of_colors + 1,
-                title=self._title
+                title=self._title,
             )
         elif _end is None:
             self.indexes = ColorIndex(
@@ -115,7 +111,7 @@ class Gradient:
                 end=None,
                 invert=self._invert,
                 num_of_index=num_of_colors + 1,
-                title=self._title
+                title=self._title,
             )
         elif _start is None:
             self.indexes = ColorIndex(
@@ -123,7 +119,7 @@ class Gradient:
                 end=_end.as_index(),
                 invert=self._invert,
                 num_of_index=num_of_colors + 1,
-                title=self._title
+                title=self._title,
             )
         else:
             self.indexes = ColorIndex(
@@ -133,11 +129,10 @@ class Gradient:
                 num_of_index=num_of_colors + 1,
                 title=self._title,
             )
-        # log.success(f"Gradient indexes: {self.indexes}")
+        log.debug(f"Gradient indexes: {self.indexes}")
 
         for index in self.indexes:
             self.colors.append(NamedColor(index))
-        # End of __init__
 
     def __repr__(self) -> str:
         return str(self.gradient_colors)
@@ -164,9 +159,10 @@ class Gradient:
         """Get the plain text of the gradient object."""
         return "".join(self._text)
 
+
     def validate_color(
-        self, color: NamedColor | str | int, verbose: Optional[bool] = False
-    ) -> NamedColor:
+        self,
+        color: NamedColor | str | int | None) -> NamedColor|bool|None:
         """Parse an user entered color.
         
         Args:
@@ -177,23 +173,16 @@ class Gradient:
         Returns:
             NamedColor: The parsed color.
         """
-        if isinstance(color, (str, int, NamedColor)):
-            valid = True
-        else:
-            valid = False
-        if verbose:
-            if valid:
-                self.console.log(
-                    f"[bold underline #00ff00]Color {color} is \
-                        valid:thumbs_up_light_skin_tone:[/]"
-                )
-            else:
-                self.console.log(
-                    f"[bold underline #ff0000]Color {color} is \
-                        invalid:thumbs_down_light_skin_tone:[/]"
-                )
-        return valid
+        try:
+            color = NamedColor(color)
+            if color:
+                return color
+        except InvalidHexColor as ihc:
+            raise InvalidHexColor("Unable to parse hex color", ihc) from ihc
+        except InvalidRGBColor as irc:
+            raise InvalidRGBColor("Unable to parse RGB color", irc) from irc
 
+    
     @classmethod
     def parse_color(cls, color: NamedColor | str | int) -> NamedColor:
         """Parse an user entered color.
@@ -211,7 +200,7 @@ class Gradient:
                 f"Could not parse color {color}, error: {cpe}"
             ) from cpe
 
-    # @snoop
+
     def __rich__(self) -> RenderResult:
         """Rich representation of the Gradient object."""
 
@@ -224,13 +213,14 @@ class Gradient:
         # console.log(f"Input Text: {input_text}")
 
         text_size = len(input_text)
+
         # console.log(f"Text Size: {text_size}")
 
         gradient_size = text_size // num_of_colors
         # console.log(f"Gradient Size: {gradient_size}\n\n")
         gradient_text = Text()
 
-        substrings = self.split_text(input_text, num_of_colors - 1)
+        substrings = self.split_text(input_text, num_of_colors - 2)
         # console.log(f"Substrings: {substrings}")
 
         for x, substring in enumerate(substrings):
@@ -243,7 +233,9 @@ class Gradient:
             )
         return gradient_text
 
+
     @staticmethod
+    @debug()
     def split_text(text: str, num: int) -> list[Text]:
         """Split a text into equal parts.
 
@@ -254,8 +246,13 @@ class Gradient:
         Returns:
             list[str]: The split text.
         """
-        text_size = len(text)
-        gradient_size = text_size // num
+        try:
+            text_size = len(text)
+            gradient_size = text_size // num
+        except ZeroDivisionError as zde:
+            raise ZeroDivisionError(
+                "Cannot split text into 0 parts, please enter a valid number of parts."
+            ) from zde
         substrings = []
         for index in range(num):
             begin = index * gradient_size
@@ -299,12 +296,14 @@ code and repurposed to make Gradient possible.
             text.stylize(color, index, index + 1)
 
         return text
+
+
 register_repr(Gradient)(normal_repr)
 
 if __name__ == "__main__":
     demo_console = MaxConsole(width=115)
     TEXT1 = lorem.paragraph()
-    gradient1 = Gradient(TEXT1, "left")
+    gradient1 = Gradient(TEXT1, start='light_purple', end='blue', justify="left")
     register_repr(Gradient)(normal_repr)
     demo_console.rule("Gradient1", style="bold.magenta")
     demo_console.print(gradient1, justify="center")
@@ -312,7 +311,24 @@ if __name__ == "__main__":
 
     demo_console.rule("Gradient2", style="bold.magenta")
     TEXT2 = lorem.paragraph()
-    demo_console.print(Gradient(TEXT2, "center"), justify="center")
+    demo_console.print(
+        Gradient(
+            TEXT2,
+            start="light-blue",
+            end="green",
+            justify="center"
+        ),
+        justify="center"
+    )
+    demo_console.line(2)
 
     demo_console.rule("Gradient3", style="bold.magenta")
-    demo_console.print(Gradient(TEXT2, "magenta", "red", "right"), justify="center")
+    demo_console.print(
+        Gradient(
+            TEXT2,
+            "magenta",
+            "red",
+            "right"
+        ),
+        justify="center"
+    )

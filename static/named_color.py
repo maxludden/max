@@ -1,11 +1,10 @@
 """Description: A class to represent a named color."""
-# pylint: disable=W0611:unused-import
 import sys
 import re
 from functools import lru_cache
 from pathlib import Path
 from time import sleep
-from typing import Any, Tuple, Optional
+from typing import Any, Tuple
 
 from cheap_repr import normal_repr, register_repr
 from console import MaxConsole
@@ -103,7 +102,7 @@ def format_rgb(rgb: Tuple[int, int, int]) -> Text:
 class NamedColor:
     """Ten colors that span the spectrum to create gradients from."""
 
-    value: Optional[str] = "magenta"
+    _value: str
     _original: Any
     indexes: Tuple[int, ...] = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
     colors: Tuple[str, ...] = (
@@ -144,12 +143,15 @@ class NamedColor:
     )
 
     # @snoop(watch_explode=("self", "color_input"))
-    def __init__(self, color_input: Any) -> None:
+    def __init__(self, color_input: Any, verbose: bool=False) -> None:
         # Parse NamedColor from inputs
         if isinstance(color_input, str):
             if color_input in self.colors:
                 self.value = color_input
                 self._original = color_input
+                if verbose:
+                    console.log("New color type: [#00ffff]str[/]-[bold #a500ff]color[/]")
+                    console.log(f"New color: {color_input}")
 
             # HEX Colors
             elif HEX_PATTERN.match(color_input):
@@ -157,6 +159,10 @@ class NamedColor:
                     index = self.hex_colors.index(color_input)
                     self.value = self.colors[index]
                     self._original = color_input
+                    if verbose:
+                        console.log("New color type: [#00ffff]str[/]\
+                            -[bold #a500ff]hex[/]")
+                        console.log(f"New color: {color_input}")
                 except InvalidHexColor as ihc:
                     raise InvalidHexColor("Unable to parse hex color", ihc) from ihc
         # RGB Tuple
@@ -165,6 +171,10 @@ class NamedColor:
                 index = self.rgb_tuples.index(color_input)
                 self.value = self.colors[index]
                 self._original = color_input
+                if verbose:
+                    console.log("New color type: [#00ffff]Tuple[/]\
+                        -[bold #a500ff]RGB[/]")
+                    console.log(f"New color: {color_input}")
             except InvalidRGBColor as irc:
                 raise InvalidRGBColor("Unable to parse RGB color", irc) from irc
 
@@ -173,6 +183,10 @@ class NamedColor:
             if color_input in list(range(0, 10)):
                 self.value = self.colors[color_input]
                 self._original = color_input
+                if verbose:
+                    console.log("New color type: [#00ffff]Int[/]\
+                        -[bold #a500ff]RGB[/]")
+                    console.log(f"New color: {color_input}")
             else:
                 raise ValueError(
                     f"Color Index must be between zero and nine. Input: {color_input}"
@@ -182,16 +196,16 @@ class NamedColor:
         elif isinstance(color_input, NamedColor):
             self.value(color_input.value())
             self._original = color_input._original
-
-        elif color_input is None:
-            return None
+            if verbose:
+                console.log("New color type: [#0fffff]NamedColor[/]")
+                console.log(f"New color type: {color_input}")
         else:
             raise ColorParsingError(
                 "invalid_named_color", f"{color_input} is not a named color."
             )
 
     def __str__(self) -> str:
-        return self.value
+        return self._value
 
     def __repr__(self) -> str:
         return f"<NamedColor: {self.value}>"
@@ -209,28 +223,28 @@ class NamedColor:
         - rgb values('tuple[int, int, int]')"""
         return list(zip((cls.colors, cls.indexes, cls.hex_colors, cls.rgb_tuples)))
 
-    # @property
-    # def value(self):
-    #     """The `name` value of a color. Valid values are:
-    #     - 'magenta',
-    #     - 'light_purple',
-    #     - 'purple,
-    #     - 'blue',
-    #     - 'light_blue',
-    #     - 'cyan',
-    #     - 'green',
-    #     - 'yellow',
-    #     - 'orange',
-    #     - 'red'"""
-    #     inspect(self)
-    #     return self.value()
+    @property
+    def value(self):
+        """The `name` value of a color. Valid values are:
+        - 'magenta',
+        - 'light_purple',
+        - 'purple,
+        - 'blue',
+        - 'light_blue',
+        - 'cyan',
+        - 'green',
+        - 'yellow',
+        - 'orange',
+        - 'red'"""
+        inspect(self)
+        return self.value()
 
-    # @value.setter
-    # def value(self, value: Any) -> None:
-    #     """The setter method for setting a NamedColor's value property."""
-    #     if not value in self.colors:
-    #         raise ColorParsingError(f"Invalid color value: {value}")
-    #     self._value = value
+    @value.setter
+    def value(self, value: Any) -> None:
+        """The setter method for setting a NamedColor's value property."""
+        if not value in self.colors:
+            raise ColorParsingError(f"Invalid color value: {value}")
+        self._value = value
 
     def named_color_table(self) -> Table:
         """Generate a table to display the named colors."""
@@ -295,7 +309,7 @@ class NamedColor:
     @lru_cache(maxsize=10)
     def as_hex(self) -> str:
         """Returns the Hex string of the NamedColor."""
-        match self.value:
+        match self._value:
             case "magenta":
                 return "#ff00ff"
             case "light_purple":
@@ -320,7 +334,7 @@ class NamedColor:
     @lru_cache(maxsize=10)
     def as_rgb(self) -> Tuple[int, int, int]:
         """Returns the RGB Tuple of the Named Color."""
-        match self.value:
+        match self._value:
             case "magenta":
                 return (255, 0, 255)
             case "light_purple":
@@ -361,7 +375,7 @@ class NamedColor:
         original_input = str(self._original)
 
         table = Table(
-            title=f"{colorful_class()}[bold {self.as_hex()}]: {str(self.value).capitalize()}[/]",
+            title=f"{colorful_class()}[bold {self.as_hex()}]: {str(self._value).capitalize()}[/]",
             box=ROUNDED,
             expand=True,
             header_style=f"bold #ffffff on {self.as_hex()}",
@@ -463,6 +477,8 @@ class NamedColor:
         return named_color
 
 
+register_repr(NamedColor)(normal_repr)
+
 
 def print_color_tables(
     as_columns: bool = False, example_console: MaxConsole = console
@@ -492,7 +508,7 @@ def print_color_tables(
     )
     console.print(NewLine(2))
     if as_columns:
-        named_colors = [NamedColor(color) for color in NamedColor.colors]
+        named_colors = [NamedColor(color, True) for color in NamedColor.colors]
         console.print(
             Columns(named_colors, equal=True, expand=True, column_first=True),
             justify="center",
@@ -503,9 +519,14 @@ def print_color_tables(
             console.print(NamedColor(color), justify="center")
             console.print(NewLine(2))
 
-    register_repr(NamedColor)
-
-
 if __name__ == "__main__":
     print_color_tables(as_columns=True)
-    
+    sleep(1)
+    Confirm.ask(
+        "Press [bold #00ff00]Enter[/] to exit...",
+        console=console,
+        show_choices=True,
+        show_default=True,
+        default=True,
+    )
+    sys.exit(0)
