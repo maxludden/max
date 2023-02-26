@@ -220,7 +220,7 @@ class Gradient:
         # console.log(f"Gradient Size: {gradient_size}\n\n")
         gradient_text = Text()
 
-        substrings = self.split_text(input_text, num_of_colors - 2)
+        substrings = self.split_text(input_text, num_of_colors - 1)
         # console.log(f"Substrings: {substrings}")
 
         for x, substring in enumerate(substrings):
@@ -235,7 +235,6 @@ class Gradient:
 
 
     @staticmethod
-    @debug()
     def split_text(text: str, num: int) -> list[Text]:
         """Split a text into equal parts.
 
@@ -303,7 +302,7 @@ register_repr(Gradient)(normal_repr)
 if __name__ == "__main__":
     demo_console = MaxConsole(width=115)
     TEXT1 = lorem.paragraph()
-    gradient1 = Gradient(TEXT1, start='light_purple', end='blue', justify="left")
+    gradient1 = Gradient(TEXT1, start="cyan", end="magenta", justify="left")
     register_repr(Gradient)(normal_repr)
     demo_console.rule("Gradient1", style="bold.magenta")
     demo_console.print(gradient1, justify="center")
