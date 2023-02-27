@@ -2,13 +2,15 @@
     from which to generate a gradient."""
 # max/color_index.copy()
 
+from collections.abc import Sequence
 from itertools import cycle
 from os import environ
 from pathlib import Path
 from random import choice, randint
 from typing import Optional
-from collections.abc import Sequence
 
+from snoop import snoop
+from cheap_repr import normal_repr, register_repr
 from loguru import logger as log
 from rich.panel import Panel
 from rich.text import Text
@@ -50,6 +52,7 @@ class ColorIndex(Sequence):
     title: Optional[str]
     _iter_index: int
 
+    @snoop
     def __init__(
         self,
         start: Optional[int] = None,
@@ -182,7 +185,7 @@ class ColorIndex(Sequence):
         colors = [
             "#ff00ff",
             "#af00ff",
-            "#5f00ff",
+            "#6f00ff",
             "#0000ff",
             "#0088ff",
             "#00ffff",
@@ -216,11 +219,11 @@ class ColorIndex(Sequence):
 from which to build a gradient to \nintegers [/][bold italic #00ffff]0[/]\
 [bold #ffffff] - [/][bold italic #00ffff]9[/][bold #ffffff]. To create one \
 you can specify a [italic]starting index[/italic]([/bold #ffffff]\
-[italic #5f00ff]start[/][bold #ffffff]), a \n[italic]finishing index[/italic]\
-([/bold #ffffff][italic #5f00ff]end[/][bold #ffffff]), which [italic]\
-direction[/italic] the index flows ([/bold #ffffff][italic #5f00ff]\
+[italic #af00ff]start[/][bold #ffffff]), a \n[italic]finishing index[/italic]\
+([/bold #ffffff][italic #af00ff]end[/][bold #ffffff]), which [italic]\
+direction[/italic] the index flows ([/bold #ffffff][italic #af00ff]\
 invert[/][bold #ffffff]), or the \nlength of the index ([/bold #ffffff]\
-[italic #5f00ff]num_of_int[/][bold #ffffff]). However you don't need all \
+[italic #af00ff]num_of_int[/][bold #ffffff]). However you don't need all \
 of these arguments \nto make a {color_index}. To generate \
 a random {color_index}, no arguments are required.[/bold #ffffff]\n\n\n{color_index}\
 [bold #ff00ff] 1[/][bold #ffffff] is an example of one such random {color_index}:\n"
@@ -238,7 +241,7 @@ a random {color_index}, no arguments are required.[/bold #ffffff]\n\n\n{color_in
 [bold #ffffff], and a [italic]finishing value[/italic] of [/bold #ffffff]\
 [bold italic #00ffff]9[/bold italic #00ffff]\
 [bold #ffffff], which spans \nthe entire range of possible indexes \
-    using {color_index}.\n[/bold #ffffff]"
+using {color_index}.\n[/bold #ffffff]"
         console.print(text_block2, justify="center", width=115)
         color_index2 = ColorIndex(0, 9, title=f"{color_index} [bold #ff00ff]2[/]")
         console.print(color_index2, justify="center", width=115)
@@ -254,12 +257,14 @@ return from the opposite end of the spectrum.[/bold #fffff]\n"
         console.print(color_index3, justify="center", width=115)
 
         text_block4 = f"\n[bold #ffffff]There is one final argument that has yet to be mentioned \
-though it has been demonstrated \nextensively. That is the [/][bold italic #5f00ff]title[/]\
+though it has been demonstrated \nextensively. That is the [/][bold italic #af00ff]title[/]\
 [bold #ffffff] which is the name of the {color_index} displayed in the repr \
 and rich \ndunder methods.[/]\n\n\n"
 
         console.print(text_block4, justify="center", width=115)
 
+
+register_repr(ColorIndex)(normal_repr)
 
 if __name__ == "__main__":
     ColorIndex.demo()

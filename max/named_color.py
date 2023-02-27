@@ -1,14 +1,13 @@
 """Description: A class to represent a named color."""
 # pylint: disable=W0611:unused-import
-import sys
 import re
+import sys
 from functools import lru_cache
 from pathlib import Path
 from time import sleep
-from typing import Any, Tuple, Optional
+from typing import Any, Optional, Tuple
 
 from cheap_repr import normal_repr, register_repr
-from console import MaxConsole
 from rich import inspect
 from rich.box import ROUNDED
 from rich.columns import Columns
@@ -16,6 +15,9 @@ from rich.console import NewLine
 from rich.prompt import Confirm
 from rich.table import Table
 from rich.text import Text
+
+from max.console import MaxConsole
+
 # from snoop import snoop
 
 
@@ -503,7 +505,7 @@ def print_color_tables(
             console.print(NamedColor(color), justify="center")
             console.print(NewLine(2))
 
-    register_repr(NamedColor)
+    register_repr(NamedColor)(normal_repr)
 
 
 if __name__ == "__main__":
