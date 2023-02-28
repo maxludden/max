@@ -3,21 +3,22 @@
 # pylint: disable=C0103:invalid-name
 # pylint: disable=W0612:unused-variable
 # pylint: disable=too-many-arguments
-import re
+
 from dataclasses import dataclass
 from os import environ
-from typing import Optional, Tuple
 from random import randint
+from typing import Optional, Tuple
 
 from cheap_repr import normal_repr, register_repr
 from lorem_text import lorem
+from rich import inspect
 from rich.console import JustifyMethod, RenderResult
 from rich.control import strip_control_codes
 from rich.text import Text
 from snoop import snoop
 
 from max.color_index import ColorIndex
-from max.console import MaxConsole, Console
+from max.console import Console, MaxConsole
 from max.log import debug, log
 from max.named_color import (
     ColorParsingError,
@@ -27,9 +28,10 @@ from max.named_color import (
 )
 
 
-@dataclass
+# @dataclass
 class Gradient:
     """Print gradient text to the console using `rich` library."""
+
     console = MaxConsole()
     text: str
     start: NamedColor
@@ -43,9 +45,10 @@ class Gradient:
     indexes = ColorIndex
     colors = list[NamedColor]
 
+    # @snoop
     def __init__(
         self,
-        console: Console = MaxConsole(),
+        console: Console = MaxConsole(),  # pylint: disable=W0621:redefined-outer-name
         text: str = "",
         start: Optional[NamedColor | str | int] = None,
         end: Optional[NamedColor | str | int] = None,
@@ -81,13 +84,16 @@ class Gradient:
 
         if self.start is None and self.end is None:
             self._start_index = randint(0, 9)
-            self._end_index = self._start_index + length
+            end_index = self._start_index + length
+            self._end_index = self.fix_out_of_index(end_index)
         elif self.end is None:
             self._start_index = NamedColor(self.start).as_index()
-            self._end_index = self._start_index + length
+            end_index = self._start_index + length
+            self._end_index = self.fix_out_of_index(end_index)
         elif self.start is None:
             self._end_index = NamedColor(self.end).as_index()
-            self._start_index = self._end_index - length
+            start_index = self._end_index + length
+            self._start_index = self.fix_out_of_index(start_index)
         else:
             self._start_index = NamedColor(self.start).as_index()
             self._end_index = NamedColor(self.end).as_index()
@@ -101,8 +107,8 @@ class Gradient:
                 title=self.title,
             )
         )
-        for index in self.indexes:
-            self.colors.append(NamedColor(index))
+
+        self.colors = [NamedColor(index) for index in self.indexes]
 
     def __str__(self) -> str:
         color_angular = f"<{', '.join(self.colors)}>"
@@ -121,11 +127,13 @@ class Gradient:
             next_index = index + 1
             begin = index * gradient_size
             end = begin + gradient_size
-            _substring = text[begin:end]
+            substring = text[begin:end]
 
             if index < num - 1:
-                r1, g1, b1 = self.colors[index].as_rgb()
-                r2, g2, b2 = self.colors[next_index].as_rgb()
+                color1 = NamedColor(self.colors[index]).as_rgb()
+                r1, g1, b1 = tuple(color1)
+                color2 = NamedColor(self.colors[next_index]).as_rgb()
+                r2, g2, b2 = tuple(color2)
 
                 dr = r2 - r1
                 dg = g2 - g1
@@ -136,14 +144,43 @@ class Gradient:
                 color = f"#{int(r1 + dr * blend):02X}\
                     {int(g1 + dg * blend):02X}\
                         {int(b1 + db * blend):02X}"  # type: ignore
-                _substring.stylize(color, index, index + 1)
+                substring.stylize(color, index, index + 1)
+                log.success(f"color: {color} | index: {index} | substring: {substring}")
 
-            text = Text.assemble(text, _substring, justify="left")
+            text = Text.assemble(text, substring, justify="left")
+
+    @staticmethod
+    def fix_out_of_index(index: int) -> int:
+        """Fix out of index color indexes."""
+        if index > 9:
+            return index - 10
+        if index < 0:
+            return index + 10
+        return index
+
+
+register_repr(Gradient)(normal_repr)
 
 if __name__ == "__main__":
-    demo_console = MaxConsole()
-    demo_console.print(
-        Gradient(
-            lorem.paragraph(),
-        )
+    console = MaxConsole()
+    register_repr(Gradient)(normal_repr)
+    register_repr(ColorIndex)(normal_repr)
+    console.clear()
+    console.line(2)
+
+    text1 = lorem.paragraph()
+    gradient1 = Gradient(text1, title="Gradient <Random>")
+    console.print(gradient1, justify="center")
+
+    text2 = lorem.paragraph()
+    gradient2 = Gradient(lorem.paragraph(), start="red", title="Gradient <Start: Red>")
+    console.print(gradient2, justify="center")
+
+    text3 = lorem.paragraph()
+    gradient3 = Gradient(
+        lorem.paragraph(),
+        end="green",
+        invert=True,
+        title="Gradient <End: Green, Inverted>",
     )
+    console.print(gradient3, justify="center")

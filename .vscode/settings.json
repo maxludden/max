@@ -2,7 +2,7 @@
     "workbench.colorCustomizations": {
         "editor.background": "#020202",
         "panel.background": "#212121",
-        "sideBar.background": "#121212",
+        "sideBar.background": "#010101",
         "sideBarSectionHeader.background": "#1a0056",
         "sideBarSectionHeader.foreground": "#d699ff",
         "sideBarSectionHeader.border": "#d699ff30",
@@ -28,11 +28,11 @@
         "list.inactiveSelectionForeground": "#dbbeff",
         "banner.background": "#121212",
         "editor.findMatchBackground": "#0fefff89",
-        "editorInlayHint.parameterBackground": "#bb00ff",
+        "editorInlayHint.parameterBackground": "#af00ff",
         "scrollbarSlider.background": "#403444",
         "scrollbarSlider.hoverBackground": "#9500ffaa",
-        "terminal.tab.activeBorder": "#bb00ff",
-        "terminal.border": "#bb00ff"
+        "terminal.tab.activeBorder": "#af00ff",
+        "terminal.border": "#af00ff"
     },
     "cSpell.words": [
         "emph",

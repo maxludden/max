@@ -1,7 +1,7 @@
 """This module creates a sequence of increasing or decreasing integers \
     from which to generate a gradient."""
 # max/color_index.copy()
-
+# pylint: disable=W0611:unused-import
 from collections.abc import Sequence
 from itertools import cycle
 from os import environ
@@ -9,18 +9,18 @@ from pathlib import Path
 from random import choice, randint
 from typing import Optional
 
-from snoop import snoop
+# from snoop import snoop
 from cheap_repr import normal_repr, register_repr
 from loguru import logger as log
+from rich import inspect
 from rich.panel import Panel
 from rich.text import Text
 
 from max.console import MaxConsole
+from max.log import debug
 from max.progress import MaxProgress
 
 console = MaxConsole()
-console.print("[#00ff00]Max's favorite color is green[/]!")
-progress = MaxProgress(console=console)
 CWD = Path.cwd()
 LOGS = CWD / "logs"
 LOG = LOGS / "log.log"
@@ -52,7 +52,7 @@ class ColorIndex(Sequence):
     title: Optional[str]
     _iter_index: int
 
-    @snoop
+    @debug()
     def __init__(
         self,
         start: Optional[int] = None,

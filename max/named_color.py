@@ -182,7 +182,7 @@ class NamedColor:
 
         # NamedColor
         elif isinstance(color_input, NamedColor):
-            self.value(color_input.value())
+            self.value = color_input.value
             self._original = color_input._original
 
         elif color_input is None:
