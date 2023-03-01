@@ -32,7 +32,11 @@
         "scrollbarSlider.background": "#403444",
         "scrollbarSlider.hoverBackground": "#9500ffaa",
         "terminal.tab.activeBorder": "#af00ff",
-        "terminal.border": "#af00ff"
+        "terminal.border": "#af00ff",
+        "statusBarItem.prominentBackground": "#dbbeff",
+        "statusBarItem.remoteBackground": "#5f00ff",
+        "statusBarItem.remoteForeground": "#110011",
+        "statusBarBackground": "#1e0051"
     },
     "cSpell.words": [
         "emph",
@@ -53,9 +57,6 @@
         "STYLUS"
     ],
     "colorize.languages": [
-        "python",
-        "json",
-        "jsonc",
         "yaml",
         "toml",
         "css",
@@ -79,10 +80,47 @@
     "python.testing.pytestArgs": [
         "max"
     ],
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+        "editor.suggest.preview": true,
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.colorDecorators": true,
+        "editor.parameterHints.cycle": true,
+        "editor.snippetSuggestions": "top",
+        "editor.trimAutoWhitespace": true
+    },
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "python.formatting.provider": "black",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "task.allowAutomaticTasks": "on"
+    "task.allowAutomaticTasks": "on",
+    "projectManager.showProjectNameInStatusBar": true,
+    "vscode-color-picker.languages": [
+        "css",
+        "less",
+        "scss",
+        "sass",
+        "stylus",
+        "postcss",
+        "json",
+        "jsonc",
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue",
+        "html",
+        "markdown",
+        "python",
+        "yaml",
+        "toml",
+        "xml",
+        "svg"
+    ],
+    "editor.unicodeHighlight.includeStrings": true,
+    "todohighlight.isEnable": true,
 }

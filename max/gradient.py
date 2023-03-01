@@ -9,7 +9,7 @@ from os import environ
 from random import randint
 from typing import Optional, Tuple
 
-from cheap_repr import normal_repr, register_repr
+from cheap_repr import ReprHelper, normal_repr, register_repr
 from lorem_text import lorem
 from rich import inspect
 from rich.console import JustifyMethod, RenderResult
@@ -28,7 +28,6 @@ from max.named_color import (
 )
 
 
-# @dataclass
 class Gradient:
     """Print gradient text to the console using `rich` library."""
 
@@ -48,7 +47,7 @@ class Gradient:
     # @snoop
     def __init__(
         self,
-        console: Console = MaxConsole(),  # pylint: disable=W0621:redefined-outer-name
+        console: MaxConsole = MaxConsole(),  # pylint: disable=W0621:redefined-outer-name
         text: str = "",
         start: Optional[NamedColor | str | int] = None,
         end: Optional[NamedColor | str | int] = None,
@@ -109,6 +108,7 @@ class Gradient:
         )
 
         self.colors = [NamedColor(index) for index in self.indexes]
+        inspect(self)
 
     def __str__(self) -> str:
         color_angular = f"<{', '.join(self.colors)}>"
@@ -117,6 +117,7 @@ class Gradient:
     def __repr__(self) -> str:
         return str(self)
 
+    # @snoop
     def __rich__(self) -> RenderResult:
         text = self.text
         size = len(text)
@@ -128,6 +129,7 @@ class Gradient:
             begin = index * gradient_size
             end = begin + gradient_size
             substring = text[begin:end]
+            gradient_text = Text("")
 
             if index < num - 1:
                 color1 = NamedColor(self.colors[index]).as_rgb()
@@ -147,7 +149,10 @@ class Gradient:
                 substring.stylize(color, index, index + 1)
                 log.success(f"color: {color} | index: {index} | substring: {substring}")
 
-            text = Text.assemble(text, substring, justify="left")
+            gradient_text = Text.assemble(
+                gradient_text, substring, justify=self.justify
+            )
+            return gradient_text
 
     @staticmethod
     def fix_out_of_index(index: int) -> int:
@@ -172,15 +177,15 @@ if __name__ == "__main__":
     gradient1 = Gradient(text1, title="Gradient <Random>")
     console.print(gradient1, justify="center")
 
-    text2 = lorem.paragraph()
-    gradient2 = Gradient(lorem.paragraph(), start="red", title="Gradient <Start: Red>")
-    console.print(gradient2, justify="center")
+    # text2 = lorem.paragraph()
+    # gradient2 = Gradient(lorem.paragraph(), start="red", title="Gradient <Start: Red>")
+    # console.print(gradient2, justify="center")
 
-    text3 = lorem.paragraph()
-    gradient3 = Gradient(
-        lorem.paragraph(),
-        end="green",
-        invert=True,
-        title="Gradient <End: Green, Inverted>",
-    )
-    console.print(gradient3, justify="center")
+    # text3 = lorem.paragraph()
+    # gradient3 = Gradient(
+    #     lorem.paragraph(),
+    #     end="green",
+    #     invert=True,
+    #     title="Gradient <End: Green, Inverted>",
+    # )
+    # console.print(gradient3, justify="center")

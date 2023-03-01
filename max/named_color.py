@@ -56,27 +56,27 @@ def colorful_class(on_white: bool = False) -> Text:
         background = " on #ffffff"
     else:
         background = ""
-    colored_n = f"[bold #ff00ff{background}]N[/]"
-    colored_a = f"[bold #af00ff{background}]a[/]"
-    colored_m = f"[bold #5f00ff{background}]m[/]"
-    colored_e = f"[bold #0000ff{background}]e[/]"
-    colored_d = f"[bold #0088ff{background}]d[/]"
-    colored_c = f"[bold #00ffff{background}]C[/]"
-    colored_o1 = f"[bold #00ff00{background}]o[/]"
-    colored_l = f"[bold #ffff00{background}]l[/]"
-    colored_o2 = f"[bold #ff8800{background}]o[/]"
-    colored_r = f"[bold #ff0000{background}]r[/]"
+    color_n = f"[bold #ff00ff{background}]N[/]"
+    color_a = f"[bold #af00ff{background}]a[/]"
+    color_m = f"[bold #5f00ff{background}]m[/]"
+    color_e = f"[bold #0000ff{background}]e[/]"
+    color_d = f"[bold #0088ff{background}]d[/]"
+    color_c = f"[bold #00ffff{background}]C[/]"
+    color_o1 = f"[bold #00ff00{background}]o[/]"
+    color_l = f"[bold #ffff00{background}]l[/]"
+    color_o2 = f"[bold #ff8800{background}]o[/]"
+    color_r = f"[bold #ff0000{background}]r[/]"
     named_color = Text.assemble(
-        colored_n,
-        colored_a,
-        colored_m,
-        colored_e,
-        colored_d,
-        colored_c,
-        colored_o1,
-        colored_l,
-        colored_o2,
-        colored_r,
+        color_n,
+        color_a,
+        color_m,
+        color_e,
+        color_d,
+        color_c,
+        color_o1,
+        color_l,
+        color_o2,
+        color_r,
     )
     return named_color
 
@@ -391,12 +391,11 @@ class NamedColor:
             )
         return table
 
-
     def as_style(self) -> str:
         """Returns the Style string of the NamedColor"""
         if self.as_index() in [1, 2, 3, 4, 9]:
             return f"bold #ffffff on {self.as_hex()}"
-        elif self.as_index() in [0,5,6,7,8]:
+        elif self.as_index() in [0, 5, 6, 7, 8]:
             return f"bold #000000 on {self.as_hex()}"
 
     @classmethod
@@ -440,30 +439,29 @@ class NamedColor:
             background = " on #ffffff"
         else:
             background = ""
-        colored_n = f"[bold #ff00ff{background}]N[/]"
-        colored_a = f"[bold #af00ff{background}]a[/]"
-        colored_m = f"[bold #5f00ff{background}]m[/]"
-        colored_e = f"[bold #0000ff{background}]e[/]"
-        colored_d = f"[bold #0088ff{background}]d[/]"
-        colored_c = f"[bold #00ffff{background}]C[/]"
-        colored_o1 = f"[bold #00ff00{background}]o[/]"
-        colored_l = f"[bold #ffff00{background}]l[/]"
-        colored_o2 = f"[bold #ff8800{background}]o[/]"
-        colored_r = f"[bold #ff0000{background}]r[/]"
+        color_n = f"[bold #ff00ff{background}]N[/]"
+        color_a = f"[bold #af00ff{background}]a[/]"
+        color_m = f"[bold #5f00ff{background}]m[/]"
+        color_e = f"[bold #0000ff{background}]e[/]"
+        color_d = f"[bold #0088ff{background}]d[/]"
+        color_c = f"[bold #00ffff{background}]C[/]"
+        color_o1 = f"[bold #00ff00{background}]o[/]"
+        color_l = f"[bold #ffff00{background}]l[/]"
+        color_o2 = f"[bold #ff8800{background}]o[/]"
+        color_r = f"[bold #ff0000{background}]r[/]"
         named_color = Text.assemble(
-            colored_n,
-            colored_a,
-            colored_m,
-            colored_e,
-            colored_d,
-            colored_c,
-            colored_o1,
-            colored_l,
-            colored_o2,
-            colored_r,
+            color_n,
+            color_a,
+            color_m,
+            color_e,
+            color_d,
+            color_c,
+            color_o1,
+            color_l,
+            color_o2,
+            color_r,
         )
         return named_color
-
 
 
 def print_color_tables(
@@ -510,4 +508,3 @@ def print_color_tables(
 
 if __name__ == "__main__":
     print_color_tables(as_columns=True)
-    

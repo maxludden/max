@@ -4,15 +4,15 @@
 			"path": "."
 		},
 		{
-			"name": "supergene",
-			"path": "../../db/VS Code DB/supergene"
+			"name": "VirtualEnv",
+			"path": "../../venvs/venv-cli"
 		}
 	],
 	"settings": {
 		"workbench.colorCustomizations": {
 			"editor.background": "#020202",
 			"panel.background": "#212121",
-			"sideBar.background": "#121212",
+			"sideBar.background": "#010101",
 			"sideBarSectionHeader.background": "#1a0056",
 			"sideBarSectionHeader.foreground": "#d699ff",
 			"sideBarSectionHeader.border": "#d699ff30",
@@ -38,12 +38,30 @@
 			"list.inactiveSelectionForeground": "#dbbeff",
 			"banner.background": "#121212",
 			"editor.findMatchBackground": "#0fefff89",
-			"editorInlayHint.parameterBackground": "#bb00ff",
+			"editorInlayHint.parameterBackground": "#af00ff",
 			"scrollbarSlider.background": "#403444",
 			"scrollbarSlider.hoverBackground": "#9500ffaa",
-			"terminal.tab.activeBorder": "#bb00ff",
-			"terminal.border": "#bb00ff"
+			"terminal.tab.activeBorder": "#af00ff",
+			"terminal.border": "#af00ff",
+			"panel.border": "#7300ff",
+			"panelTitle.activeBorder": "#c100b4",
+			"panelTitle.activeForeground": "#dfa7ff",
+			"panelTitle.inactiveForeground": "#dfa7ff55",
+			"tab.activeBackground": "#110033",
+			"tab.activeForeground": "#7300b1dc",
+			"tab.inactiveBackground": "#220055",
+			"tab.inactiveForeground": "#dddddd",
+			"statusBar.debuggingBackground": "#000000",
+			"statusBar.debuggingForeground": "#cccccc",
+			"statusBarItem.prominentBackground": "#dbbeff",
+			"statusBarItem.remoteBackground": "#1e0051",
+			"statusBarItem.remoteForeground": "#a782ff"
 		},
+		"cSpell.words": [
+			"emph",
+			"mofn",
+			"namedcolor"
+		],
 		"colorize.colorized_colors": [
 			"BROWSERS_COLORS",
 			"HEXA",
@@ -72,6 +90,625 @@
 			"stylus",
 			"xml",
 			"svg"
-		]
+		],
+		"[markdown]": {
+			"editor.unicodeHighlight.ambiguousCharacters": false,
+			"editor.unicodeHighlight.invisibleCharacters": false,
+			"cSpell.fixSpellingWithRenameProvider": true,
+			"cSpell.advanced.feature.useReferenceProviderWithRename": true,
+			"cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
+			"editor.suggest.preview": true
+		},
+		"python.testing.pytestArgs": [
+			"max"
+		],
+		"[python]": {
+			"editor.formatOnSave": true,
+			"editor.codeActionsOnSave": {
+				"source.organizeImports": true
+			},
+			"editor.suggest.preview": true,
+			"editor.defaultFormatter": "ms-python.black-formatter",
+			"editor.colorDecorators": true,
+			"editor.parameterHints.cycle": true,
+			"editor.snippetSuggestions": "top",
+			"editor.trimAutoWhitespace": true
+		},
+		"python.testing.unittestEnabled": false,
+		"python.testing.pytestEnabled": true,
+		"python.linting.pylintEnabled": true,
+		"python.linting.enabled": true,
+		"task.allowAutomaticTasks": "on",
+		"projectManager.showProjectNameInStatusBar": true,
+		"vscode-color-picker.languages": [
+			"css",
+			"less",
+			"scss",
+			"sass",
+			"stylus",
+			"postcss",
+			"json",
+			"jsonc",
+			"javascript",
+			"javascriptreact",
+			"typescript",
+			"typescriptreact",
+			"vue",
+			"html",
+			"markdown",
+			"python",
+			"yaml",
+			"toml",
+			"xml",
+			"svg",
+			"settings"
+		],
+		"better-comments.tags": [
+			{
+				"tag": "!",
+				"color": "#FF0000",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "transparent",
+				"bold": false,
+				"italic": false
+			},
+			{
+				"tag": "?",
+				"color": "#00ffff",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "transparent",
+				"bold": true,
+				"italic": false
+			},
+			{
+				"tag": "#",
+				"color": "#114488",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "transparent",
+				"bold": false,
+				"italic": false
+			},
+			{
+				"tag": "##",
+				"color": "#114488",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "transparent",
+				"bold": true,
+				"italic": false
+			}
+		],
+		"todohighlight.isEnable": true,
+		"todohighlight.isCaseSensitive": false,
+		"todohighlight.keywords": [
+			{
+				// white
+				"text": "white",
+				"color": "#000000",
+				"bold": true,
+				"backgroundColor": "#ffffff",
+				"overviewRulerColor": "#ffffff",
+				"border": "1px solid #dddddd",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				"text": "#ffffff",
+				"color": "#000000",
+				"bold": true,
+				"backgroundColor": "#ffffff",
+				"overviewRulerColor": "#ffffff",
+				"border": "1px solid #dddddd",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				"text": "(0, 0, 0)",
+				"color": "#000000",
+				"bold": true,
+				"backgroundColor": "#ffffff",
+				"overviewRulerColor": "#ffffff",
+				"border": "1px solid #dddddd",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// light_grey
+				"text": "light_grey",
+				"color": "#000000",
+				"bold": true,
+				"backgroundColor": "#cccccc",
+				"overviewRulerColor": "#cccccc",
+				"border": "1px solid #",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// light_grey
+				"text": "#cccccc",
+				"color": "#000000",
+				"bold": true,
+				"backgroundColor": "#cccccc",
+				"overviewRulerColor": "#cccccc",
+				"border": "1px solid #888888",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// light_grey
+				"text": "(204, 204, 204)",
+				"color": "#000000",
+				"bold": true,
+				"backgroundColor": "#cccccc",
+				"overviewRulerColor": "#cccccc",
+				"border": "1px solid #888888",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// grey
+				"text": "grey",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#888888",
+				"overviewRulerColor": "#888888",
+				"border": "1px solid #444444",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// grey
+				"text": "#888888",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#888888",
+				"overviewRulerColor": "#888888",
+				"border": "1px solid #444444",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// grey
+				"text": "(136, 136, 136)",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#888888",
+				"overviewRulerColor": "#888888",
+				"border": "1px solid #444444",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// dark_grey
+				"text": "dark_grey",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#444444",
+				"overviewRulerColor": "#444444",
+				"border": "1px solid #000000",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// dark_grey
+				"text": "#444444",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#444444",
+				"overviewRulerColor": "#444444",
+				"border": "1px solid #000000",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// dark_grey
+				"text": "(68, 68, 68)",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#444444",
+				"overviewRulerColor": "#444444",
+				"border": "1px solid #000000",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// black
+				"text": "black",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#000000",
+				"overviewRulerColor": "#000000",
+				"border": "1px solid #444444",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// black
+				"text": "#000000",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#000000",
+				"overviewRulerColor": "#000000",
+				"border": "1px solid #444444",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// black
+				"text": "(0, 0, 0)",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#000000",
+				"overviewRulerColor": "#000000",
+				"border": "1px solid #444444",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// magenta
+				"text": "magenta",
+				"color": "#000000",
+				"bold": true,
+				"backgroundColor": "#ff00ff",
+				"overviewRulerColor": "#ff00ff",
+				"border": "1px solid #af00ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// magenta
+				"text": "#ff00ff",
+				"color": "#000000",
+				"bold": true,
+				"backgroundColor": "#ff00ff",
+				"overviewRulerColor": "#ff00ff",
+				"border": "1px solid #af00ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// magenta
+				"text": "(255, 0, 255)",
+				"color": "#000000",
+				"bold": true,
+				"backgroundColor": "#ff00ff",
+				"overviewRulerColor": "#ff00ff",
+				"border": "1px solid #af00ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// light_purple
+				"text": "light_purple",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#af00ff",
+				"overviewRulerColor": "#af00ff",
+				"border": "1px solid #ff00ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// light_purple
+				"text": "#af00ff",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#af00ff",
+				"overviewRulerColor": "#af00ff",
+				"border": "1px solid #5f00ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// light_purple
+				"text": "(175, 0, 255)",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#af00ff",
+				"overviewRulerColor": "#af00ff",
+				"border": "1px solid #5f00ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				"text": "purple",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#5f00ff",
+				"overviewRulerColor": "#5f00ff",
+				"border": "1px solid #af00ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				"text": "#5f00ff",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#5f00ff",
+				"overviewRulerColor": "#5f00ff",
+				"border": "1px solid #af00ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				"text": "(95, 0, 255)",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#5f00ff",
+				"overviewRulerColor": "#5f00ff",
+				"border": "1px solid #af00ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				"text": "blue",
+				"color": "#ccffff",
+				"bold": true,
+				"backgroundColor": "#0000ff",
+				"overviewRulerColor": "#00ffff",
+				"border": "1px solid #0088ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// blue
+				"text": "#0000ff",
+				"color": "#ccffff",
+				"bold": true,
+				"backgroundColor": "#0000ff",
+				"overviewRulerColor": "#00ffff",
+				"border": "1px solid #0088ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				//# blue
+				"text": "(0, 0, 255)",
+				"color": "#ccffff",
+				"bold": true,
+				"backgroundColor": "#0000ff",
+				"overviewRulerColor": "#00ffff",
+				"border": "1px solid #0088ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				//light_blue
+				"text": "light_blue",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#0088ff",
+				"overviewRulerColor": "#0000ff",
+				"border": "1px solid #00ffff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// light_blue
+				"text": "#0088ff",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#0088ff",
+				"overviewRulerColor": "#0000ff",
+				"border": "1px solid #00ffff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// light_blue
+				"text": "(0, 136, 255)",
+				"color": "#ffffff",
+				"bold": true,
+				"backgroundColor": "#0088ff",
+				"overviewRulerColor": "#0000ff",
+				"border": "1px solid #00ffff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// cyan
+				"text": "cyan",
+				"color": "#000011",
+				"bold": true,
+				"backgroundColor": "#00ffff",
+				"overviewRulerColor": "#00ffff",
+				"border": "1px solid #0088ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// cyan
+				"text": "#00ffff",
+				"color": "#000011",
+				"bold": true,
+				"backgroundColor": "#00ffff",
+				"overviewRulerColor": "#00ffff",
+				"border": "1px solid #0088ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// cyan
+				"text": "(0, 255, 255)",
+				"color": "#000011",
+				"bold": true,
+				"backgroundColor": "#00ffff",
+				"overviewRulerColor": "#00ffff",
+				"border": "1px solid #0088ff",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// green
+				"text": "green",
+				"color": "#001100",
+				"bold": true,
+				"backgroundColor": "#00ff00",
+				"border": "1px solid #008800",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// green
+				"text": "#00ff00",
+				"color": "#001100",
+				"bold": true,
+				"backgroundColor": "#00ff00",
+				"border": "1px solid #008800",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// green
+				"text": "(0, 255, 0)",
+				"color": "#001100",
+				"bold": true,
+				"backgroundColor": "#00ff00",
+				"border": "1px solid #008800",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// yellow
+				"text": "yellow",
+				"color": "#111100",
+				"bold": true,
+				"backgroundColor": "#ffff00",
+				"overviewRulerColor": "#ffff00",
+				"border": "1px solid #888800",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// yellow
+				"text": "#ffff00",
+				"color": "#111100",
+				"bold": true,
+				"backgroundColor": "#ffff00",
+				"overviewRulerColor": "#ffff00",
+				"border": "1px solid #888800",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// yellow
+				"text": "(255, 255, 0)",
+				"color": "#111100",
+				"bold": true,
+				"backgroundColor": "#ffff00",
+				"overviewRulerColor": "#ffff00",
+				"border": "1px solid #888800",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// orange
+				"text": "orange",
+				"color": "#111100",
+				"bold": true,
+				"backgroundColor": "#ff8800",
+				"overviewRulerColor": "#ff8800",
+				"border": "1px solid #884400",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// orange
+				"text": "#ff8800",
+				"color": "#111100",
+				"bold": true,
+				"backgroundColor": "#ff8800",
+				"overviewRulerColor": "#ff8800",
+				"border": "1px solid #884400",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// orange
+				"text": "(255, 136, 0)",
+				"color": "#111100",
+				"bold": true,
+				"backgroundColor": "#ff8800",
+				"overviewRulerColor": "#ff8800",
+				"border": "1px solid #884400",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// red
+				"text": "red",
+				"color": "#ffeeee",
+				"bold": true,
+				"backgroundColor": "#ff0000",
+				"overviewRulerColor": "#ff0000",
+				"border": "1px solid #880000",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// red
+				"text": "#ff0000",
+				"color": "#ffeeee",
+				"bold": true,
+				"backgroundColor": "#ff0000",
+				"overviewRulerColor": "#ff0000",
+				"border": "1px solid #880000",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			},
+			{
+				// red
+				"text": "(255, 0, 0)",
+				"color": "#ffeeee",
+				"bold": true,
+				"backgroundColor": "#ff0000",
+				"overviewRulerColor": "#ff0000",
+				"border": "1px solid #880000",
+				"borderRadius": "2px",
+				"isWholeLine": false
+			}
+		],
+		"todohighlight.defaultStyle": {
+			"color": "#ffffff",
+			"backgroundColor": "#af00ff",
+			"overviewRulerColor": "#af00ff",
+			"cursor": "block",
+			"border": "1px solid #5f00ff",
+			"borderRadius": "2px",
+			"isWholeLine": true,
+			//other styling properties goes here ...
+		},
+		"todohighlight.include": [
+			"**/*.mmd",
+			"**/*.md",
+			"**/*.jsonc",
+			"**/*.json",
+			"**/*.py",
+			"**/*.js",
+			"**/*.jsx",
+			"**/*.ts",
+			"**/*.tsx",
+			"**/*.html",
+			"**/*.php",
+			"**/*.css",
+			"**/*.scss"
+		],
+		"todohighlight.exclude": [
+			"**/node_modules/**",
+			"**/bower_components/**",
+			"**/dist/**",
+			"**/build/**",
+			"**/.vscode/**",
+			"**/.github/**",
+			"**/_output/**",
+			"**/*.min.*",
+			"**/*.map",
+			"**/.next/**"
+		],
+		"todohighlight.maxFilesForSearch": 5120,
+		"todohighlight.toggleURI": false
 	}
 }
