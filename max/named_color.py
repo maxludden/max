@@ -108,7 +108,7 @@ class NamedColor:
     value: Optional[str] = "magenta"
     _original: Any
     indexes: Tuple[int, ...] = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-    colors: Tuple[str, ...] = (
+    colors: tuple[str] = (
         "magenta",
         "light_purple",
         "purple",
@@ -120,7 +120,7 @@ class NamedColor:
         "orange",
         "red",
     )
-    hex_colors: Tuple[str, ...] = (
+    hex_colors: Tuple[str] = (
         "#ff00ff",
         "#af00ff",
         "#5f00ff",
@@ -132,7 +132,7 @@ class NamedColor:
         "#ff8800",
         "#ff0000",
     )
-    rgb_tuples: Tuple[Tuple[int, int, int], ...] = (
+    rgb_tuples: Tuple[Tuple[int, int, int]] = (
         (255, 0, 255),  # magenta
         (175, 0, 255),  # light_purple
         (95, 0, 255),  # purple
@@ -192,47 +192,15 @@ class NamedColor:
                 "invalid_named_color", f"{color_input} is not a named color."
             )
 
-    def __str__(self) -> str:
-        return self.value
-
-    def __repr__(self) -> str:
-        return f"<NamedColor: {self.value}>"
-
-    def __rich_repr__(self) -> str:
-        nc_color = colorful_class()
-        return f"{nc_color}: [bold {self.as_hex()}]{str(self.value).capitalize()}[/]"
-
     @classmethod
     def get_all_colors(cls) -> set[dict[str, int | str | tuple]]:
         """Return a set of:
         - all colors('str')
         - their indexes(`int`)
         - hex values('str')
-        - rgb values('tuple[int, int, int]')"""
+        - rgb values('tuple[int, int, int]'
+        )"""
         return list(zip((cls.colors, cls.indexes, cls.hex_colors, cls.rgb_tuples)))
-
-    # @property
-    # def value(self):
-    #     """The `name` value of a color. Valid values are:
-    #     - 'magenta',
-    #     - 'light_purple',
-    #     - 'purple,
-    #     - 'blue',
-    #     - 'light_blue',
-    #     - 'cyan',
-    #     - 'green',
-    #     - 'yellow',
-    #     - 'orange',
-    #     - 'red'"""
-    #     inspect(self)
-    #     return self.value()
-
-    # @value.setter
-    # def value(self, value: Any) -> None:
-    #     """The setter method for setting a NamedColor's value property."""
-    #     if not value in self.colors:
-    #         raise ColorParsingError(f"Invalid color value: {value}")
-    #     self._value = value
 
     def named_color_table(self) -> Table:
         """Generate a table to display the named colors."""
@@ -292,7 +260,7 @@ class NamedColor:
             case "red":
                 return 9
             case _:
-                raise ValueError("Unable to convert NamedColor ({self}) to an integer")
+                raise ValueError("Unable to convert NamedColor({self}) to an integer")
 
     @lru_cache(maxsize=10)
     def as_hex(self) -> str:
@@ -355,6 +323,10 @@ class NamedColor:
         return Text.assemble(
             left_par, r_string, g_string, b_string, end, justify="center"
         )
+
+    def __str__(self):
+        """Print the name of the NamedColor."""
+        return self.value
 
     def __rich__(self):
         """Return whatever input was given to instantiate the\
@@ -507,4 +479,4 @@ def print_color_tables(
 
 
 if __name__ == "__main__":
-    print_color_tables(as_columns=True)
+    print_color_tables(as_columns=False)

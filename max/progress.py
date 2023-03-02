@@ -2,18 +2,18 @@
 import threading
 import time
 from random import randint
-from typing import Sequence, Tuple, Optional, Dict
-
+from typing import Dict, Optional, Sequence, Tuple
 
 from rich.panel import Panel
+
 # from rich import inspect
 from rich.progress import (
-    TaskID,
     BarColumn,
     MofNCompleteColumn,
     Progress,
     ProgressColumn,
     SpinnerColumn,
+    TaskID,
     TextColumn,
     TimeElapsedColumn,
     TimeRemainingColumn,
@@ -24,12 +24,14 @@ from rich.syntax import Syntax
 from rich.table import Column, Table
 from rich.text import Text
 
-from max.console import MaxConsole,RenderableType
+from max.console import MaxConsole, RenderableType
 
 console = MaxConsole()
 
+
 class MaxProgressColumn(ProgressColumn):
     """A basic wrapper around `rich.table.Column`"""
+
     def __init__(self, table_column: Optional[Column] = None) -> None:
         super().__init__(table_column=table_column)
         self._table_column = table_column
@@ -55,6 +57,7 @@ def singleton(cls):
         return instance
 
     return get_instance
+
 
 class MaxProgress(Progress):
     """Generates a progress bar for MaxConsole with additional fields\
@@ -85,7 +88,7 @@ class MaxProgress(Progress):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         if not self.progress_console:
-            self.progress_console =  MaxConsole()
+            self.progress_console = MaxConsole()
         if not self.columns:
             self.columns = self.get_default_columns()
         if self.expand is None:
@@ -208,4 +211,3 @@ if __name__ == "__main__":  # pragma: no coverage
             if randint(0, 100) < 1:
                 progress.log(next(examples))
     console.line(3)
-                    

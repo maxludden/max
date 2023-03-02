@@ -1,6 +1,7 @@
 """This module generates a custom theme for the other modules of Max."""
 
-from typing import Dict, Optional, Mapping
+from typing import Dict, Mapping, Optional
+
 from rich.style import Style, StyleType
 from rich.theme import Theme
 
@@ -66,16 +67,16 @@ MAX_STYLES: Dict[str, Style] = {
     "cs.purple": Style(color="#5f00ff", bgcolor="#5f00ff"),
     "cs.light_purple": Style(color="#af00ff", bgcolor="#af00ff"),
     "cs.magenta": Style(color="#ff00ff", bgcolor="#ff00ff"),
-    "style.red": Style(color="#ffffff", bgcolor="#ff0000"),
-    "style.orange": Style(color="#000000", bgcolor="#ff8800"),
-    "style.yellow": Style(color="#000000", bgcolor="#ffff00"),
-    "style.green": Style(color="#000000", bgcolor="#00ff00"),
-    "style.cyan": Style(color="#000000", bgcolor="#00ffff"),
-    "style.light_blue": Style(color="#ffffff", bgcolor="#0088ff"),
-    "style.blue": Style(color="#ffffff", bgcolor="#0000ff"),
-    "style.light_purple": Style(color="#ffffff", bgcolor="#af00ff"),
-    "style.purple": Style(color="#ffffff", bgcolor="#5f00ff"),
-    "style.magenta": Style(color="#000000", bgcolor="#ff00ff"),
+    "style.red": Style(color="#ffffff", bgcolor="#ff0000", bold=True),
+    "style.orange": Style(color="#000000", bgcolor="#ff8800", bold=True),
+    "style.yellow": Style(color="#000000", bgcolor="#ffff00", bold=True),
+    "style.green": Style(color="#000000", bgcolor="#00ff00", bold=True),
+    "style.cyan": Style(color="#000000", bgcolor="#00ffff", bold=True),
+    "style.light_blue": Style(color="#ffffff", bgcolor="#0088ff", bold=True),
+    "style.blue": Style(color="#ffffff", bgcolor="#0000ff", bold=True),
+    "style.light_purple": Style(color="#ffffff", bgcolor="#af00ff", bold=True),
+    "style.purple": Style(color="#ffffff", bgcolor="#5f00ff", bold=True),
+    "style.magenta": Style(color="#000000", bgcolor="#ff00ff", bold=True),
     "inspect.attr": Style(color="yellow", italic=True),
     "inspect.attr.dunder": Style(color="yellow", italic=True, dim=True),
     "inspect.callable": Style(bold=True, color="#ff0000"),
@@ -255,7 +256,7 @@ if __name__ == "__main__":  # pragma: no cover
         print(console.export_html(inline_styles=True))
 
     new_styles = {
-         "red": Style(color="#ff0000"),
+        "red": Style(color="#ff0000"),
         "bold.red": Style(color="#ff0000", bold=True),
         "cs.red": Style(color="#ff0000", bgcolor="#ff0000"),
         "style.red": Style(color="#ffffff", bgcolor="#ff0000"),
@@ -297,8 +298,13 @@ if __name__ == "__main__":  # pragma: no cover
         "style.magenta": Style(color="#000000", bgcolor="#ff00ff"),
     }
 
-    table2 = Table("Name", "Styling", title="\n\n :star: New Styles :star:", \
-        title_style="bold italic #ff00ff", width=115)
+    table2 = Table(
+        "Name",
+        "Styling",
+        title="\n\n :star: New Styles :star:",
+        title_style="bold italic #ff00ff",
+        width=115,
+    )
 
     for style_name, style in new_styles.items():
         table2.add_row(Text(style_name, style=style), str(style))

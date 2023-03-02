@@ -15,6 +15,7 @@ from loguru import logger as log
 from rich import inspect
 from rich.panel import Panel
 from rich.text import Text
+from snoop import snoop
 
 from max.console import MaxConsole
 from max.log import debug
@@ -52,7 +53,7 @@ class ColorIndex(Sequence):
     title: Optional[str]
     _iter_index: int
 
-    @debug()
+    # @snoop
     def __init__(
         self,
         start: Optional[int] = None,
@@ -60,7 +61,7 @@ class ColorIndex(Sequence):
         invert: Optional[bool] = False,
         num_of_index: Optional[int] = 3,
         title: Optional[str] = "ColorIndex",
-    ):
+    ) -> None:
         self.start = start
         self.end = end
         self.invert = invert
