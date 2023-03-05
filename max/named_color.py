@@ -4,6 +4,7 @@ import re
 import sys
 from functools import lru_cache
 from pathlib import Path
+from random import choice, randint
 from time import sleep
 from typing import Any, Optional, Tuple
 
@@ -12,9 +13,9 @@ from rich import inspect
 from rich.box import ROUNDED
 from rich.columns import Columns
 from rich.console import NewLine
-from rich.prompt import Confirm
 from rich.table import Table
 from rich.text import Text
+from snoop import snoop
 
 from max.console import MaxConsole
 
@@ -147,6 +148,8 @@ class NamedColor:
 
     # @snoop(watch_explode=("self", "color_input"))
     def __init__(self, color_input: Any) -> None:
+        self.value = color_input
+        self._original = color_input
         # Parse NamedColor from inputs
         if isinstance(color_input, str):
             if color_input in self.colors:
@@ -236,6 +239,7 @@ class NamedColor:
                 )
 
     @lru_cache(maxsize=10)
+    # @snoop
     def as_index(self) -> int:
         """Retrieve the index of a color given its name."""
         match self.value:
@@ -259,8 +263,10 @@ class NamedColor:
                 return 8
             case "red":
                 return 9
+            case None:
+                return randint(0, 9)
             case _:
-                raise ValueError("Unable to convert NamedColor({self}) to an integer")
+                raise ValueError(f"Unable to convert NamedColor({self}) to an integer")
 
     @lru_cache(maxsize=10)
     def as_hex(self) -> str:

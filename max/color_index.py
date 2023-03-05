@@ -19,6 +19,7 @@ from snoop import snoop
 
 from max.console import MaxConsole
 from max.log import debug
+from max.named_color import NamedColor
 from max.progress import MaxProgress
 
 console = MaxConsole()
@@ -73,17 +74,17 @@ class ColorIndex(Sequence):
             raise TypeError(
                 f"num_of_index must be an integer: {type(self.num_of_index)}"
             )
-        if self.num_of_index not in list(range(2, 10)):
-            raise ValueError(
-                f"num_of_index must be between 2 and 9: {self.num_of_index}"
-            )
+        if self.num_of_index < 2:
+            self.num_of_index += 10
+        if self.num_of_index > 10:
+            self.num_of_index -= 10
         log.debug(f"Num of Index: {self.num_of_index}")
 
         # Start
         if self.start is None:
             self.start = randint(0, 9)
         if not isinstance(self.start, int):
-            raise TypeError(f"Start must be an integer: {type(self.start)}")
+            raise TypeError(f"Start must be an integer: {NamedColor(self.start)}")
         if self.start not in list(range(0, 10)):
             raise ValueError(f"Start must be between 0 and 9: {self.start}")
         log.debug(f"Start: {self.start}")

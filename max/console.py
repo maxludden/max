@@ -8,16 +8,17 @@ from random import randint
 from rich import inspect
 from rich.console import (
     Console,
-    ConsoleRenderable,
-    RichCast,
     ConsoleOptions,
-    RenderResult
+    ConsoleRenderable,
+    RenderResult,
+    RichCast,
 )
-from rich.theme import Theme
-from rich.text import Text
-from rich.panel import Panel
-from rich.traceback import install as install_traceback
 from rich.padding import Padding
+from rich.panel import Panel
+from rich.text import Text
+from rich.theme import Theme
+from rich.traceback import install as install_traceback
+
 from max.theme import MaxTheme
 
 RenderableType = ConsoleRenderable | RichCast | str
@@ -103,10 +104,15 @@ class MaxConsole(Console):
         get_time (Callable[[], time], optional): Callable that \
             gets the current time in seconds, default uses time.monotonic.
     """
+
     theme: Theme = MaxTheme()
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, theme=self.theme, )
+        super().__init__(
+            *args,
+            **kwargs,
+            theme=self.theme,
+        )
         install_traceback(console=self)
 
     @staticmethod
@@ -126,7 +132,7 @@ class MaxConsole(Console):
             "no_wrap": options.no_wrap,
             "highlight": options.highlight,
             "markup": options.markup,
-            "height": options.height
+            "height": options.height,
         }
         return ConsoleOptions(**options.dict)
 
@@ -137,6 +143,7 @@ class MaxConsole(Console):
             #00ff00]l[/][bold #00ffff]o[/][bold #0088ff] W[/][bold \
             #0000ff]o[/][bold #5f00ff]r[/][bold #af00ff]l[/][bold \
             #ff00ff]d[/][bold #ff0000]![/]"
+
 
 if __name__ == "__main__":
 
@@ -157,19 +164,17 @@ if __name__ == "__main__":
         # console.log(Text.assemble(*letters))
         return Text.assemble(*letters)
 
-
     def gen_explanation() -> Text:
         """Generate an explanation of MaxConsole for demonstration."""
         colorful = _colorful_console()
         explanation_text = Text.from_markup(
             " is a custom themed class inheriting from \
-[bold #00ffff]rich.console.Console[/]. It is a [italic #b219ff]global singleton \
+[bold #00ffff]rich.console.Console[/]. It is a [bold.light_purple]global singleton \
 [/]class that can be imported and used anywhere in the project and \
 used as a drop in replacement for [bold #00ffff]rich.console.Console[/].\n\n"
         )
         combine_explanation = Text.assemble("\n\n", colorful, explanation_text)
         return combine_explanation
-
 
     if __name__ == "__main__":
         console = MaxConsole()
