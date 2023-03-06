@@ -248,7 +248,7 @@ if __name__ == "__main__":
     console.line(2)
 
     text1 = lorem.paragraph()
-    console.rule(title="Random Gradient")
+    console.rule(title="Random Gradient", style="bold.white")
     gradient1 = Gradient(text1, title="Gradient <Random>")
     console.print(gradient1, justify="center")
     console.line(2)
@@ -256,7 +256,8 @@ if __name__ == "__main__":
     text2 = lorem.paragraph()
     console.rule(
         title="[bold white]Gradient <[/][bold #ff0000]Red[/][bold white] to \
-[/][bold #0000ff]Blue[/][bold white]>[/]"
+[/][bold #0000ff]Blue[/][bold white]>[/]",
+        style="bold.white",
     )
     gradient2 = Gradient(text2, justify="center", start="red", end="blue")
     console.print(gradient2, justify="center")
@@ -265,8 +266,9 @@ if __name__ == "__main__":
     text3 = lorem.paragraph()
     console.rule(
         title="[bold white]Inverted Gradient <[/][bold #ff0000]Red[/][bold white] to \
-[/][bold #0000ff]Blue[/][bold white]>[/]"
+[/][bold #0000ff]Blue[/][bold white]>[/]",
+        style="bold.white",
     )
     gradient3 = Gradient(text3, justify="center", start="red", end="blue", invert=True)
-    console.print(gradient3, justify="center", width=125)
+    console.print(gradient3, justify="center")
     console.line(2)
