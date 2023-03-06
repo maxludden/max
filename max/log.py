@@ -1,7 +1,6 @@
 """This module contains the logging configuration for the project."""
 # pylint: disable=W0622:redefined-builtin
 from functools import wraps
-from os import environ
 from pathlib import Path
 
 from loguru import logger as log
