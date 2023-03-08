@@ -137,7 +137,7 @@ class MaxConsole(Console):
         return ConsoleOptions(**options.dict)
 
     @staticmethod
-    def colorful_hello():
+    def colorful_hello_world():
         """Print 'Hello World' in a colorful manner"""
         return "[bold #ff0000]H[/][bold #ff8800]e[/][bold #ffff00]l[/][bold \
             #00ff00]l[/][bold #00ffff]o[/][bold #0088ff] W[/][bold \
@@ -147,7 +147,7 @@ class MaxConsole(Console):
 
 if __name__ == "__main__":
 
-    def _colorful_console() -> Text:
+    def _max_console() -> Text:
         """Print out `MaxConsole` in a gradient"""
         letters = [
             Text("M", style="bold.green"),
@@ -166,7 +166,7 @@ if __name__ == "__main__":
 
     def gen_explanation() -> Text:
         """Generate an explanation of MaxConsole for demonstration."""
-        colorful = _colorful_console()
+        colorful = _max_console()
         explanation_text = Text.from_markup(
             " is a custom themed class inheriting from \
 [bold #00ffff]rich.console.Console[/]. It is a [bold.light_purple]global singleton \
@@ -179,7 +179,7 @@ used as a drop in replacement for [bold #00ffff]rich.console.Console[/].\n\n"
     if __name__ == "__main__":
         console = MaxConsole()
         explanation = gen_explanation()
-        title = _colorful_console()
+        title = _max_console()
         console.line(2)
         console.print(
             Panel(

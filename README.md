@@ -1,6 +1,6 @@
 # maxludden/max
 
-A library that automates some of the tricky parts of rich. The trickier parts being 
+A library that automates some of the tricky parts of rich. The trickier parts being
 
 - a custom theme with added styles for colors:
 
@@ -20,7 +20,7 @@ A library that automates some of the tricky parts of rich. The trickier parts be
 
 ## Installation
 
-`max` is avalible on pypi and may be installed with your favorite package manager.
+`max` is available on pypi and may be installed with your favorite package manager.
 
 #### PIP
 
@@ -39,4 +39,3 @@ pdm add max
 ```python
 from max import 
 ```
-

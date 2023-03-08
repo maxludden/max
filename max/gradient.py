@@ -6,14 +6,15 @@
 import re
 from os import environ
 from random import randint
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 from cheap_repr import normal_repr, register_repr
 from lorem_text import lorem
-from rich.console import JustifyMethod, RenderResult
+from rich import inspect
+from rich.console import JustifyMethod, OverflowMethod, RenderResult
 from rich.control import strip_control_codes
 from rich.table import Table
-from rich.text import Text
+from rich.text import Span, Text
 from snoop import snoop
 
 from max.color_index import ColorIndex
@@ -26,8 +27,11 @@ from max.named_color import (
     NamedColor,
 )
 
+DEFAULT_JUSTIFY: "JustifyMethod" = "default"
+DEFAULT_OVERFLOW: "OverflowMethod" = "fold"
 
-class Gradient:
+
+class Gradient(Text):
     """Print gradient colored text to the console.
         Args:
             console(`MaxConsole`): The rich console to print \
@@ -58,10 +62,11 @@ class Gradient:
         text: Optional[str | Text] = None,
         start: Optional[NamedColor | str | int] = None,
         end: Optional[NamedColor | str | int] = None,
-        justify: Optional[JustifyMethod] = None,
+        justify: Optional[JustifyMethod] = DEFAULT_JUSTIFY,
         invert: Optional[bool] = False,
         length: Optional[int] = 3,
         console: MaxConsole = MaxConsole(),  # pylint: disable=W0621:redefined-outer-name
+        overflow: Optional[OverflowMethod] = DEFAULT_OVERFLOW,
         title: Optional[str] = "Gradient",
         verbose: Optional[bool] = False,
     ) -> None:
@@ -78,6 +83,9 @@ class Gradient:
                 gradient text to. Defaults to MaxConsole().
             title(`str|Text'): The optional title of the Gradient. Defaults to 'Gradient'
         """
+        if isinstance(text, Text):
+            text = str(text)
+        super().__init__(text=text, justify=justify, overflow=overflow)
         self.console = console
         self.text = strip_control_codes(text)
         self.start = NamedColor(start)
@@ -98,10 +106,8 @@ class Gradient:
                 end_index = start_index + int(self.length)
             self.end = NamedColor(end_index)
             if verbose:
-                console.log(
-                    f"None-none: random start_index: {self.start.as_index()}\
- random end_index: {self.end.as_index()}"
-                )
+                console.log(f"None-none: random start_index: {self.start.as_index()}")
+                console.log(f"None-none: random end_index: {self.end.as_index()}")
 
         elif self.end is None and self.start:
             if self.invert:
@@ -110,10 +116,8 @@ class Gradient:
                 end_index = self.start.as_index() - int(self.length)
             self.end = NamedColor(end_index)
             if verbose:
-                console.log(
-                    f"start-none: random start_index: {self.start.as_index()}\
- random end_index: {self.end.as_index()}"
-                )
+                console.log(f"start-none: random start_index: {self.start.value}")
+                console.log(f"start-none: random end_index: {self.end.as_index()}")
 
         elif self.start is None and self.end:
             if self.invert:
@@ -121,14 +125,13 @@ class Gradient:
             else:
                 start_index = self.end.as_index() + int(self.length)
             self.start = NamedColor(start_index)
-            console.log(
-                f"None-end: random start_index: {self.start.as_index()}\
- random end_index: {self.end.as_index}"
-            )
+            if verbose:
+                console.log(f"None-end: random start_index: {self.start.as_index()}")
+                console.log(f"None-end: random end_index: {self.end.value}")
 
         else:
             if verbose:
-                self.console.log(f"\nstart: {self.start}\nend: {self.end}\n")
+                console.log(f"start: {self.start.value}\nend: {self.end.value}\n")
             if invert:
                 if self.start.as_index() > self.end.as_index():
                     self.length = self.end.as_index() - self.start.as_index()
@@ -147,8 +150,11 @@ class Gradient:
             num_of_index=self.length,
             title=self.title,
         )
+        if verbose:
+            console.log(f"Indexes: {self.indexes}")
         for index in self.indexes:
             self.colors.append(NamedColor(index))
+        inspect(self.colors, all=True)
 
     def __str__(self):
         return self.text
@@ -156,24 +162,60 @@ class Gradient:
     def __repr__(self) -> str:
         return f"Gradient<{', '.join([str(color) for color in self.colors])}>"
 
+    # def __rich__(self) -> RenderResult:
+    #     """Rich representation of the Gradient object."""
+    #     num_of_colors = len(self.colors)
+    #     input_text = Text("".join(self.text))
+    #     text_size = len(input_text)
+    #     gradient_size = text_size // num_of_colors
+    #     gradient_text = Text()
+
+    #     substrings = self.split_text(input_text, num_of_colors - 1)
+    #     # console.log(f"Substrings: {substrings}")
+
+    #     for x, substring in enumerate(substrings):
+    #         if x < num_of_colors - 1:
+    #             color1 = self.colors[x].as_rgb()
+    #             color2 = self.colors[x + 1].as_rgb()
+    #             substring = self.simple_gradient(substring, color1, color2)
+    #         gradient_text = Text.assemble(
+    #             gradient_text, substring, justify=self.justify
+    #         )
+    #     return gradient_text
+
     def __rich__(self) -> RenderResult:
-        """Rich representation of the Gradient object."""
-        num_of_colors = len(self.colors)
-        input_text = Text("".join(self.text))
-        text_size = len(input_text)
-        gradient_size = text_size // num_of_colors
+        """Rich representation of a gradient object."""
+        size = len(self.text)
+        gradient_size = size // (self.length - 1)
         gradient_text = Text()
 
-        substrings = self.split_text(input_text, num_of_colors - 1)
-        # console.log(f"Substrings: {substrings}")
+        for index in range(self.length - 1):
+            next_index = index + 1
+            begin = index * gradient_size
+            end = begin + gradient_size
+            substring = Text(self.text[begin:end])
 
-        for x, substring in enumerate(substrings):
-            if x < num_of_colors - 1:
-                color1 = self.colors[x].as_rgb()
-                color2 = self.colors[x + 1].as_rgb()
-                substring = self.simple_gradient(substring, color1, color2)
+            if index < (self.length - 1):
+                color1 = self.colors[index]
+                r1, g1, b1 = tuple(NamedColor(color1).as_rgb())
+                color2 = self.colors[next_index]
+                r2, g2, b2 = tuple(NamedColor(color2).as_rgb())
+                dr = r2 - r1
+                dg = g2 - g1
+                db = b2 - b1
+
+            for x in range(gradient_size):
+                blend = index / gradient_size
+                color = f"#{int(r1 + dr * blend):02X}\
+{int(g1 + dg * blend):02X}{int(b1 + db * blend):02X}"
+                substring.stylize(color, x, x + 1)
+
             gradient_text = Text.assemble(
-                gradient_text, substring, justify=self.justify
+                gradient_text,
+                substring,
+                justify=self.justify,
+                overflow=self.overflow,
+                end=self.end,
             )
         return gradient_text
 
@@ -222,11 +264,11 @@ code and repurposed to make Gradient possible.
         Returns:
             list[str]: The split text.
         """
-        try:
-            text_size = len(text)
-            gradient_size = text_size // num
-        except ZeroDivisionError as zde:
-            num = 1
+        text_size = len(text)
+        if num < 1:
+            while num < 1:
+                num += 1
+        gradient_size = text_size // num
         substrings = []
         for index in range(num):
             begin = index * gradient_size
@@ -239,6 +281,36 @@ code and repurposed to make Gradient possible.
             substrings.append(substring)
         return substrings
 
+    @property
+    def plain(self) -> str:
+        """Get the text as a single string."""
+        return self.text[0]
+
+    @plain.setter
+    def plain(self, new_text: str) -> None:
+        """Set the text to a new value."""
+        if new_text != self.plain:
+            sanitized_text = strip_control_codes(new_text)
+            self.text[:] = [sanitized_text]
+            old_length = self.length
+            self._length = len(sanitized_text)
+            if old_length > self._length:
+                self._trim_spans()
+
+    def _trim_spans(self) -> None:
+        """Remove or modify any spans that are over the end of the text."""
+        max_offset = len(self.plain)
+        _Span = Span
+        self._spans[:] = [
+            (
+                span
+                if span.end < max_offset
+                else _Span(span.start, min(max_offset, span.end), span.style)
+            )
+            for span in self._spans
+            if span.start < max_offset
+        ]
+
 
 if __name__ == "__main__":
     console = MaxConsole(width=125)
@@ -249,7 +321,7 @@ if __name__ == "__main__":
 
     text1 = lorem.paragraph()
     console.rule(title="Random Gradient", style="bold.white")
-    gradient1 = Gradient(text1, title="Gradient <Random>")
+    gradient1 = Gradient(text1, title="Gradient <Random>", verbose=True)
     console.print(gradient1, justify="center")
     console.line(2)
 
@@ -265,10 +337,12 @@ if __name__ == "__main__":
 
     text3 = lorem.paragraph()
     console.rule(
-        title="[bold white]Inverted Gradient <[/][bold #ff0000]Red[/][bold white] to \
-[/][bold #0000ff]Blue[/][bold white]>[/]",
+        title="[bold white]Inverted Gradient <[/][bold #ff00ff]Magenta[/][bold white] to \
+[/][bold #ff0000]Red[/][bold white]>[/]",
         style="bold.white",
     )
-    gradient3 = Gradient(text3, justify="center", start="red", end="blue", invert=True)
+    gradient3 = Gradient(
+        text3, justify="center", start="magenta", end="red", invert=True
+    )
     console.print(gradient3, justify="center")
     console.line(2)

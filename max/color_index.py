@@ -78,7 +78,7 @@ class ColorIndex(Sequence):
             self.num_of_index += 10
         if self.num_of_index > 10:
             self.num_of_index -= 10
-        log.debug(f"Num of Index: {self.num_of_index}")
+        log.debug(f"\nNum of Index: {self.num_of_index}")
 
         # Start
         if self.start is None:
