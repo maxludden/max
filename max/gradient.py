@@ -1,14 +1,15 @@
 """This module contains the gradient class to automate the creation of gradient colored text."""
 # pylint: disable=W0612:unused-variable
 # pylint: disable=R0913:too-many-arguments
+# pylint: disable=C0103:invalid-name
 from random import randint
-from typing import Optional, Tuple
+from typing import Optional
 
 from cheap_repr import normal_repr, register_repr
 from lorem_text import lorem
 from rich.console import JustifyMethod, OverflowMethod, RenderResult
 from rich.control import strip_control_codes
-from rich.text import Span, Text
+from rich.text import Text
 
 from max.color_index import ColorIndex
 from max.console import MaxConsole
@@ -46,22 +47,22 @@ class Gradient(Text):
 
     def __init__(
         self,
-        text: Optional[str | Text] = None,
+        text: str | Text = "",
         start: Optional[NamedColor | str | int] = None,
         end: Optional[NamedColor | str | int] = None,
-        justify: Optional[JustifyMethod] = DEFAULT_JUSTIFY,
-        invert: Optional[bool] = False,
-        length: Optional[int] = 3,
+        justify: JustifyMethod = DEFAULT_JUSTIFY,
+        invert: bool = False,
+        length: int = 3,
         console: MaxConsole = MaxConsole(),  # pylint: disable=W0621:redefined-outer-name
-        overflow: Optional[OverflowMethod] = DEFAULT_OVERFLOW,
-        title: Optional[str] = "Gradient",
-        verbose: Optional[bool] = False,
+        overflow: OverflowMethod = DEFAULT_OVERFLOW,
+        title: str = "Gradient",
+        verbose: bool = False,
     ) -> None:
         """Print gradient colored text to the console.
         Args:
             text(`text): The text to print. Defaults to empty string.
-            start(`NamedColor | str | int`): The color to start the gradient.
-            end(`NamedColor|str|int`): The color to end the gradient.
+            start(`Optional[NamedColor|str|int]`): The color to start the gradient.
+            end(`Optional[NamedColor|str|int]`): The color to end the gradient.
             justify(`JustifyMethod`): How to align the gradient text locally. Defaults \
                 to `left`.
             invert(`bool): Reverse the color gradient. Defaults to False.
@@ -77,7 +78,7 @@ class Gradient(Text):
         self.text = strip_control_codes(text)
         self.start = NamedColor(start)
         self.end = NamedColor(end)
-        self.invert = invert
+        self.invert = bool(invert)
         self.length = length
         self.justify = justify
         self.indexes = []
@@ -119,16 +120,6 @@ class Gradient(Text):
         else:
             if verbose:
                 log.debug(f"start: {self.start.value}\nend: {self.end.value}\n")
-            # if invert:
-            #     if self.start.as_index() > self.end.as_index():
-            #         self.length = self.end.as_index() - self.start.as_index()
-            #     else:
-            #         self.length = self.start.as_index() + (10 - self.end.as_index())
-            # else:
-            #     if self.start.as_index() < self.end.as_index():
-            #         self.length = self.end.as_index() - self.end.as_index()
-            #     else:
-            #         self.length = (10 - self.end.as_index()) + self.start.as_index()
 
         self.indexes = ColorIndex(
             start=self.start.as_index(),
@@ -184,98 +175,6 @@ class Gradient(Text):
                 end=self.end,
             )
         return gradient_text
-
-    @staticmethod
-    def simple_gradient(
-        message: str, color1: Tuple[int, int, int], color2: Tuple[int, int, int]
-    ) -> Text:
-        """Blend text from one color to another. This function was found in rich-cli \
-code and repurposed to make Gradient possible.
-
-        Args:
-            message (str): The text to apply the gradient to
-            color1 (Tuple[int, int, int]): The first color of the gradient
-            color2 (Tuple[int, int, int]): The second color of the gradient
-
-        Returns:
-            Text: The gradient text
-        """
-        text = Text(str(message))
-        size = len(text)
-
-        r1, g1, b1 = color1
-        r2, g2, b2 = color2
-
-        dr = r2 - r1
-        dg = g2 - g1
-        db = b2 - b1
-
-        for index in range(size):
-            blend = index / size
-            color = f"#{int(r1 + dr * blend):02X}"
-            color = f"{color}{int(g1 + dg * blend):02X}"
-            color = f"{color}{int(b1 + db * blend):02X}"
-            text.stylize(color, index, index + 1)
-
-        return text
-
-    @staticmethod
-    def split_text(text: str, num: int) -> list[Text]:
-        """Split a text into equal parts.
-
-        Args:
-            text (str): The text to split.
-            num (int): The number of parts to split the text into.
-
-        Returns:
-            list[str]: The split text.
-        """
-        text_size = len(text)
-        if num < 1:
-            while num < 1:
-                num += 1
-        gradient_size = text_size // num
-        substrings = []
-        for index in range(num):
-            begin = index * gradient_size
-            end = begin + gradient_size
-            if index == 0:
-                substring = str(text[begin:end])
-            else:
-                substring = str(text[begin + 1 : end + 1])
-            substring = Text(substring)
-            substrings.append(substring)
-        return substrings
-
-    @property
-    def plain(self) -> str:
-        """Get the text as a single string."""
-        return self.text[0]
-
-    @plain.setter
-    def plain(self, new_text: str) -> None:
-        """Set the text to a new value."""
-        if new_text != self.plain:
-            sanitized_text = strip_control_codes(new_text)
-            self.text[:] = [sanitized_text]
-            old_length = self.length
-            self._length = len(sanitized_text)
-            if old_length > self._length:
-                self._trim_spans()
-
-    def _trim_spans(self) -> None:
-        """Remove or modify any spans that are over the end of the text."""
-        max_offset = len(self.plain)
-        _Span = Span
-        self._spans[:] = [
-            (
-                span
-                if span.end < max_offset
-                else _Span(span.start, min(max_offset, span.end), span.style)
-            )
-            for span in self._spans
-            if span.start < max_offset
-        ]
 
 
 if __name__ == "__main__":

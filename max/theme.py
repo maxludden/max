@@ -136,7 +136,7 @@ MAX_STYLES: Dict[str, Style] = {
     "repr.path": Style(color="magenta"),
     "repr.filename": Style(color="bright_magenta"),
     "rule.line": Style(color="bright_green"),
-    "rule.text": Style.null(),
+    "rule.text": Style(color="#ffffff", bold=True),
     "json.brace": Style(bold=True),
     "json.bool_true": Style(color="bright_green", italic=True),
     "json.bool_false": Style(color="#ff0000", italic=True),
