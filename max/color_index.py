@@ -1,7 +1,6 @@
 """This module creates a sequence of increasing or decreasing integers \
     from which to generate a gradient."""
-# max/color_index.copy()
-# pylint: disable=W0611:unused-import
+# pylint: disable=unused-import,redefined-outer-name,syntax-error
 from collections.abc import Sequence
 from itertools import cycle
 from os import environ
@@ -18,120 +17,125 @@ from rich.text import Text
 from snoop import snoop
 
 from max.console import MaxConsole
-from max.log import debug
+from max.log import debug, log
 from max.named_color import NamedColor
 from max.progress import MaxProgress
 
 console = MaxConsole()
-CWD = Path.cwd()
-LOGS = CWD / "logs"
-LOG = LOGS / "log.log"
-FORMAT = environ.get("LOGURU_FORMAT")
-RICH_SUCCESS_LOG_FORMAT = environ.get("RICH_SUCCESS_LOG_FORMAT")
-RICH_ERROR_LOG_FORMAT = environ.get("RICH_ERROR_LOG_FORMAT")
 ASCENDING = cycle(list(range(10)))
 DESCENDING = cycle(list(range(9, -1, -1)))
-TEST = True
 
 
-class ColorIndex(Sequence):
-    """
-    A class to generate a list of indexes for a color wheel.
+class ColorIndex(list):
+    """A list of indexes from which to generate a gradient."""
 
-    Args:
-        `start` (int, optional): The starting index. Defaults to None.
-        `end` (int, optional): The ending index. Defaults to None.
-        `invert` (bool, optional): If True, the indexes will be inverted. Defaults to False.
-        `num_of_index` (int, optional): The number of indexes. Defaults to 3.
-        `title` (str, optional): The title of the `ColorIndex` object. Defaults to "ColorIndex".
-    """
+    indexes: list = []
+    _iter_index: int = 0
 
-    start: Optional[int]
-    end: Optional[int]
-    invert: Optional[bool]
-    num_of_index: Optional[int]
-    indexes: list[int]
-    title: Optional[str]
-    _iter_index: int
-
-    # @snoop
     def __init__(
         self,
         start: Optional[int] = None,
         end: Optional[int] = None,
         invert: Optional[bool] = False,
-        num_of_index: Optional[int] = 3,
-        title: Optional[str] = "ColorIndex",
+        length: Optional[int] = 3,
+        title: Optional[str | Text] = "ColorIndex",
     ) -> None:
+        """Generate a list of integers from which to construct a gradient.
+
+		Args:
+			start (Optional[int]): The integer from which to start the index.
+			end (Optional[int]): The integer to end the index.
+			invert (Optional[bool]): Whether to descend the index. Defaults to False.
+			length (Optional[int]): The number of integers in the index. This value is \
+only used when `start`, `end`, or both are not provided. Defaults to 3.
+"""
+        super().__init__([])
         self.start = start
         self.end = end
         self.invert = invert
-        self.num_of_index = num_of_index
+        self.length = length
         self.title = title
 
-        # Num of Index
-        if not isinstance(self.num_of_index, int):
-            raise TypeError(
-                f"num_of_index must be an integer: {type(self.num_of_index)}"
-            )
-        if self.num_of_index < 2:
-            self.num_of_index += 10
-        if self.num_of_index > 10:
-            self.num_of_index -= 10
-        log.debug(f"\nNum of Index: {self.num_of_index}")
+        if self.start is None and self.end is None:
+            self.generate_start_end()
+        elif self.start is None and self.end:
+            self.generate_start()
+        elif self.start and self.end is None:
+            self.generate_end()
+        else:
+            self.generate_index()
 
-        # Start
-        if self.start is None:
-            self.start = randint(0, 9)
-        if not isinstance(self.start, int):
-            raise TypeError(f"Start must be an integer: {NamedColor(self.start)}")
-        if self.start not in list(range(0, 10)):
-            raise ValueError(f"Start must be between 0 and 9: {self.start}")
-        log.debug(f"Start: {self.start}")
-
-        if self.invert is None:
-            self.invert = choice([True, False])
-        if not isinstance(self.invert, bool):
-            raise TypeError(f"invert must be a boolean: {type(self.invert)}")
-        log.debug(f"Invert: {self.invert}")
-
-        numbers = []
-        for index in range(10):
+    def generate_start_end(self):
+        """Generate the start and end when only `length` is provided."""
+        self.start = randint(0, 9)
+        self.indexes = []
+        for index in range(self.length):
             if not self.invert:
-                num = self.start + index
-                if num > 9:
-                    num -= 10
+                next_index = self.start + index
             else:
-                num = self.start - index
-                if num < 0:
-                    num += 10
-            numbers.append(num)
-        self.cycle = cycle(numbers)
-        cycle_list = []
-        for _ in range(10):
-            cycle_list.append(next(self.cycle))
-        log.debug(f"Cycle: {cycle_list}")
+                next_index = self.start - index
+            if next_index < 0:
+                next_index += 10
+            if next_index > 9:
+                next_index -= 10
+            self.indexes.append(next_index)
+        self.end = self.indexes[-1]
 
-        # End
-        if self.end is None:
-            self.end = cycle_list[self.num_of_index]
+    def generate_start(self):
+        """ "Generate the start when only `end` is provided."""
+        for index in range(self.length):
+            if not self.invert:
+                next_index = self.end - index
+            else:
+                next_index = self.end + index
+            if index < 0:
+                next_index += 10
+            if index > 9:
+                next_index -= 10
+            self.indexes.append(next_index)
 
-        elif not isinstance(self.end, int):
-            raise ValueError(f"end must be an integer: {self.end}")
-        elif self.end not in list(range(0, 10)):
-            raise ValueError(f"end must be between 0 and 9: {self.end}")
-        log.debug(f"end: {self.end}")
+    def generate_end(self):
+        """Generate the end when only `start` is provided."""
+        self.indexes = []
+        for index in range(self.length):
+            if not self.invert:
+                next_index = self.start + index
+            else:
+                next_index = self.start - index
+            if next_index < 0:
+                next_index += 10
+            if next_index > 9:
+                next_index -= 10
+            self.indexes.append(next_index)
+        self.end = self.indexes[-1]
 
-        end_index = cycle_list.index(self.end)
-        self.indexes = cycle_list[0 : end_index + 1]
-        log.debug(f"Indexes: {self.indexes}")
+    def generate_index(self):
+        """Generate the index when both `start` and `end` are provided."""
+        self.indexes = []
+        if not self.invert:
+            if self.start < self.end:
+                self.length = (self.end + 1) - self.start
+            else:
+                self.length = (10 - self.start) + self.end + 1
+        else:
+            if self.start > self.end:
+                self.length = (self.start + 1) - self.end
+            else:
+                self.length = (10 - self.end) + self.start + 1
+        for index in range(self.length):
+            if not self.invert:
+                next_index = self.start + index
+            else:
+                next_index = self.start - index
+            if next_index < 0:
+                next_index += 10
+            if next_index > 9:
+                next_index -= 10
+            self.indexes.append(next_index)
+        assert next_index == self.end, f"{next_index} != {self.end}"
 
     def __getitem__(self, index):
-        if isinstance(index, slice):
-            return [self[i] for i in range(*index.indices(len(self)))]
-        elif index < 0:
-            index = len(self) + index
-        if not 0 <= index < len(self):
+        if index >= len(self.indexes):
             raise IndexError("ColorIndex index out of range")
         return self.indexes[index]
 
@@ -196,10 +200,10 @@ class ColorIndex(Sequence):
             "#ff8800",
             "#ff0000",
         ]
-        if self.title == "Color Index":
-            title = self.colorful_class()
+        if "ColorIndex" in self.title:
+            self.title = self.colorful_class()
         else:
-            title = self.title
+            self.title = self.title
         index_list = []
         for i in self.indexes:
             hex_color = colors[i]
@@ -208,7 +212,7 @@ class ColorIndex(Sequence):
         indexes = "[bold #ffffff],[/] ".join(index_list)
         index_text = f"[bold #ffffff]< [/]{indexes} [bold #ffffff]>[/]"
 
-        return Panel(index_text, title=title, border_style="bold #ffffff")
+        return Panel(index_text, title=self.title, border_style="bold #ffffff")
 
     @staticmethod
     def demo():
@@ -245,7 +249,9 @@ a random {color_index}, no arguments are required.[/bold #ffffff]\n\n\n{color_in
 [bold #ffffff], which spans \nthe entire range of possible indexes \
 using {color_index}.\n[/bold #ffffff]"
         console.print(text_block2, justify="center", width=115)
-        color_index2 = ColorIndex(0, 9, title=f"{color_index} [bold #ff00ff]2[/]")
+        color_index2 = ColorIndex(
+            start=0, end=9, title=f"{color_index} [bold #ff00ff]2[/]"
+        )
         console.print(color_index2, justify="center", width=115)
         console.line(2)
 

@@ -1,31 +1,19 @@
 """This module contains the gradient class to automate the creation of gradient colored text."""
-# pylint: disable=W0611:unused-import
-# pylint: disable=C0103:invalid-name
 # pylint: disable=W0612:unused-variable
 # pylint: disable=R0913:too-many-arguments
-import re
-from os import environ
 from random import randint
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 from cheap_repr import normal_repr, register_repr
 from lorem_text import lorem
-from rich import inspect
 from rich.console import JustifyMethod, OverflowMethod, RenderResult
 from rich.control import strip_control_codes
-from rich.table import Table
 from rich.text import Span, Text
-from snoop import snoop
 
 from max.color_index import ColorIndex
 from max.console import MaxConsole
-from max.log import debug, log
-from max.named_color import (
-    ColorParsingError,
-    InvalidHexColor,
-    InvalidRGBColor,
-    NamedColor,
-)
+from max.log import log
+from max.named_color import NamedColor
 
 DEFAULT_JUSTIFY: "JustifyMethod" = "default"
 DEFAULT_OVERFLOW: "OverflowMethod" = "fold"
@@ -56,7 +44,6 @@ class Gradient(Text):
     invert: Optional[bool]
     title: Optional[str | Text]
 
-    # @snoop
     def __init__(
         self,
         text: Optional[str | Text] = None,
@@ -106,8 +93,8 @@ class Gradient(Text):
                 end_index = start_index + int(self.length)
             self.end = NamedColor(end_index)
             if verbose:
-                console.log(f"None-none: random start_index: {self.start.as_index()}")
-                console.log(f"None-none: random end_index: {self.end.as_index()}")
+                log.debug(f"None-none: random start_index: {self.start.as_index()}")
+                log.debug(f"None-none: random end_index: {self.end.as_index()}")
 
         elif self.end is None and self.start:
             if self.invert:
@@ -116,8 +103,8 @@ class Gradient(Text):
                 end_index = self.start.as_index() - int(self.length)
             self.end = NamedColor(end_index)
             if verbose:
-                console.log(f"start-none: random start_index: {self.start.value}")
-                console.log(f"start-none: random end_index: {self.end.as_index()}")
+                log.debug(f"start-none: random start_index: {self.start.value}")
+                log.debug(f"start-none: random end_index: {self.end.as_index()}")
 
         elif self.start is None and self.end:
             if self.invert:
@@ -126,62 +113,41 @@ class Gradient(Text):
                 start_index = self.end.as_index() + int(self.length)
             self.start = NamedColor(start_index)
             if verbose:
-                console.log(f"None-end: random start_index: {self.start.as_index()}")
-                console.log(f"None-end: random end_index: {self.end.value}")
+                log.debug(f"None-end: random start_index: {self.start.as_index()}")
+                log.debug(f"None-end: random end_index: {self.end.value}")
 
         else:
             if verbose:
-                console.log(f"start: {self.start.value}\nend: {self.end.value}\n")
-            if invert:
-                if self.start.as_index() > self.end.as_index():
-                    self.length = self.end.as_index() - self.start.as_index()
-                else:
-                    self.length = self.start.as_index() + (10 - self.end.as_index())
-            else:
-                if self.start.as_index() < self.end.as_index():
-                    self.length = self.end.as_index() - self.end.as_index()
-                else:
-                    self.length = (10 - self.end.as_index()) + self.start.as_index()
+                log.debug(f"start: {self.start.value}\nend: {self.end.value}\n")
+            # if invert:
+            #     if self.start.as_index() > self.end.as_index():
+            #         self.length = self.end.as_index() - self.start.as_index()
+            #     else:
+            #         self.length = self.start.as_index() + (10 - self.end.as_index())
+            # else:
+            #     if self.start.as_index() < self.end.as_index():
+            #         self.length = self.end.as_index() - self.end.as_index()
+            #     else:
+            #         self.length = (10 - self.end.as_index()) + self.start.as_index()
 
         self.indexes = ColorIndex(
             start=self.start.as_index(),
             end=self.end.as_index(),
             invert=self.invert,
-            num_of_index=self.length,
+            length=self.length,
             title=self.title,
         )
+        self.length = len(self.indexes)
         if verbose:
-            console.log(f"Indexes: {self.indexes}")
+            log.debug(f"Indexes: {self.indexes}")
         for index in self.indexes:
             self.colors.append(NamedColor(index))
-        inspect(self.colors, all=True)
 
     def __str__(self):
         return self.text
 
     def __repr__(self) -> str:
-        return f"Gradient<{', '.join([str(color) for color in self.colors])}>"
-
-    # def __rich__(self) -> RenderResult:
-    #     """Rich representation of the Gradient object."""
-    #     num_of_colors = len(self.colors)
-    #     input_text = Text("".join(self.text))
-    #     text_size = len(input_text)
-    #     gradient_size = text_size // num_of_colors
-    #     gradient_text = Text()
-
-    #     substrings = self.split_text(input_text, num_of_colors - 1)
-    #     # console.log(f"Substrings: {substrings}")
-
-    #     for x, substring in enumerate(substrings):
-    #         if x < num_of_colors - 1:
-    #             color1 = self.colors[x].as_rgb()
-    #             color2 = self.colors[x + 1].as_rgb()
-    #             substring = self.simple_gradient(substring, color1, color2)
-    #         gradient_text = Text.assemble(
-    #             gradient_text, substring, justify=self.justify
-    #         )
-    #     return gradient_text
+        return f"Gradient<{', '.join([str(color) for color in self.colors])}>, Text<{self.text}>"
 
     def __rich__(self) -> RenderResult:
         """Rich representation of a gradient object."""
@@ -205,7 +171,7 @@ class Gradient(Text):
                 db = b2 - b1
 
             for x in range(gradient_size):
-                blend = index / gradient_size
+                blend = x / gradient_size
                 color = f"#{int(r1 + dr * blend):02X}\
 {int(g1 + dg * blend):02X}{int(b1 + db * blend):02X}"
                 substring.stylize(color, x, x + 1)
