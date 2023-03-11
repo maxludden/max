@@ -241,15 +241,16 @@ class Gradient(Text):
     def as_text(self) -> Text:
         """Return the gradient as a Text object."""
         size = len(self.text)
-        gradient_size = size // (self.length - 1)
+        number_of_gradients = int(self.length - 1)
+        gradient_size = int(size // number_of_gradients)
         gradient_text = Text()
 
-        for index in range(self.length):
+        for index in range(number_of_gradients):
             next_index = index + 1
             begin = index * gradient_size
             end = begin + gradient_size
-            if index == self.length:
-                substring = Text(self.text[begin:size])
+            if index == number_of_gradients - 1:
+                substring = Text(self.text[begin:])
             else:
                 substring = Text(self.text[begin:end])
 
@@ -270,8 +271,8 @@ class Gradient(Text):
                     substring.stylize(color, x, x + 1)
                 else:
                     substring.stylize(f"bold {color}", x, x + 1)
-                if self.verbose:
-                    console.log(f"Index: {index}", substring)
+            if self.verbose:
+                console.log(f"Gradient {index}:", substring)
 
             gradient_text = Text.assemble(
                 gradient_text,
@@ -304,13 +305,13 @@ if __name__ == "__main__":
     # console.clear()
     console.line(2)
 
-    text1 = lorem.paragraph()
+    text1 = lorem.paragraphs(10)
     console.rule(title="Random Gradient", style="bold.white")
     gradient1 = Gradient(text1, title="Gradient <Random>")
     console.print(gradient1, justify="center")
     console.line(2)
 
-    text2 = lorem.paragraph()
+    text2 = lorem.paragraphs(10)
     console.rule(
         title="[bold white]Gradient <[/][bold.red]Red[/][bold.white] to \
 [/][bold.blue]Light_Blue[/][bold.white]>[/]",
@@ -322,15 +323,18 @@ if __name__ == "__main__":
 
     text3 = lorem.paragraphs(10)
     console.rule(
-        title="[bold.white]Bold Inverted Gradient <[/][bold.yellow]Yellow[/][bold.white] to \
+        title="[bold.white]Inverted Gradient <[/][bold.yellow]Yellow[/][bold.white] to \
 [/][bold.blue]Blue[/][bold.white]>[/]",
         style="bold.white",
     )
     gradient3 = Gradient(
-        text3, justify="center", start="yellow", end="blue", invert=True, bold=True
+        text3, justify="center", start="yellow", end="blue", invert=True
     )
     console.print(gradient3, justify="center")
     console.line(2)
 
-    console.rule(title="[bold.white]Rainbow Gradient(Right Justified)[/]")
-    console.print(Gradient(text3, rainbow=True), justify="right")
+    console.rule(
+        title="[bold.white]Bold Rainbow Gradient(Right Justified)[/]",
+        style="bold.white",
+    )
+    console.print(Gradient(text3, rainbow=True, bold=True), justify="right")
