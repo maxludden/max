@@ -12,7 +12,7 @@ from rich.control import strip_control_codes
 from rich.text import Text
 
 from max.color_index import ColorIndex
-from max.console import MaxConsole
+from max.console import BaseMaxConsole as MaxConsole
 from max.log import log
 from max.named_color import NamedColor
 
@@ -35,15 +35,12 @@ class Gradient(Text):
             title(`str|Text'): The optional title of the Gradient. Defaults to 'Gradient'
     """
 
-    start_index: int
-    end_index: int
     indexes: ColorIndex
     colors: list[NamedColor]
     console: MaxConsole
-    _start: Optional[NamedColor | str | int]
-    _end: Optional[NamedColor | str | int]
     invert: Optional[bool]
     title: Optional[str | Text]
+    _iter_index: int = 0
 
     def __init__(
         self,
@@ -52,10 +49,12 @@ class Gradient(Text):
         end: Optional[NamedColor | str | int] = None,
         justify: JustifyMethod = DEFAULT_JUSTIFY,
         invert: bool = False,
-        length: int = 3,
+        length: int = 4,
         console: MaxConsole = MaxConsole(),  # pylint: disable=W0621:redefined-outer-name
         overflow: OverflowMethod = DEFAULT_OVERFLOW,
         title: str = "Gradient",
+        bold: bool = False,
+        *,
         verbose: bool = False,
     ) -> None:
         """Print gradient colored text to the console.
@@ -76,63 +75,145 @@ class Gradient(Text):
         super().__init__(text=text, justify=justify, overflow=overflow)
         self.console = console
         self.text = strip_control_codes(text)
-        self.start = NamedColor(start)
-        self.end = NamedColor(end)
+        self.start = start
+        self.end = end
         self.invert = bool(invert)
         self.length = length
         self.justify = justify
         self.indexes = []
         self.colors = []
         self.title = title
+        self.bold = bold
+        self.verbose = verbose
+
+        if self.start in NamedColor.colors:
+            self.start = NamedColor.colors.index(self.start)
+        elif self.start in NamedColor.hex_colors:
+            self.start = NamedColor.hex_colors.index(self.start)
+        elif isinstance(self.start, NamedColor):
+            self.start = NamedColor(self.start).as_index()
+        elif isinstance(self.start, int):
+            if self.start not in list(range(0, 9)):
+                raise ValueError(
+                    f"Invalid start index: {self.start}. Must be between 0 and 9."
+                )
+        elif self.start is None:
+            pass
+        else:
+            raise TypeError(f"Invalid start type: {type(self.start)}")
+
+        if self.end in NamedColor.colors:
+            self.end = NamedColor.colors.index(self.end)
+        elif self.end in NamedColor.hex_colors:
+            self.end = NamedColor.hex_colors.index(self.end)
+        elif isinstance(self.end, NamedColor):
+            self.end = NamedColor(self.end).as_index()
+        elif isinstance(self.end, int):
+            if self.end not in list(range(0, 9)):
+                raise ValueError(
+                    f"Invalid end index: {self.end}. Must be between 0 and 9."
+                )
+        elif self.end is None:
+            pass
+        else:
+            raise TypeError(f"Invalid end type: {type(self.end)}")
 
         if self.start is None and self.end is None:
-            start_index = randint(0, 9)
-            self.start = NamedColor(start_index)
-            if self.invert:
-                end_index = start_index - int(self.length)
-            else:
-                end_index = start_index + int(self.length)
-            self.end = NamedColor(end_index)
-            if verbose:
-                log.debug(f"None-none: random start_index: {self.start.as_index()}")
-                log.debug(f"None-none: random end_index: {self.end.as_index()}")
-
-        elif self.end is None and self.start:
-            if self.invert:
-                end_index = self.start.as_index() + int(self.length)
-            else:
-                end_index = self.start.as_index() - int(self.length)
-            self.end = NamedColor(end_index)
-            if verbose:
-                log.debug(f"start-none: random start_index: {self.start.value}")
-                log.debug(f"start-none: random end_index: {self.end.as_index()}")
-
+            self.generate_start_end()
         elif self.start is None and self.end:
-            if self.invert:
-                start_index = self.end.as_index() - int(self.length)
-            else:
-                start_index = self.end.as_index() + int(self.length)
-            self.start = NamedColor(start_index)
-            if verbose:
-                log.debug(f"None-end: random start_index: {self.start.as_index()}")
-                log.debug(f"None-end: random end_index: {self.end.value}")
-
+            self.generate_start()
+        elif self.start and self.end is None:
+            self.generate_end()
         else:
-            if verbose:
-                log.debug(f"start: {self.start.value}\nend: {self.end.value}\n")
+            self.generate_index()
 
-        self.indexes = ColorIndex(
-            start=self.start.as_index(),
-            end=self.end.as_index(),
-            invert=self.invert,
-            length=self.length,
-            title=self.title,
-        )
-        self.length = len(self.indexes)
-        if verbose:
-            log.debug(f"Indexes: {self.indexes}")
         for index in self.indexes:
-            self.colors.append(NamedColor(index))
+            self.colors.append(NamedColor.colors[index])
+
+    def generate_start_end(self):
+        """Generate the start and end when only `length` is provided."""
+        self.start = randint(0, 9)
+        self.indexes = []
+        for index in range(self.length):
+            if not self.invert:
+                next_index = self.start + index
+            else:
+                next_index = self.start - index
+            if next_index < 0:
+                next_index += 10
+            if next_index > 9:
+                next_index -= 10
+            self.indexes.append(next_index)
+        self.end = self.indexes[-1]
+
+    def generate_start(self):
+        """Generate the start when only `end` is provided."""
+        for index in range(self.length):
+            if not self.invert:
+                next_index = self.end - index
+            else:
+                next_index = self.end + index
+            if index < 0:
+                next_index += 10
+            if index > 9:
+                next_index -= 10
+            self.indexes.append(next_index)
+
+    def generate_end(self):
+        """Generate the end when only `start` is provided."""
+        self.indexes = []
+        for index in range(self.length):
+            if not self.invert:
+                next_index = self.start + index
+            else:
+                next_index = self.start - index
+            if next_index < 0:
+                next_index += 10
+            if next_index > 9:
+                next_index -= 10
+            self.indexes.append(next_index)
+        self.end = self.indexes[-1]
+
+    def generate_index(self):
+        """Generate the index when both `start` and `end` are provided."""
+        self.indexes = []
+        if not self.invert:
+            if self.start < self.end:
+                self.length = (self.end + 1) - self.start
+            else:
+                self.length = (10 - self.start) + self.end + 1
+        else:
+            if self.start > self.end:
+                self.length = (self.start + 1) - self.end
+            else:
+                self.length = (10 - self.end) + self.start + 1
+        for index in range(self.length):
+            if not self.invert:
+                next_index = self.start + index
+            else:
+                next_index = self.start - index
+            if next_index < 0:
+                next_index += 10
+            if next_index > 9:
+                next_index -= 10
+            self.indexes.append(next_index)
+        assert next_index == self.end, f"{next_index} != {self.end}"
+
+    def __getitem__(self, index):
+        if index >= len(self.indexes):
+            raise IndexError("ColorIndex index out of range")
+        return self.indexes[index]
+
+    def __iter__(self):
+        self._iter_index = 0
+        return self
+
+    def __next__(self):
+        if self._iter_index >= len(self.indexes):
+            raise StopIteration
+        value = self.indexes[self._iter_index]
+        self._iter_index += 1
+        return value
 
     def __str__(self):
         return self.text
@@ -165,7 +246,10 @@ class Gradient(Text):
                 blend = x / gradient_size
                 color = f"#{int(r1 + dr * blend):02X}\
 {int(g1 + dg * blend):02X}{int(b1 + db * blend):02X}"
-                substring.stylize(color, x, x + 1)
+                if not self.bold:
+                    substring.stylize(color, x, x + 1)
+                else:
+                    substring.stylize(f"bold {color}", x, x + 1)
 
             gradient_text = Text.assemble(
                 gradient_text,
@@ -178,36 +262,36 @@ class Gradient(Text):
 
 
 if __name__ == "__main__":
-    console = MaxConsole(width=125)
+    console = MaxConsole(justify="center")
     register_repr(Gradient)(normal_repr)
     register_repr(ColorIndex)(normal_repr)
-    console.clear()
+    # console.clear()
     console.line(2)
 
     text1 = lorem.paragraph()
     console.rule(title="Random Gradient", style="bold.white")
-    gradient1 = Gradient(text1, title="Gradient <Random>", verbose=True)
+    gradient1 = Gradient(text1, title="Gradient <Random>")
     console.print(gradient1, justify="center")
     console.line(2)
 
     text2 = lorem.paragraph()
     console.rule(
-        title="[bold white]Gradient <[/][bold #ff0000]Red[/][bold white] to \
-[/][bold #0000ff]Blue[/][bold white]>[/]",
+        title="[bold white]Gradient <[/][bold.red]Red[/][bold.white] to \
+[/][bold.blue]Light_Blue[/][bold.white]>[/]",
         style="bold.white",
     )
-    gradient2 = Gradient(text2, justify="center", start="red", end="blue")
-    console.print(gradient2, justify="center")
+    gradient2 = Gradient(text2, justify="center", start="red", end="light_blue")
+    console.print(gradient2, width=115, justify="center")
     console.line(2)
 
     text3 = lorem.paragraph()
     console.rule(
-        title="[bold white]Inverted Gradient <[/][bold #ff00ff]Magenta[/][bold white] to \
-[/][bold #ff0000]Red[/][bold white]>[/]",
+        title="[bold.white]Bold Inverted Gradient <[/][bold.yellow]Yellow[/][bold.white] to \
+[/][bold.blue]Blue[/][bold.white]>[/]",
         style="bold.white",
     )
     gradient3 = Gradient(
-        text3, justify="center", start="magenta", end="red", invert=True
+        text3, justify="center", start="yellow", end="blue", invert=True, bold=True
     )
     console.print(gradient3, justify="center")
     console.line(2)
