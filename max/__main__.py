@@ -11,9 +11,8 @@ from rich.style import Style
 from rich.text import Text
 
 from max.color_index import ColorIndex
-from max.console import BaseMaxConsole
-from max.console import BaseMaxConsole as Console
 from max.console import (
+    BaseMaxConsole,
     ConsoleOptions,
     JustifyMethod,
     OverflowMethod,
@@ -105,13 +104,14 @@ class MaxConsole(BaseMaxConsole, metaclass=Singleton):
         install_traceback(console=self)
 
     def gradient(  # pylint: disable=too-many-arguments
+        self,
         text: str | Text,
         start: Optional[NamedColor | str | int] = None,
         end: Optional[NamedColor | str | int] = None,
         justify: JustifyMethod = DEFAULT_JUSTIFY,
         invert: bool = False,
         length: int = 3,
-        console: Console = Console(),  # pylint: disable=W0621:redefined-outer-name
+        console: BaseMaxConsole = BaseMaxConsole(),  # pylint: disable=W0621:redefined-outer-name
         overflow: OverflowMethod = DEFAULT_OVERFLOW,
         title: str = "Gradient",
         verbose: bool = False,
@@ -161,7 +161,7 @@ class MaxConsole(BaseMaxConsole, metaclass=Singleton):
         end: Optional[NamedColor | str | int] = None,
         invert: bool = False,
         length: int = 3,
-        console: Console = Console(),  # pylint: disable=W0621:redefined-outer-name
+        console: BaseMaxConsole = BaseMaxConsole(),  # pylint: disable=W0621:redefined-outer-name
         title: str = "Gradient",
         verbose: bool = False,
     ) -> Text:

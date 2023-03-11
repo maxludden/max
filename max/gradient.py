@@ -1,13 +1,14 @@
 """This module contains the gradient class to automate the creation of gradient colored text."""
-# pylint: disable=W0612:unused-variable
+# pylint: disable=unused-variable, redefined-outer-name
 # pylint: disable=R0913:too-many-arguments
 # pylint: disable=C0103:invalid-name
+
 from random import randint
 from typing import Optional
 
 from cheap_repr import normal_repr, register_repr
 from lorem_text import lorem
-from rich.console import JustifyMethod, OverflowMethod, RenderResult
+from rich.console import ConsoleOptions, JustifyMethod, OverflowMethod, RenderResult
 from rich.control import strip_control_codes
 from rich.text import Text
 
@@ -48,11 +49,12 @@ class Gradient(Text):
         end: Optional[NamedColor | str | int] = None,
         justify: JustifyMethod = DEFAULT_JUSTIFY,
         invert: bool = False,
-        length: int = 4,
+        length: int = 3,
         console: MaxConsole = MaxConsole(),  # pylint: disable=W0621:redefined-outer-name
         overflow: OverflowMethod = DEFAULT_OVERFLOW,
         title: str = "Gradient",
         bold: bool = False,
+        rainbow: bool = False,
         *,
         verbose: bool = False,
     ) -> None:
@@ -83,6 +85,7 @@ class Gradient(Text):
         self.colors = []
         self.title = title
         self.bold = bold
+        self.rainbow = rainbow
         self.verbose = verbose
 
         if self.start in NamedColor.colors:
@@ -101,21 +104,33 @@ class Gradient(Text):
         else:
             raise TypeError(f"Invalid start type: {type(self.start)}")
 
-        if self.end in NamedColor.colors:
-            self.end = NamedColor.colors.index(self.end)
-        elif self.end in NamedColor.hex_colors:
-            self.end = NamedColor.hex_colors.index(self.end)
-        elif isinstance(self.end, NamedColor):
-            self.end = NamedColor(self.end).as_index()
-        elif isinstance(self.end, int):
-            if self.end not in list(range(0, 9)):
-                raise ValueError(
-                    f"Invalid end index: {self.end}. Must be between 0 and 9."
-                )
-        elif self.end is None:
-            pass
+        if not rainbow:
+            if self.end in NamedColor.colors:
+                self.end = NamedColor.colors.index(self.end)
+            elif self.end in NamedColor.hex_colors:
+                self.end = NamedColor.hex_colors.index(self.end)
+            elif isinstance(self.end, NamedColor):
+                self.end = NamedColor(self.end).as_index()
+            elif isinstance(self.end, int):
+                if self.end not in list(range(0, 9)):
+                    raise ValueError(
+                        f"Invalid end index: {self.end}. Must be between 0 and 9."
+                    )
+            elif self.end is None:
+                pass
+            else:
+                raise TypeError(f"Invalid end type: {type(self.end)}")
         else:
-            raise TypeError(f"Invalid end type: {type(self.end)}")
+            if self.start is None:
+                self.start = 0
+            if not invert:
+                self.end = self.start - 1
+                if self.end < 0:
+                    self.end += 10
+            else:
+                self.end = self.start + 1
+                if self.end > 9:
+                    self.end -= 10
 
         if self.start is None and self.end is None:
             self.generate_start_end()
@@ -220,17 +235,23 @@ class Gradient(Text):
     def __repr__(self) -> str:
         return f"Gradient<{', '.join([str(color) for color in self.colors])}>, Text<{self.text}>"
 
-    def __rich__(self) -> RenderResult:
-        """Rich representation of a gradient object."""
+    def __len__(self) -> int:
+        return len(self.text)
+
+    def as_text(self) -> Text:
+        """Return the gradient as a Text object."""
         size = len(self.text)
         gradient_size = size // (self.length - 1)
         gradient_text = Text()
 
-        for index in range(self.length - 1):
+        for index in range(self.length):
             next_index = index + 1
             begin = index * gradient_size
             end = begin + gradient_size
-            substring = Text(self.text[begin:end])
+            if index == self.length:
+                substring = Text(self.text[begin:size])
+            else:
+                substring = Text(self.text[begin:end])
 
             if index < (self.length - 1):
                 color1 = self.colors[index]
@@ -241,7 +262,7 @@ class Gradient(Text):
                 dg = g2 - g1
                 db = b2 - b1
 
-            for x in range(gradient_size):
+            for x in range(len(substring)):
                 blend = x / gradient_size
                 color = f"#{int(r1 + dr * blend):02X}\
 {int(g1 + dg * blend):02X}{int(b1 + db * blend):02X}"
@@ -249,6 +270,8 @@ class Gradient(Text):
                     substring.stylize(color, x, x + 1)
                 else:
                     substring.stylize(f"bold {color}", x, x + 1)
+                if self.verbose:
+                    console.log(f"Index: {index}", substring)
 
             gradient_text = Text.assemble(
                 gradient_text,
@@ -258,6 +281,20 @@ class Gradient(Text):
                 end=self.end,
             )
         return gradient_text
+
+    def __rich__(self) -> RenderResult:
+        """Rich representation of a gradient object."""
+        return self.as_text()
+
+    def __rich_console__(
+        self, console: MaxConsole, options: ConsoleOptions
+    ) -> RenderResult:
+        """Rich representation of a gradient object."""
+        return self.as_text()
+
+    def __call__(self) -> Text:
+        """Return the gradient as a Text object."""
+        return self.as_text()
 
 
 if __name__ == "__main__":
@@ -280,10 +317,10 @@ if __name__ == "__main__":
         style="bold.white",
     )
     gradient2 = Gradient(text2, justify="center", start="red", end="light_blue")
-    console.print(gradient2, width=115, justify="center")
+    console.print(gradient2, justify="left")
     console.line(2)
 
-    text3 = lorem.paragraph()
+    text3 = lorem.paragraphs(10)
     console.rule(
         title="[bold.white]Bold Inverted Gradient <[/][bold.yellow]Yellow[/][bold.white] to \
 [/][bold.blue]Blue[/][bold.white]>[/]",
@@ -294,3 +331,6 @@ if __name__ == "__main__":
     )
     console.print(gradient3, justify="center")
     console.line(2)
+
+    console.rule(title="[bold.white]Rainbow Gradient(Right Justified)[/]")
+    console.print(Gradient(text3, rainbow=True), justify="right")
