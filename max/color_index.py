@@ -16,7 +16,7 @@ from rich.panel import Panel
 from rich.text import Text
 from snoop import snoop
 
-from max.console import MaxConsole
+from max.console import BaseMaxConsole as MaxConsole
 from max.log import debug, log
 from max.named_color import NamedColor
 from max.progress import MaxProgress
