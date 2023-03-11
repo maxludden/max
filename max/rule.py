@@ -12,7 +12,8 @@ from rich.measure import Measurement
 from rich.style import Style, StyleType
 from rich.text import Text
 
-from max.console import ConsoleOptions, MaxConsole, RenderResult
+from max.console import BaseMaxConsole as MaxConsole
+from max.console import ConsoleOptions, RenderResult
 from max.gradient import Gradient
 from max.named_color import NamedColor
 
@@ -104,6 +105,7 @@ or "right". Defaults to "center".
             rule_text.append(title_text)
 
         rule_text.plain = set_cell_size(rule_text.plain, width)
+        self._gradient_rule(rule_text)
         return Gradient(rule_text.plain)
 
     def _rule_line(self, chars_len: int, width: int) -> Text:
@@ -112,11 +114,17 @@ or "right". Defaults to "center".
         rule_text.plain = set_cell_size(rule_text.plain, width)
         return Gradient(rule_text.plain)
 
+    def _gradient_rule(self, rule_text: Text):
+        regex = re.compile(r"^(?P<left>─* )(?P<text>.*)(?P<right> ─*)$", re.I | re.M)
+        matches = regex.match(rule_text.plain)
+        groups = matches.groups()
+        console.print(groups)
+
 
 if __name__ == "__main__":  # pragma: no cover
     import sys
 
-    from max.console import MaxConsole  # pylint: disable=reimported
+    from max.console import BaseMaxConsole as MaxConsole  # pylint: disable=reimported
 
     try:
         TEXT = sys.argv[1]

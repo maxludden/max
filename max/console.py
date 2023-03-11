@@ -10,6 +10,8 @@ from rich.console import (
     Console,
     ConsoleOptions,
     ConsoleRenderable,
+    JustifyMethod,
+    OverflowMethod,
     RenderResult,
     RichCast,
 )
@@ -24,24 +26,16 @@ from max.theme import MaxTheme
 RenderableType = ConsoleRenderable | RichCast | str
 
 
-def singleton(cls):
-    """Singleton decorator for MaxConsole."""
-    instance = None
-    lock = threading.Lock()
+class Singleton(type):
+    _instances = {}
 
-    def get_instance(*args, **kwargs):
-        nonlocal instance
-        if instance is None:
-            with lock:
-                if instance is None:
-                    instance = cls(*args, **kwargs)
-        return instance
-
-    return get_instance
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
 
 
-@dataclass
-class MaxConsole(Console):
+class BaseMaxConsole(Console, metaclass=Singleton):
     """A custom themed high level interface for the MaxConsole class that \
         inherits from rich.console.Console
 
@@ -118,7 +112,7 @@ class MaxConsole(Console):
     @staticmethod
     def get_options() -> dict:
         """Retrieve the console options from MaxConsole and return it as a dict."""
-        options = MaxConsole().options
+        options = BaseMaxConsole().options
         options.dict = {
             "size": options.size,
             "legacy_windows": options.legacy_windows,
@@ -148,7 +142,7 @@ class MaxConsole(Console):
 if __name__ == "__main__":
 
     def _max_console() -> Text:
-        """Print out `MaxConsole` in a gradient"""
+        """Print out `MaxConsole` in a manual gradient"""
         letters = [
             Text("M", style="bold.green"),
             Text("a", style="bold.yellow"),
@@ -177,7 +171,7 @@ used as a drop in replacement for [bold #00ffff]rich.console.Console[/].\n\n"
         return combine_explanation
 
     if __name__ == "__main__":
-        console = MaxConsole()
+        console = BaseMaxConsole()
         explanation = gen_explanation()
         title = _max_console()
         console.line(2)
