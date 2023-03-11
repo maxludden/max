@@ -1,6 +1,5 @@
 """A gradient rule line for MaxConsole"""
-# pylint: disable=unused-import
-# pylint: disable=unused-argument
+
 from random import randint
 from typing import Optional
 
