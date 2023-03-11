@@ -13,7 +13,6 @@ from rich.text import Text
 
 from max.color_index import ColorIndex
 from max.console import BaseMaxConsole as MaxConsole
-from max.log import log
 from max.named_color import NamedColor
 
 DEFAULT_JUSTIFY: "JustifyMethod" = "default"
