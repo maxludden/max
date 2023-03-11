@@ -1,22 +1,15 @@
 """MaxConsole is a custom themed class inheriting from rich.console.Console."""
-# pylint: disable=unused-import
 # pylint: disable=invalid-name
-import threading
-from dataclasses import dataclass
-from random import randint
+import os
+from datetime import datetime
+from typing import IO, Callable, Literal, Mapping, Optional, Union
 
-from rich import inspect
-from rich.console import (
-    Console,
-    ConsoleOptions,
-    ConsoleRenderable,
-    JustifyMethod,
-    OverflowMethod,
-    RenderResult,
-    RichCast,
-)
-from rich.padding import Padding
+from rich._log_render import FormatTimeCallable
+from rich.console import Console, ConsoleRenderable, RichCast
+from rich.emoji import EmojiVariant
+from rich.highlighter import ReprHighlighter
 from rich.panel import Panel
+from rich.style import StyleType
 from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import install as install_traceback
@@ -24,9 +17,14 @@ from rich.traceback import install as install_traceback
 from max.theme import MaxTheme
 
 RenderableType = ConsoleRenderable | RichCast | str
+HighlighterType = Callable[[Union[str, "Text"]], "Text"]
+JustifyMethod = Literal["default", "left", "center", "right", "full"]
+OverflowMethod = Literal["fold", "crop", "ellipsis", "ignore"]
 
 
 class Singleton(type):
+    """A metaclass to create a single global MaxConsole instance."""
+
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
@@ -35,7 +33,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class BaseMaxConsole(Console, metaclass=Singleton):
+class MaxConsole(Console, metaclass=Singleton):
     """A custom themed high level interface for the MaxConsole class that \
         inherits from rich.console.Console
 
@@ -52,7 +50,7 @@ class BaseMaxConsole(Console, metaclass=Singleton):
         soft_wrap (Optional[bool], optional): Set soft wrap default on \
             print method. Defaults to False.
         theme (Theme, optional): An optional style theme object, or \
-            None for max's default theme.
+            None for Max's default theme.
         stderr (bool, optional): Use stderr rather than stdout if \
             file is not specified. Defaults to False.
         file (IO, optional): A file object where the console \
@@ -100,48 +98,81 @@ class BaseMaxConsole(Console, metaclass=Singleton):
     """
 
     theme: Theme = MaxTheme()
+    _environ: Mapping[str, str] = os.environ
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+        self,
+        *,
+        color_system: Optional[
+            Literal["auto", "standard", "256", "truecolor", "windows"]
+        ] = "auto",
+        force_terminal: Optional[bool] = None,
+        force_jupyter: Optional[bool] = None,
+        force_interactive: Optional[bool] = None,
+        soft_wrap: bool = False,
+        theme: Optional[Theme] = MaxTheme(),
+        stderr: bool = False,
+        file: Optional[IO[str]] = None,
+        quiet: bool = False,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        style: Optional[StyleType] = None,
+        no_color: Optional[bool] = None,
+        tab_size: int = 8,
+        record: bool = False,
+        markup: bool = True,
+        emoji: bool = True,
+        emoji_variant: Optional[EmojiVariant] = None,
+        highlight: bool = True,
+        log_time: bool = True,
+        log_path: bool = True,
+        log_time_format: Union[str, FormatTimeCallable] = "[%X]",
+        highlighter: Optional[HighlighterType] = ReprHighlighter(),
+        legacy_windows: Optional[bool] = None,
+        safe_box: bool = True,
+        get_datetime: Optional[Callable[[], datetime]] = None,
+        get_time: Optional[Callable[[], float]] = None,
+        traceback: bool = True,
+        _environ: Optional[Mapping[str, str]] = None,
+    ):
         super().__init__(
-            *args,
-            **kwargs,
-            theme=self.theme,
+            color_system=color_system,
+            force_terminal=force_terminal,
+            force_jupyter=force_jupyter,
+            force_interactive=force_interactive,
+            soft_wrap=soft_wrap,
+            theme=theme,
+            stderr=stderr,
+            file=file,
+            quiet=quiet,
+            width=width,
+            height=height,
+            style=style,
+            no_color=no_color,
+            tab_size=tab_size,
+            record=record,
+            markup=markup,
+            emoji=emoji,
+            emoji_variant=emoji_variant,
+            highlight=highlight,
+            log_time=log_time,
+            log_path=log_path,
+            log_time_format=log_time_format,
+            highlighter=highlighter,
+            legacy_windows=legacy_windows,
+            safe_box=safe_box,
+            get_datetime=get_datetime,
+            get_time=get_time,
+            _environ=_environ,
         )
-        install_traceback(console=self)
+        if traceback:
+            install_traceback(console=self)
+
+    def __repr__(self) -> str:
+        return f"<MaxConsole width={self.width} {self._color_system!s}>"
 
     @staticmethod
-    def get_options() -> dict:
-        """Retrieve the console options from MaxConsole and return it as a dict."""
-        options = BaseMaxConsole().options
-        options.dict = {
-            "size": options.size,
-            "legacy_windows": options.legacy_windows,
-            "min_width": options.min_width,
-            "max_width": options.max_width,
-            "is_terminal": options.is_terminal,
-            "encoding": options.encoding,
-            "max_height": options.max_height,
-            "justify": options.justify,
-            "overflow": options.overflow,
-            "no_wrap": options.no_wrap,
-            "highlight": options.highlight,
-            "markup": options.markup,
-            "height": options.height,
-        }
-        return ConsoleOptions(**options.dict)
-
-    @staticmethod
-    def colorful_hello_world():
-        """Print 'Hello World' in a colorful manner"""
-        return "[bold #ff0000]H[/][bold #ff8800]e[/][bold #ffff00]l[/][bold \
-            #00ff00]l[/][bold #00ffff]o[/][bold #0088ff] W[/][bold \
-            #0000ff]o[/][bold #5f00ff]r[/][bold #af00ff]l[/][bold \
-            #ff00ff]d[/][bold #ff0000]![/]"
-
-
-if __name__ == "__main__":
-
-    def _max_console() -> Text:
+    def max_console() -> Text:
         """Print out `MaxConsole` in a manual gradient"""
         letters = [
             Text("M", style="bold.green"),
@@ -158,9 +189,10 @@ if __name__ == "__main__":
         # console.log(Text.assemble(*letters))
         return Text.assemble(*letters)
 
-    def gen_explanation() -> Text:
+    @classmethod
+    def gen_explanation(cls) -> Text:
         """Generate an explanation of MaxConsole for demonstration."""
-        colorful = _max_console()
+        colorful = cls.max_console()
         explanation_text = Text.from_markup(
             " is a custom themed class inheriting from \
 [bold #00ffff]rich.console.Console[/]. It is a [bold.light_purple]global singleton \
@@ -170,18 +202,19 @@ used as a drop in replacement for [bold #00ffff]rich.console.Console[/].\n\n"
         combine_explanation = Text.assemble("\n\n", colorful, explanation_text)
         return combine_explanation
 
-    if __name__ == "__main__":
-        console = BaseMaxConsole()
-        explanation = gen_explanation()
-        title = _max_console()
-        console.line(2)
-        console.print(
-            Panel(
-                explanation,
-                title=title,
-                padding=(1, 8),
-                width=100,
-            ),
-            justify="center",
-        )
-        console.line()
+
+if __name__ == "__main__":
+    console = MaxConsole()
+    explanation = console.gen_explanation()
+    title = console.max_console()
+    console.line(2)
+    console.print(
+        Panel(
+            explanation,
+            title=title,
+            padding=(1, 8),
+            width=100,
+        ),
+        justify="center",
+    )
+    console.line()

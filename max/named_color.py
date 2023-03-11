@@ -17,7 +17,7 @@ from rich.table import Table
 from rich.text import Text
 from snoop import snoop
 
-from max.console import BaseMaxConsole as MaxConsole
+from max.console import MaxConsole
 
 # from snoop import snoop
 

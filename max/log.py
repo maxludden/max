@@ -5,7 +5,7 @@ from pathlib import Path
 
 from loguru import logger as log
 
-from max.console import BaseMaxConsole as MaxConsole
+from max.console import MaxConsole
 
 CWD = Path.cwd()
 LOGS = CWD / "logs"

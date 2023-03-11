@@ -24,8 +24,7 @@ from rich.syntax import Syntax
 from rich.table import Column, Table
 from rich.text import Text
 
-from max.console import BaseMaxConsole as MaxConsole
-from max.console import RenderableType
+from max.console import MaxConsole, RenderableType
 
 console = MaxConsole()
 

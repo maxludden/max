@@ -297,6 +297,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "svgwrite"
+version = "1.4.3"
+requires_python = ">=3.6"
+summary = "A Python library to create SVG drawings."
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 requires_python = ">=3.7"
@@ -343,7 +349,7 @@ summary = "Module for decorators, wrappers and monkey patching."
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:ccdd8df9178fea7f71ba6ffcb76c8d8fcbbed3f982c9ec1d014aee06209a0e9d"
+content_hash = "sha256:dd94c708f14c910e343088d80c76c5957246dee2fddbe0771cbbab9f06d98d3d"
 
 [metadata.files]
 "astroid 2.15.0" = [
@@ -744,6 +750,10 @@ content_hash = "sha256:ccdd8df9178fea7f71ba6ffcb76c8d8fcbbed3f982c9ec1d014aee062
     {url = "https://files.pythonhosted.org/packages/f0/ab/1f5fa162a69240591bf98cbd75bf2d36701385e2a06e4d2823d8e30baab5/SQLAlchemy-2.0.5.post1-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:f53542654124d30a3c3ebff9f99e5749add75e4cf28895a2ca6cd1458039bd8f"},
     {url = "https://files.pythonhosted.org/packages/fa/37/e23a97ed89cc69141fdc5998c7847d25554f9a419a8d23225565b1d8db53/SQLAlchemy-2.0.5.post1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:7fe933831e17f93947b4e3db4e4a7470dae24340f269baf06cdfcc0538c8d1cb"},
     {url = "https://files.pythonhosted.org/packages/ff/45/6c1a4c1424d62327b1c45c023a7b6a5d5b434fa9ab0f64a59c465d859ee4/SQLAlchemy-2.0.5.post1-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:869ca02661f6d4cece5823997a364dfa97601de11151fca3ebc3429eb9ffa2e0"},
+]
+"svgwrite 1.4.3" = [
+    {url = "https://files.pythonhosted.org/packages/16/c1/263d4e93b543390d86d8eb4fc23d9ce8a8d6efd146f9427364109004fa9b/svgwrite-1.4.3.zip", hash = "sha256:a8fbdfd4443302a6619a7f76bc937fc683daf2628d9b737c891ec08b8ce524c3"},
+    {url = "https://files.pythonhosted.org/packages/84/15/640e399579024a6875918839454025bb1d5f850bb70d96a11eabb644d11c/svgwrite-1.4.3-py3-none-any.whl", hash = "sha256:bb6b2b5450f1edbfa597d924f9ac2dd099e625562e492021d7dd614f65f8a22d"},
 ]
 "tomli 2.0.1" = [
     {url = "https://files.pythonhosted.org/packages/97/75/10a9ebee3fd790d20926a90a2547f0bf78f371b2f13aa822c759680ca7b9/tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},

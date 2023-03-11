@@ -3,10 +3,8 @@
 # pylint: disable=unused-import,redefined-outer-name,syntax-error
 from collections.abc import Sequence
 from itertools import cycle
-from os import environ
-from pathlib import Path
 from random import choice, randint
-from typing import Optional
+from typing import List, Optional
 
 # from snoop import snoop
 from cheap_repr import normal_repr, register_repr
@@ -16,7 +14,7 @@ from rich.panel import Panel
 from rich.text import Text
 from snoop import snoop
 
-from max.console import BaseMaxConsole as MaxConsole
+from max.console import MaxConsole
 from max.log import debug, log
 from max.named_color import NamedColor
 from max.progress import MaxProgress
@@ -26,7 +24,7 @@ ASCENDING = cycle(list(range(10)))
 DESCENDING = cycle(list(range(9, -1, -1)))
 
 
-class ColorIndex(list):
+class ColorIndex(List):
     """A list of indexes from which to generate a gradient."""
 
     indexes: list = []
@@ -274,5 +272,5 @@ and rich \ndunder methods.[/]\n\n\n"
 
 register_repr(ColorIndex)(normal_repr)
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     ColorIndex.demo()
