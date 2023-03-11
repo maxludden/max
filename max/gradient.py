@@ -13,7 +13,7 @@ from rich.control import strip_control_codes
 from rich.text import Text
 
 from max.color_index import ColorIndex
-from max.console import BaseMaxConsole as MaxConsole
+from max.console import MaxConsole
 from max.named_color import NamedColor
 
 DEFAULT_JUSTIFY: "JustifyMethod" = "default"
@@ -299,7 +299,7 @@ class Gradient(Text):
 
 
 if __name__ == "__main__":
-    console = MaxConsole(justify="center")
+    console = MaxConsole()
     register_repr(Gradient)(normal_repr)
     register_repr(ColorIndex)(normal_repr)
     # console.clear()
