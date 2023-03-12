@@ -24,6 +24,7 @@ class GradientRule:  # pylint: disable=too-few-public-methods
         end (str, optional): Character at end of Rule. defaults to "\\\\n"
         align (str, optional): How to align the title, one of "left", "center", \
 or "right". Defaults to "center".
+        thick (bool, optional): Draw a rule that is as think as possible. Defaults to False.
     """
 
     def __init__(
@@ -35,6 +36,7 @@ or "right". Defaults to "center".
         style: Optional[str | Style] = "bold.white",
         end: str = "\n",
         align: AlignMethod = "center",
+        thick: bool = False,
     ) -> None:
         if cell_len(characters) < 1:
             raise ValueError(
@@ -50,6 +52,7 @@ or "right". Defaults to "center".
         self.style = style
         self.end = end
         self.align = align
+        self.thick = thick
 
     def __repr__(self) -> str:
         return f"GradientRule({self.title!r}, {self.characters!r})"
@@ -103,40 +106,89 @@ or "right". Defaults to "center".
                 right_index -= 10
             right_color = NamedColor(right_index)
             left_str = characters * (side_width // chars_len + 1)
-            left = Gradient(left_str, left_color, center_color, bold=True).as_text()
+            if not self.thick:
+                left = Gradient(left_str, left_color, center_color, bold=True).as_text()
+            else:
+                left = Gradient(
+                    left_str, left_color, center_color, color_box=True
+                ).as_text()
             left.truncate(side_width - 1)
             right_length = width - cell_len(left.plain) - cell_len(title_text.plain)
             right_str = characters * (side_width // chars_len + 1)
-            right = Gradient(right_str, center_color, right_color, bold=True).as_text()
+            if not self.thick:
+                right = Gradient(
+                    right_str, center_color, right_color, bold=True
+                ).as_text()
+            else:
+                right = Gradient(
+                    right_str, center_color, right_color, color_box=True
+                ).as_text()
             right.truncate(right_length)
             rule_text.append_text(left)
-            rule_text.append_text(Text(" "))
-            rule_text.append_text(title_text)
-            rule_text.append_text(Text(" "))
+            if self.thick:
+                space = Text(" ", style=f"style.{center_color}")
+                title_text.stylize(f"style.{center_color}")
+                rule_text.append_text(space)
+                rule_text.append_text(title_text)
+                rule_text.append_text(space)
+            else:
+                rule_text.append_text(Text(" "))
+                rule_text.append_text(title_text)
+                rule_text.append_text(Text(" "))
             rule_text.append_text(right)
             rule_text.truncate(width)
         elif self.align == "left":
+            _start_index = randint(0, 9)
+            _start_color = NamedColor(_start_index)
             title_text.truncate(truncate_width, overflow="ellipsis")
-            rule_text.append(title_text)
-            rule_text.append(" ")
             rule_str = characters * ((width - rule_text.cell_len) + 2)
-            rule = Gradient(rule_str, bold=True).as_text()
-            rule_text.append(rule)
-            rule_text.truncate(width)
+            if self.thick:
+                title_text.stylize(f"style.{_start_color}")
+                rule_text.append(title_text)
+                rule_text.append(Text(" ", style=f"style.{_start_color}"))
+                rule = Gradient(rule_str, start=_start_color, color_box=True).as_text()
+                rule_text.append(rule)
+                rule_text.truncate(width)
+            else:
+                rule_text.append(title_text)
+                rule_text.append(" ")
+                rule = Gradient(rule_str, bold=True).as_text()
+                rule_text.append(rule)
+                rule_text.truncate(width)
         elif self.align == "right":
+            _start_index = randint(0, 9)
+            _start_color = NamedColor(_start_index)
+            _end_index = _start_index + 2
+            if _end_index > 9:
+                _end_index -= 10
+            _end_color = NamedColor(_end_index)
             title_text.truncate(truncate_width, overflow="ellipsis")
             rule_str = characters * (width - title_text.cell_len - 1)
-            rule = Gradient(rule_str, bold=True).as_text()
-            rule_text.append(rule)
-            rule_text.append(" ")
-            rule_text.append(title_text)
+            if self.thick:
+                title_text.stylize(f"style.{_end_color}")
+                space = Text(" ", style=f"style.{_end_color}")
+                rule = Gradient(
+                    rule_str, start=_start_color, end=_end_color, color_box=True
+                ).as_text()
+                rule_text.append(rule)
+                rule_text.append(space)
+                rule_text.append(title_text)
+            else:
+                space = Text(" ")
+                rule = Gradient(rule_str, bold=True).as_text()
+                rule_text.append(rule)
+                rule_text.append(space)
+                rule_text.append(title_text)
 
         rule_text.plain = set_cell_size(rule_text.plain, width)
         return rule_text
 
     def _rule_line(self, chars_len: int, width: int) -> Text:
         rule_str = self.characters * ((width // chars_len) + 3)
-        rule_text = Gradient(rule_str, bold=True).as_text()
+        if not self.thick:
+            rule_text = Gradient(rule_str, bold=True).as_text()
+        else:
+            rule_text = Gradient(rule_str, color_box=True).as_text()
         rule_text.truncate(width)
         rule_text.plain = set_cell_size(rule_text.plain, width)
         return rule_text
@@ -167,5 +219,14 @@ if __name__ == "__main__":  # pragma: no cover
     rule3 = GradientRule(title=TEXT3, align="right")
     console.print(rule3)
 
-    console = MaxConsole()
     console.print(GradientRule())
+    console.line(2)
+
+    # Thick Gradient Rules
+    console.print(GradientRule(title="Or thicker if you prefer!", thick=True))
+    console.line()
+    console.print(
+        GradientRule(title="Without sacrificing...", align="left", thick=True)
+    )
+    console.line()
+    console.print(GradientRule(title="...any finesse!", align="right", thick=True))
