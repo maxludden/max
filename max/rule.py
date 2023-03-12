@@ -152,14 +152,16 @@ if __name__ == "__main__":  # pragma: no cover
         TEXT2 = sys.argv[1]
         TEXT3 = sys.argv[1]
     except IndexError:
-        TEXT1 = "Hello, World"
+        TEXT1 = "Underlined Gradient Rule"
         TEXT2 = "Gradient Title on Left"
         TEXT3 = "Regular Title on Right"
     console = MaxConsole()
-    rule1 = GradientRule(title=TEXT1)
+    rule1 = GradientRule(title=TEXT1, style="underline white")
     console.print(rule1)
 
-    rule2 = GradientRule(title=TEXT2, gradient_title=True, align="left")
+    rule2 = GradientRule(
+        title=TEXT2, gradient_title=True, style="underline", align="left"
+    )
     console.print(rule2)
 
     rule3 = GradientRule(title=TEXT3, align="right")

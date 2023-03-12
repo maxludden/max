@@ -3,13 +3,17 @@
 # pylint: disable=R0913:too-many-arguments
 # pylint: disable=C0103:invalid-name
 
+# from concurrent.futures import ThreadPoolExecutor, as_completed
+# from multiprocessing import cpu_count
 from random import randint
 from typing import Optional
 
 from cheap_repr import normal_repr, register_repr
 from lorem_text import lorem
 from rich.console import ConsoleOptions, JustifyMethod, OverflowMethod, RenderResult
+from rich.containers import Lines
 from rich.control import strip_control_codes
+from rich.style import StyleType
 from rich.text import Text
 
 from max.color_index import ColorIndex
@@ -48,13 +52,17 @@ class Gradient(Text):
         start: Optional[NamedColor | str | int] = None,
         end: Optional[NamedColor | str | int] = None,
         justify: JustifyMethod = DEFAULT_JUSTIFY,
+        overflow: OverflowMethod = DEFAULT_OVERFLOW,
         invert: bool = False,
         length: int = 3,
         console: MaxConsole = MaxConsole(),  # pylint: disable=W0621:redefined-outer-name
-        overflow: OverflowMethod = DEFAULT_OVERFLOW,
         title: str = "Gradient",
+        style: StyleType = None,
         bold: bool = False,
+        underline: bool = False,
+        italic: bool = False,
         rainbow: bool = False,
+        string_end: str = "\n",
         *,
         verbose: bool = False,
     ) -> None:
@@ -64,79 +72,103 @@ class Gradient(Text):
             start(`Optional[NamedColor|str|int]`): The color to start the gradient.
             end(`Optional[NamedColor|str|int]`): The color to end the gradient.
             justify(`JustifyMethod`): How to align the gradient text locally. Defaults \
-                to `left`.
+                to `default`.
+            overflow(`OverflowMethod`): How to handle text that overflows the width of \
+                the console. Defaults to `fold`.
             invert(`bool): Reverse the color gradient. Defaults to False.
             length(`int`): The number of colors in the gradient. Defaults to `3`.
             console(`MaxConsole`): The rich console to print \
                 gradient text to. Defaults to MaxConsole().
             title(`str|Text'): The optional title of the Gradient. Defaults to 'Gradient'
+            style(`StyleType`) The style of the gradient text. Defaults to None.
+            bold(`bool`): Whether to bold the gradient text. Defaults to False.
+            underline(`bool`): Whether to underline the gradient text. Defaults to False.
+            italic(`bool`): Whether to italicize the gradient text. Defaults to False.
+            rainbow(`bool`): Whether to print the gradient text in rainbow colors across \
+                the spectrum. Defaults to False.
+            string_end(`str`): The string to end the gradient text with. Defaults to \
+                `\n`.
+            verbose(`bool`): Whether to print verbose output. Defaults to False.
         """
         if isinstance(text, Text):
             text = str(text)
         super().__init__(text=text, justify=justify, overflow=overflow)
         self.console = console
         self.text = strip_control_codes(text)
-        self.start = start
-        self.end = end
+        self.start_color = start
+        self.end_color = end
         self.invert = bool(invert)
         self.length = length
         self.justify = justify
         self.indexes = []
         self.colors = []
+        self.end = string_end
         self.title = title
+        self.style = style
         self.bold = bold
+        self.underline = underline
+        self.italic = italic
         self.rainbow = rainbow
         self.verbose = verbose
+        if self.style is not None:
+            style = self.style.split(" ")
 
-        if self.start in NamedColor.colors:
-            self.start = NamedColor.colors.index(self.start)
-        elif self.start in NamedColor.hex_colors:
-            self.start = NamedColor.hex_colors.index(self.start)
-        elif isinstance(self.start, NamedColor):
-            self.start = NamedColor(self.start).as_index()
-        elif isinstance(self.start, int):
-            if self.start not in list(range(0, 9)):
+            if "bold" in style:
+                self.bold = True
+            if "underline" in style:
+                self.underline = True
+            if "italic" in style:
+                self.italic = True
+
+        if self.start_color in NamedColor.colors:
+            self.start_color = NamedColor.colors.index(self.start_color)
+        elif self.start_color in NamedColor.hex_colors:
+            self.start_color = NamedColor.hex_colors.index(self.start_color)
+        elif isinstance(self.start_color, NamedColor):
+            self.start_color = NamedColor(self.start_color).as_index()
+        elif isinstance(self.start_color, int):
+            if self.start_color not in list(range(0, 9)):
                 raise ValueError(
-                    f"Invalid start index: {self.start}. Must be between 0 and 9."
+                    f"Invalid start index: {self.start_color}. Must be between 0 and 9."
                 )
-        elif self.start is None:
+        elif self.start_color is None:
             pass
         else:
-            raise TypeError(f"Invalid start type: {type(self.start)}")
+            raise TypeError(f"Invalid start type: {type(self.start_color)}")
 
         if not rainbow:
-            if self.end in NamedColor.colors:
-                self.end = NamedColor.colors.index(self.end)
-            elif self.end in NamedColor.hex_colors:
-                self.end = NamedColor.hex_colors.index(self.end)
-            elif isinstance(self.end, NamedColor):
-                self.end = NamedColor(self.end).as_index()
-            elif isinstance(self.end, int):
-                if self.end not in list(range(0, 9)):
+            if self.end_color in NamedColor.colors:
+                self.end_color = NamedColor.colors.index(self.end_color)
+            elif self.end_color in NamedColor.hex_colors:
+                self.end_color = NamedColor.hex_colors.index(self.end_color)
+            elif isinstance(self.end_color, NamedColor):
+                self.end_color = NamedColor(self.end_color).as_index()
+            elif isinstance(self.end_color, int):
+                if self.end_color not in list(range(0, 9)):
                     raise ValueError(
-                        f"Invalid end index: {self.end}. Must be between 0 and 9."
+                        f"Invalid end index: {self.end_color}. Must be between 0 and 9."
                     )
-            elif self.end is None:
+            elif self.end_color is None:
                 pass
             else:
-                raise TypeError(f"Invalid end type: {type(self.end)}")
+                raise TypeError(f"Invalid end type: {type(self.end_color)}")
         else:
-            if self.start is None:
-                self.start = 0
+            if self.start_color is None:
+                self.start_color = 0
             if not invert:
-                self.end = self.start - 1
-                if self.end < 0:
-                    self.end += 10
+                self.end_color = self.start_color - 1
+                if self.end_color < 0:
+                    self.end_color += 10
             else:
-                self.end = self.start + 1
-                if self.end > 9:
-                    self.end -= 10
+                self.end_color = self.start_color + 1
+                if self.end_color > 9:
+                    self.end_color -= 10
 
-        if self.start is None and self.end is None:
+        if self.start_color is None and self.end_color is None:
             self.generate_start_end()
-        elif self.start is None and self.end:
+        elif self.start_color is None and self.end_color:
             self.generate_start()
-        elif self.start and self.end is None:
+        elif self.start_color and self.end_color is None:
             self.generate_end()
         else:
             self.generate_index()
@@ -146,27 +178,27 @@ class Gradient(Text):
 
     def generate_start_end(self):
         """Generate the start and end when only `length` is provided."""
-        self.start = randint(0, 9)
+        self.start_color = randint(0, 9)
         self.indexes = []
         for index in range(self.length):
             if not self.invert:
-                next_index = self.start + index
+                next_index = self.start_color + index
             else:
-                next_index = self.start - index
+                next_index = self.start_color - index
             if next_index < 0:
                 next_index += 10
             if next_index > 9:
                 next_index -= 10
             self.indexes.append(next_index)
-        self.end = self.indexes[-1]
+        self.end_color = self.indexes[-1]
 
     def generate_start(self):
         """Generate the start when only `end` is provided."""
         for index in range(self.length):
             if not self.invert:
-                next_index = self.end - index
+                next_index = self.end_color - index
             else:
-                next_index = self.end + index
+                next_index = self.end_color + index
             if index < 0:
                 next_index += 10
             if index > 9:
@@ -178,40 +210,40 @@ class Gradient(Text):
         self.indexes = []
         for index in range(self.length):
             if not self.invert:
-                next_index = self.start + index
+                next_index = self.start_color + index
             else:
-                next_index = self.start - index
+                next_index = self.start_color - index
             if next_index < 0:
                 next_index += 10
             if next_index > 9:
                 next_index -= 10
             self.indexes.append(next_index)
-        self.end = self.indexes[-1]
+        self.end_color = self.indexes[-1]
 
     def generate_index(self):
         """Generate the index when both `start` and `end` are provided."""
         self.indexes = []
         if not self.invert:
-            if self.start < self.end:
-                self.length = (self.end + 1) - self.start
+            if self.start_color < self.end_color:
+                self.length = (self.end_color + 1) - self.start_color
             else:
-                self.length = (10 - self.start) + self.end + 1
+                self.length = (10 - self.start_color) + self.end_color + 1
         else:
-            if self.start > self.end:
-                self.length = (self.start + 1) - self.end
+            if self.start_color > self.end_color:
+                self.length = (self.start_color + 1) - self.end_color
             else:
-                self.length = (10 - self.end) + self.start + 1
+                self.length = (10 - self.end_color) + self.start_color + 1
         for index in range(self.length):
             if not self.invert:
-                next_index = self.start + index
+                next_index = self.start_color + index
             else:
-                next_index = self.start - index
+                next_index = self.start_color - index
             if next_index < 0:
                 next_index += 10
             if next_index > 9:
                 next_index -= 10
             self.indexes.append(next_index)
-        assert next_index == self.end, f"{next_index} != {self.end}"
+        assert next_index == self.end_color, f"{next_index} != {self.end_color}"
 
     def __getitem__(self, index):
         if index >= len(self.indexes):
@@ -267,10 +299,24 @@ class Gradient(Text):
                 blend = x / gradient_size
                 color = f"#{int(r1 + dr * blend):02X}\
 {int(g1 + dg * blend):02X}{int(b1 + db * blend):02X}"
-                if not self.bold:
-                    substring.stylize(color, x, x + 1)
+                if self.bold:
+                    bold = "bold "
                 else:
-                    substring.stylize(f"bold {color}", x, x + 1)
+                    bold = ""
+                if self.underline:
+                    underline = "underline "
+                else:
+                    underline = ""
+                if self.italic:
+                    italic = "italic "
+                else:
+                    italic = ""
+                new_style = f"{bold}{underline}{italic} {color}"
+                if "  " in new_style:
+                    new_style = new_style.replace("  ", " ")
+                mew_style = new_style.strip()
+                substring.stylize(new_style, x, x + 1)
+
             if self.verbose:
                 console.log(f"Gradient {index}:", substring)
 
@@ -279,7 +325,7 @@ class Gradient(Text):
                 substring,
                 justify=self.justify,
                 overflow=self.overflow,
-                end=self.end,
+                end=self.end_color,
             )
         return gradient_text
 
@@ -297,6 +343,18 @@ class Gradient(Text):
         """Return the gradient as a Text object."""
         return self.as_text()
 
+    def wrap(  # pylint: disable=arguments-renamed, arguments-differ
+        self,
+        width: int,
+        justify: JustifyMethod = DEFAULT_JUSTIFY,
+        overflow: OverflowMethod = DEFAULT_OVERFLOW,
+        console: MaxConsole = MaxConsole(),
+    ) -> Lines:
+        """Wrap the gradient to a given width."""
+        return self.as_text().wrap(
+            console, width=width, justify=justify, overflow=overflow
+        )
+
 
 if __name__ == "__main__":
     console = MaxConsole()
@@ -308,6 +366,7 @@ if __name__ == "__main__":
     text1 = lorem.paragraphs(10)
     console.rule(title="Random Gradient", style="bold.white")
     gradient1 = Gradient(text1, title="Gradient <Random>")
+    gradient1 = gradient1.wrap(125)
     console.print(gradient1, justify="center")
     console.line(2)
 
@@ -321,14 +380,21 @@ if __name__ == "__main__":
     console.print(gradient2, justify="left")
     console.line(2)
 
+    title3 = "[underline bold.white]Inverted Italicized Bold Gradient <[/]"
+    title3 = f"{title3}[bold.yellow]Yellow[/][bold.white] to[/]"
+    title3 = f"{title3}[bold.blue]Blue[/][bold.white]>[/]"
     text3 = lorem.paragraphs(10)
     console.rule(
-        title="[bold.white]Inverted Gradient <[/][bold.yellow]Yellow[/][bold.white] to \
-[/][bold.blue]Blue[/][bold.white]>[/]",
+        title=title3,
         style="bold.white",
     )
     gradient3 = Gradient(
-        text3, justify="center", start="yellow", end="blue", invert=True
+        text3,
+        justify="center",
+        start="yellow",
+        end="blue",
+        invert=True,
+        style="italic bold",
     )
     console.print(gradient3, justify="center")
     console.line(2)
@@ -337,4 +403,4 @@ if __name__ == "__main__":
         title="[bold.white]Bold Rainbow Gradient(Right Justified)[/]",
         style="bold.white",
     )
-    console.print(Gradient(text3, rainbow=True, bold=True), justify="right")
+    console.print(Gradient(text=text3, rainbow=True, bold=True), justify="right")
