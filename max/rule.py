@@ -121,7 +121,7 @@ or "right". Defaults to "center".
                 ).as_text()
             else:
                 right = Gradient(
-                    right_str, center_color, right_color, color_box=True
+                    right_str, center_color, right_color, color_box=True, bold=True
                 ).as_text()
             right.truncate(right_length)
             rule_text.append_text(left)
@@ -146,7 +146,9 @@ or "right". Defaults to "center".
                 title_text.stylize(f"style.{_start_color}")
                 rule_text.append(title_text)
                 rule_text.append(Text(" ", style=f"style.{_start_color}"))
-                rule = Gradient(rule_str, start=_start_color, color_box=True).as_text()
+                rule = Gradient(
+                    rule_str, start=_start_color, color_box=True, bold=True
+                ).as_text()
                 rule_text.append(rule)
                 rule_text.truncate(width)
             else:
@@ -168,7 +170,11 @@ or "right". Defaults to "center".
                 title_text.stylize(f"style.{_end_color}")
                 space = Text(" ", style=f"style.{_end_color}")
                 rule = Gradient(
-                    rule_str, start=_start_color, end=_end_color, color_box=True
+                    rule_str,
+                    start=_start_color,
+                    end=_end_color,
+                    color_box=True,
+                    bold=True,
                 ).as_text()
                 rule_text.append(rule)
                 rule_text.append(space)

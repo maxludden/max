@@ -1,10 +1,5 @@
 """This module contains the gradient class to automate the creation of gradient colored text."""
-# pylint: disable=unused-variable, redefined-outer-name
-# pylint: disable=R0913:too-many-arguments
-# pylint: disable=C0103:invalid-name
-
-# from concurrent.futures import ThreadPoolExecutor, as_completed
-# from multiprocessing import cpu_count
+# pylint: disable=redefined-outer-name, too-many-arguments
 from random import randint
 from typing import Optional
 
@@ -13,7 +8,9 @@ from lorem_text import lorem
 from rich.console import ConsoleOptions, JustifyMethod, OverflowMethod, RenderResult
 from rich.containers import Lines
 from rich.control import strip_control_codes
+from rich.pretty import Pretty
 from rich.style import StyleType
+from rich.syntax import Syntax
 from rich.text import Text
 
 from max.color_index import ColorIndex
@@ -29,7 +26,7 @@ class Gradient(Text):
         Args:
             console(`MaxConsole`): The rich console to print \
                 gradient text to. Defaults to MaxConsole().
-            text(`text): The text to print. Defaults to empty string.
+            text(`text): The text to print. Defaults to empty string. P
             start(`NamedColor | str | int`): The color to start the gradient.
             end(`NamedColor|str|int`): The color to end the gradient.
             invert(`bool): Reverse the color gradient. Defaults to False.
@@ -55,7 +52,7 @@ class Gradient(Text):
         overflow: OverflowMethod = DEFAULT_OVERFLOW,
         invert: bool = False,
         length: int = 3,
-        console: MaxConsole = MaxConsole(),  # pylint: disable=W0621:redefined-outer-name
+        console: MaxConsole = MaxConsole(),
         title: str = "Gradient",
         style: StyleType = None,
         bold: bool = False,
@@ -63,6 +60,7 @@ class Gradient(Text):
         italic: bool = False,
         rainbow: bool = False,
         string_end: str = "\n",
+        color_box: bool = False,
         *,
         verbose: bool = False,
     ) -> None:
@@ -88,6 +86,9 @@ class Gradient(Text):
                 the spectrum. Defaults to False.
             string_end(`str`): The string to end the gradient text with. Defaults to \
                 `\n`.
+            color_box(`bool`): Whether to print the gradient on identically colored background. \
+                This makes the gradient's text invisible, but it useful for printing gradient \
+                samples. Defaults to False.
             verbose(`bool`): Whether to print verbose output. Defaults to False.
         """
         if isinstance(text, Text):
@@ -110,6 +111,7 @@ class Gradient(Text):
         self.italic = italic
         self.rainbow = rainbow
         self.verbose = verbose
+        self.color_box = color_box
         if self.style is not None:
             style = self.style.split(" ")
 
@@ -222,28 +224,35 @@ class Gradient(Text):
 
     def generate_index(self):
         """Generate the index when both `start` and `end` are provided."""
-        self.indexes = []
-        if not self.invert:
-            if self.start_color < self.end_color:
-                self.length = (self.end_color + 1) - self.start_color
-            else:
-                self.length = (10 - self.start_color) + self.end_color + 1
+        if self.start_color is None and self.end_color is None:
+            self.generate_start_end()
+        elif self.start_color is None and self.end_color:
+            self.generate_start()
+        elif self.start_color and self.end_color is None:
+            self.generate_end()
         else:
-            if self.start_color > self.end_color:
-                self.length = (self.start_color + 1) - self.end_color
-            else:
-                self.length = (10 - self.end_color) + self.start_color + 1
-        for index in range(self.length):
+            self.indexes = []
             if not self.invert:
-                next_index = self.start_color + index
+                if self.start_color < self.end_color:
+                    self.length = (self.end_color + 1) - self.start_color
+                else:
+                    self.length = (10 - self.start_color) + self.end_color + 1
             else:
-                next_index = self.start_color - index
-            if next_index < 0:
-                next_index += 10
-            if next_index > 9:
-                next_index -= 10
-            self.indexes.append(next_index)
-        assert next_index == self.end_color, f"{next_index} != {self.end_color}"
+                if self.start_color > self.end_color:
+                    self.length = (self.start_color + 1) - self.end_color
+                else:
+                    self.length = (10 - self.end_color) + self.start_color + 1
+            for index in range(self.length):
+                if not self.invert:
+                    next_index = self.start_color + index
+                else:
+                    next_index = self.start_color - index
+                if next_index < 0:
+                    next_index += 10
+                if next_index > 9:
+                    next_index -= 10
+                self.indexes.append(next_index)
+            assert next_index == self.end_color, f"{next_index} != {self.end_color}"
 
     def __getitem__(self, index):
         if index >= len(self.indexes):
@@ -265,7 +274,8 @@ class Gradient(Text):
         return self.text
 
     def __repr__(self) -> str:
-        return f"Gradient<{', '.join([str(color) for color in self.colors])}>, Text<{self.text}>"
+        # return f"Gradient<{', '.join([str(color) for color in self.colors])}>, Text<{self.text}>"
+        return f"Gradient<{Pretty(self)}>"
 
     def __len__(self) -> int:
         return len(self.text)
@@ -288,34 +298,37 @@ class Gradient(Text):
 
             if index < (self.length - 1):
                 color1 = self.colors[index]
-                r1, g1, b1 = tuple(NamedColor(color1).as_rgb())
+                red1, green1, blue1 = tuple(NamedColor(color1).as_rgb())
                 color2 = self.colors[next_index]
-                r2, g2, b2 = tuple(NamedColor(color2).as_rgb())
-                dr = r2 - r1
-                dg = g2 - g1
-                db = b2 - b1
+                red2, green2, blue2 = tuple(NamedColor(color2).as_rgb())
+                delta_red = red2 - red1
+                delta_green = green2 - green1
+                delta_blue = blue2 - blue1
 
-            for x in range(len(substring)):
-                blend = x / gradient_size
-                color = f"#{int(r1 + dr * blend):02X}\
-{int(g1 + dg * blend):02X}{int(b1 + db * blend):02X}"
-                if self.bold:
-                    bold = "bold "
+            for char_index in range(len(substring)):
+                blend = char_index / gradient_size
+                color = f"#{int(red1 + delta_red * blend):02X}\
+{int(green1 + delta_green * blend):02X}{int(blue1 + delta_blue * blend):02X}"
+                if self.color_box:
+                    new_style = f"{color} on {color}"
                 else:
-                    bold = ""
-                if self.underline:
-                    underline = "underline "
-                else:
-                    underline = ""
-                if self.italic:
-                    italic = "italic "
-                else:
-                    italic = ""
-                new_style = f"{bold}{underline}{italic} {color}"
-                if "  " in new_style:
-                    new_style = new_style.replace("  ", " ")
-                mew_style = new_style.strip()
-                substring.stylize(new_style, x, x + 1)
+                    if self.bold:
+                        bold = "bold "
+                    else:
+                        bold = ""
+                    if self.underline:
+                        underline = "underline "
+                    else:
+                        underline = ""
+                    if self.italic:
+                        italic = "italic "
+                    else:
+                        italic = ""
+                    new_style = f"{bold}{underline}{italic} {color}"
+                    if "  " in new_style:
+                        new_style = new_style.replace("  ", " ")
+                    new_style = new_style.strip()
+                substring.stylize(new_style, char_index, char_index + 1)
 
             if self.verbose:
                 console.log(f"Gradient {index}:", substring)
@@ -337,7 +350,7 @@ class Gradient(Text):
         self, console: MaxConsole, options: ConsoleOptions
     ) -> RenderResult:
         """Rich representation of a gradient object."""
-        return self.as_text()
+        yield self.as_text()
 
     def __call__(self) -> Text:
         """Return the gradient as a Text object."""
@@ -351,56 +364,17 @@ class Gradient(Text):
         console: MaxConsole = MaxConsole(),
     ) -> Lines:
         """Wrap the gradient to a given width."""
-        return self.as_text().wrap(
-            console, width=width, justify=justify, overflow=overflow
-        )
+        if width > console.options.max_width:
+            msg = f"Entered width ({width}) is greater than the console width"
+            msg = f"{msg} ({console.options.max_width})."
+            raise ValueError(msg)
+        else:
+            return self.as_text().wrap(
+                console, width=width, justify=justify, overflow=overflow
+            )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     console = MaxConsole()
     register_repr(Gradient)(normal_repr)
     register_repr(ColorIndex)(normal_repr)
-    # console.clear()
-    console.line(2)
-
-    text1 = lorem.paragraphs(10)
-    console.rule(title="Random Gradient", style="bold.white")
-    gradient1 = Gradient(text1, title="Gradient <Random>")
-    gradient1 = gradient1.wrap(125)
-    console.print(gradient1, justify="center")
-    console.line(2)
-
-    text2 = lorem.paragraphs(10)
-    console.rule(
-        title="[bold white]Gradient <[/][bold.red]Red[/][bold.white] to \
-[/][bold.blue]Light_Blue[/][bold.white]>[/]",
-        style="bold.white",
-    )
-    gradient2 = Gradient(text2, justify="center", start="red", end="light_blue")
-    console.print(gradient2, justify="left")
-    console.line(2)
-
-    title3 = "[underline bold.white]Inverted Italicized Bold Gradient <[/]"
-    title3 = f"{title3}[bold.yellow]Yellow[/][bold.white] to[/]"
-    title3 = f"{title3}[bold.blue]Blue[/][bold.white]>[/]"
-    text3 = lorem.paragraphs(10)
-    console.rule(
-        title=title3,
-        style="bold.white",
-    )
-    gradient3 = Gradient(
-        text3,
-        justify="center",
-        start="yellow",
-        end="blue",
-        invert=True,
-        style="italic bold",
-    )
-    console.print(gradient3, justify="center")
-    console.line(2)
-
-    console.rule(
-        title="[bold.white]Bold Rainbow Gradient(Right Justified)[/]",
-        style="bold.white",
-    )
-    console.print(Gradient(text=text3, rainbow=True, bold=True), justify="right")
