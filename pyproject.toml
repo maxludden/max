@@ -4,6 +4,12 @@ dev = [
     "snoop>=0.4.3",
     "birdseye>=0.9.4",
     "pylint>=2.16.2",
+    "ipywidgets>=8.0.4",
+    "jupyter>=1.0.0",
+    "ipython>=8.11.0",
+    "pyaml>=21.10.1",
+    "ujson>=5.7.0",
+    "toml>=0.10.2",
 ]
 
 [project]
@@ -17,6 +23,7 @@ dependencies = [
     "loguru>=0.6.0",
     "lorem-text>=2.1",
     "svgwrite>=1.4.3",
+    "notebook>=6.5.3",
 ]
 requires-python = ">=3.10"
 readme = "README.md"

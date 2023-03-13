@@ -2,10 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"name": "VirtualEnv",
-			"path": "../../venvs/venv-cli"
 		}
 	],
 	"settings": {

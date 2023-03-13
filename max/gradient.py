@@ -8,9 +8,11 @@ from lorem_text import lorem
 from rich.console import ConsoleOptions, JustifyMethod, OverflowMethod, RenderResult
 from rich.containers import Lines
 from rich.control import strip_control_codes
+from rich.layout import Layout
+from rich.live import Live
 from rich.pretty import Pretty
 from rich.style import StyleType
-from rich.syntax import Syntax
+from rich.table import Column, Table
 from rich.text import Text
 
 from max.color_index import ColorIndex
@@ -376,5 +378,24 @@ class Gradient(Text):
 
 if __name__ == "__main__":  # pragma: no cover
     console = MaxConsole()
+    lorem_ipsum: str = lorem.paragraphs(3)
     register_repr(Gradient)(normal_repr)
     register_repr(ColorIndex)(normal_repr)
+
+    table = Table(
+        title=Gradient("Gradients").as_text(),
+        show_header=True,
+        show_lines=True,
+        border_style="bold.white",
+    )
+    table.add_column("Normal", justify="center", style="bold.white")
+    table.add_column(
+        Gradient("Max's Version", bold=True, underline=True),
+        justify="center",
+        style="bold",
+    )
+
+    table.add_row("Regular Text", Gradient("Gradient Text").as_text())
+    TEXT = lorem.paragraphs(3)
+    table.add_row(TEXT, Gradient(TEXT, bold=True, underline=True).as_text())
+    console.print(table)

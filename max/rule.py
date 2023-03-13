@@ -5,7 +5,7 @@ from typing import Optional
 
 from rich.align import AlignMethod
 from rich.cells import cell_len, set_cell_size
-from rich.console import RenderResult
+from rich.console import RenderResult, console
 from rich.errors import MissingStyle
 from rich.style import Style
 from rich.text import Text
@@ -236,3 +236,4 @@ if __name__ == "__main__":  # pragma: no cover
     )
     console.line()
     console.print(GradientRule(title="...any finesse!", align="right", thick=True))
+    console.line(2)

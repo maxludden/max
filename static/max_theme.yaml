@@ -1,0 +1,2764 @@
+bar.back: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: !!python/object/new:rich.color.Color
+    - grey23
+    - !!python/object/apply:builtins.getattr
+      - &id001 !!python/name:rich.color.ColorType ''
+      - EIGHT_BIT
+    - 237
+    - null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+bar.complete: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: !!python/object/new:rich.color.Color
+    - '#646464'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 100
+      - 100
+      - 100
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+bar.finished: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: !!python/object/new:rich.color.Color
+    - '#006a20'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 0
+      - 106
+      - 32
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+bar.pulse: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: !!python/object/new:rich.color.Color
+    - '#f92672'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 249
+      - 38
+      - 114
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+black: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: &id002 !!python/object/new:rich.color.Color
+    - '#000000'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 0
+      - 0
+      - 0
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+blink: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 16
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 16
+    _style_definition: null
+blink2: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 32
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 32
+    _style_definition: null
+blue: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: &id003 !!python/object/new:rich.color.Color
+    - '#0000ff'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 0
+      - 0
+      - 255
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+bold: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.black: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id002
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.blue: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id003
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.cyan: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id004 !!python/object/new:rich.color.Color
+    - '#00ffff'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 0
+      - 255
+      - 255
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.dark_gray: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id013 !!python/object/new:rich.color.Color
+    - '#444444'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 68
+      - 68
+      - 68
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.green: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id005 !!python/object/new:rich.color.Color
+    - '#00ff00'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 0
+      - 255
+      - 0
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.grey: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id014 !!python/object/new:rich.color.Color
+    - '#888888'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 136
+      - 136
+      - 136
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.light_blue: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id006 !!python/object/new:rich.color.Color
+    - '#0088ff'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 0
+      - 136
+      - 255
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.light_gray: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id015 !!python/object/new:rich.color.Color
+    - '#cccccc'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 204
+      - 204
+      - 204
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.light_purple: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id007 !!python/object/new:rich.color.Color
+    - '#af00ff'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 175
+      - 0
+      - 255
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.magenta: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id008 !!python/object/new:rich.color.Color
+    - '#ff00ff'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 255
+      - 0
+      - 255
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.orange: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id009 !!python/object/new:rich.color.Color
+    - '#ff8800'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 255
+      - 136
+      - 0
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.purple: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id010 !!python/object/new:rich.color.Color
+    - '#5f00ff'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 95
+      - 0
+      - 255
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.red: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id011 !!python/object/new:rich.color.Color
+    - '#ff0000'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 255
+      - 0
+      - 0
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.white: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id018 !!python/object/new:rich.color.Color
+    - '#ffffff'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 255
+      - 255
+      - 255
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bold.yellow: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: &id012 !!python/object/new:rich.color.Color
+    - '#ffff00'
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - TRUECOLOR
+    - null
+    - !!python/object/new:rich.color_triplet.ColorTriplet
+      - 255
+      - 255
+      - 0
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+bright: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 2
+    _style_definition: null
+code: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 65
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 65
+    _style_definition: null
+cs.blue: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id003
+    _color: *id003
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cs.cyan: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id004
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cs.green: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id005
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cs.light_blue: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id006
+    _color: *id006
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cs.light_purple: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id007
+    _color: *id007
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cs.magenta: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id008
+    _color: *id008
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cs.orange: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id009
+    _color: *id009
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cs.purple: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id010
+    _color: *id010
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cs.red: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id011
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cs.yellow: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id012
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+cyan: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+dark_gray: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id013
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+dim: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 2
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 2
+    _style_definition: null
+emphasize: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+green: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+grey: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id014
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+inspect.async_def: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+inspect.attr: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+inspect.attr.dunder: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 6
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 6
+    _style_definition: null
+inspect.callable: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+inspect.class: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+inspect.def: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+inspect.doc: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 2
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 2
+    _style_definition: null
+inspect.equals: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: true
+    _set_attributes: 0
+    _style_definition: null
+inspect.error: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+inspect.help: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+inspect.value.border: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+iso8601.date: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id003
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+iso8601.time: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id008
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+iso8601.timezone: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+italic: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+json.bool_false: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+json.bool_true: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+json.brace: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+json.key: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id003
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+json.null: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+json.number: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 5
+    _style_definition: null
+json.str: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 5
+    _style_definition: null
+layout.tree.column: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id003
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 2
+    _style_definition: null
+layout.tree.row: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 2
+    _style_definition: null
+light_blue: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id006
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+light_gray: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id015
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+light_purple: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id007
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+live.ellipsis: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+log.level: &id016 !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: true
+    _set_attributes: 0
+    _style_definition: null
+log.message: *id016
+log.path: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 2
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 2
+    _style_definition: null
+log.time: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 2
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 2
+    _style_definition: null
+logging.keyword: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+logging.level.critical: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 65
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 65
+    _style_definition: null
+logging.level.debug: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id006
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+logging.level.error: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+logging.level.info: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id008
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+logging.level.notset: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 2
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 2
+    _style_definition: null
+logging.level.success: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+logging.level.warning: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+magenta: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id008
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+markdown.block_quote: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+markdown.code: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: &id017 !!python/object/new:rich.color.Color
+    - black
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - STANDARD
+    - 0
+    - null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+markdown.code_block: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id017
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+markdown.em: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+markdown.emph: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+markdown.h1: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+markdown.h1.border: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: true
+    _set_attributes: 0
+    _style_definition: null
+markdown.h2: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 9
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 9
+    _style_definition: null
+markdown.h3: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+markdown.h4: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 3
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 3
+    _style_definition: null
+markdown.h5: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 8
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 8
+    _style_definition: null
+markdown.h6: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+markdown.h7: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 6
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 6
+    _style_definition: null
+markdown.hr: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id018
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+markdown.item: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: true
+    _set_attributes: 0
+    _style_definition: null
+markdown.item.bullet: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+markdown.item.number: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+markdown.link: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id003
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+markdown.link_url: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 8
+    _bgcolor: null
+    _color: *id003
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 8
+    _style_definition: null
+markdown.list: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+markdown.paragraph: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: true
+    _set_attributes: 0
+    _style_definition: null
+markdown.s: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 256
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 256
+    _style_definition: null
+markdown.strong: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+markdown.text: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: true
+    _set_attributes: 0
+    _style_definition: null
+none: *id016
+orange: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id009
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+pretty: *id016
+progress.data.speed: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+progress.description: *id016
+progress.download: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+progress.elapsed: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+progress.filesize: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+progress.filesize.total: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+progress.percentage: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id008
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+progress.remaining: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+progress.spinner: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+prompt: *id016
+prompt.choices: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id008
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+prompt.default: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+prompt.invalid: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+prompt.invalid.choice: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+purple: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id010
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+red: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+repr.attrib_equal: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.attrib_name: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+repr.attrib_value: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+repr.bool_false: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+repr.bool_true: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+repr.brace: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.call: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.comma: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.ellipsis: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+repr.error: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.eui48: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.eui64: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.filename: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+repr.indent: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 2
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 2
+    _style_definition: null
+repr.ipv4: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.ipv6: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.none: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+repr.number: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 5
+    _style_definition: null
+repr.number_complex: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id004
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 5
+    _style_definition: null
+repr.path: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+repr.str: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 5
+    _style_definition: null
+repr.tag_contents: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: &id019 !!python/object/new:rich.color.Color
+    - default
+    - !!python/object/apply:builtins.getattr
+      - *id001
+      - DEFAULT
+    - null
+    - null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+repr.tag_end: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.tag_name: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.tag_start: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+repr.url: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 8
+    _bgcolor: null
+    _color: *id003
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 13
+    _style_definition: null
+repr.uuid: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+reset: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: *id019
+    _color: *id019
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 511
+    _style_definition: null
+reverse: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 64
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 64
+    _style_definition: null
+rule.line: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+rule.text: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id018
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+scope.border: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id003
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+scope.equals: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+scope.key: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+scope.key.special: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 6
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 6
+    _style_definition: null
+status.spinner: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id005
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+strike: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 256
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 256
+    _style_definition: null
+strong: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.blue: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id003
+    _color: *id018
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.cyan: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id004
+    _color: *id002
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.green: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id005
+    _color: *id002
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.light_blue: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id006
+    _color: *id018
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.light_purple: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id007
+    _color: *id018
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.magenta: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id008
+    _color: *id002
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.orange: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id009
+    _color: *id002
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.purple: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id010
+    _color: *id018
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.red: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id011
+    _color: *id018
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+style.yellow: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: *id012
+    _color: *id002
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+table.caption: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 6
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 6
+    _style_definition: null
+table.cell: *id016
+table.footer: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+table.header: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+table.title: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+traceback.border: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+traceback.border.syntax_error: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+traceback.error: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 4
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 4
+    _style_definition: null
+traceback.exc_type: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+traceback.exc_value: *id016
+traceback.offset: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+traceback.text: *id016
+traceback.title: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 1
+    _bgcolor: null
+    _color: *id011
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 1
+    _style_definition: null
+tree: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: true
+    _set_attributes: 0
+    _style_definition: null
+tree.line: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: true
+    _set_attributes: 0
+    _style_definition: null
+underline: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 8
+    _bgcolor: null
+    _color: null
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 8
+    _style_definition: null
+white: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id018
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
+yellow: !!python/object/new:rich.style.Style
+  state: !!python/tuple
+  - null
+  - _ansi: null
+    _attributes: 0
+    _bgcolor: null
+    _color: *id012
+    _hash: null
+    _link: null
+    _link_id: ''
+    _meta: null
+    _null: false
+    _set_attributes: 0
+    _style_definition: null
